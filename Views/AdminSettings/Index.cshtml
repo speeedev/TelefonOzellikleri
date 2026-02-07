@@ -1,0 +1,146 @@
+@model TelefonOzellikleri.Models.SiteSetting
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<form method="post" action="/derin/settings">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0 pt-3 pb-0">
+            <h6 class="fw-bold">General</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="SiteName" class="form-label">Site Name</label>
+                    <input asp-for="SiteName" class="form-control" placeholder="My Website" />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="SiteTitle" class="form-label">Site Title (SEO)</label>
+                    <input asp-for="SiteTitle" class="form-control" placeholder="Page title for search engines" />
+                </div>
+                <div class="col-md-12">
+                    <label asp-for="SiteDescription" class="form-label">Site Description (SEO)</label>
+                    <textarea asp-for="SiteDescription" class="form-control" rows="2" placeholder="Short description for search engines (max 160 chars)"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0 pt-3 pb-0">
+            <h6 class="fw-bold">Branding</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="LogoUrl" class="form-label">Logo URL</label>
+                    <input asp-for="LogoUrl" class="form-control" placeholder="https://example.com/logo.png" />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="FaviconUrl" class="form-label">Favicon URL</label>
+                    <input asp-for="FaviconUrl" class="form-control" placeholder="https://example.com/favicon.ico" />
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.LogoUrl) || !string.IsNullOrEmpty(Model.FaviconUrl))
+            {
+                <div class="d-flex gap-4 mt-3">
+                    @if (!string.IsNullOrEmpty(Model.LogoUrl))
+                    {
+                        <div>
+                            <small class="text-muted d-block mb-1">Logo Preview</small>
+                            <img src="@Model.LogoUrl" alt="Logo" style="max-height: 40px; object-fit: contain;" />
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.FaviconUrl))
+                    {
+                        <div>
+                            <small class="text-muted d-block mb-1">Favicon Preview</small>
+                            <img src="@Model.FaviconUrl" alt="Favicon" style="max-height: 32px; object-fit: contain;" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0 pt-3 pb-0">
+            <h6 class="fw-bold">Social Media</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label asp-for="XUrl" class="form-label">X (Twitter) URL</label>
+                    <input asp-for="XUrl" class="form-control" placeholder="https://x.com/username" />
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="InstagramUrl" class="form-label">Instagram URL</label>
+                    <input asp-for="InstagramUrl" class="form-control" placeholder="https://instagram.com/username" />
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="YoutubeUrl" class="form-label">YouTube URL</label>
+                    <input asp-for="YoutubeUrl" class="form-control" placeholder="https://youtube.com/@@channel" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0 pt-3 pb-0">
+            <h6 class="fw-bold">Other</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label asp-for="FooterText" class="form-label">Footer Text</label>
+                    <input asp-for="FooterText" class="form-control" placeholder="Copyright text or similar" />
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="IsMaintenanceMode" class="form-label">Maintenance Mode</label>
+                    <select asp-for="IsMaintenanceMode" class="form-select">
+                        <option value="false">Off</option>
+                        <option value="true">On</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.UpdatedAt.HasValue)
+    {
+        <div class="text-muted mb-3" style="font-size: 0.85rem;">
+            Last updated: @Model.UpdatedAt.Value.ToString("dd MMM yyyy HH:mm")
+        </div>
+    }
+
+    <div class="d-flex justify-content-end mb-4">
+        <button type="submit" class="btn btn-primary px-4">Save Settings</button>
+    </div>
+</form>
+
+<style>
+    .form-label {
+        font-weight: 500;
+        font-size: 0.85rem;
+        color: #555;
+    }
+
+    .card {
+        border-radius: 12px;
+    }
+
+    .card-header h6 {
+        color: #1a1a2e;
+    }
+</style>

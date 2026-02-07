@@ -1,0 +1,156 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var phones = ViewData["Phones"] as IEnumerable<dynamic> ?? Enumerable.Empty<dynamic>();
+    var brands = ViewData["Brands"] as List<TelefonOzellikleri.Models.Brand> ?? new();
+    var brandDict = ViewData["BrandDict"] as Dictionary<int, string> ?? new();
+    var search = ViewData["Search"]?.ToString() ?? "";
+    var selectedBrandId = ViewData["BrandId"] as int?;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div></div>
+    <a href="/derin/phones/create" class="btn btn-primary">New Phone</a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" action="/derin/phones" class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label fw-medium">Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Model name or slug..." value="@search" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-medium">Brand</label>
+                <select name="brandId" class="form-select">
+                    <option value="">All</option>
+                    @foreach (var brand in brands)
+                    {
+                        <option value="@brand.Id" selected="@(selectedBrandId == brand.Id)">@brand.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1">Filter</button>
+                <a href="/derin/phones" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th style="width: 60px;">Image</th>
+                        <th>Model</th>
+                        <th>Brand</th>
+                        <th>Screen</th>
+                        <th>Battery</th>
+                        <th>Chipset</th>
+                        <th>Date</th>
+                        <th style="width: 100px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var phone in phones)
+                    {
+                        <tr>
+                            <td class="text-muted">@phone.Id</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty((string?)phone.MainImageUrl))
+                                {
+                                    <img src="@phone.MainImageUrl" alt="" class="phone-thumb" />
+                                }
+                                else
+                                {
+                                    <div class="phone-thumb-empty"></div>
+                                }
+                            </td>
+                            <td>
+                                <a href="/@phone.Slug" target="_blank" class="fw-medium text-dark text-decoration-none">
+                                    @phone.ModelName
+                                </a>
+                                <br />
+                                <small class="text-muted">/@phone.Slug</small>
+                            </td>
+                            <td>
+                                @(brandDict.ContainsKey((int)phone.BrandId) ? brandDict[(int)phone.BrandId] : "-")
+                            </td>
+                            <td>
+                                @(phone.ScreenSize != null ? $"{phone.ScreenSize}\"" : "-")
+                            </td>
+                            <td>
+                                @(phone.BatteryCapacity != null ? $"{phone.BatteryCapacity} mAh" : "-")
+                            </td>
+                            <td>
+                                <small>@(phone.Chipset ?? "-")</small>
+                            </td>
+                            <td>
+                                @if (phone.ReleaseDate != null)
+                                {
+                                    <small>@(((DateOnly)phone.ReleaseDate).ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR")))</small>
+                                }
+                                else
+                                {
+                                    <small class="text-muted">-</small>
+                                }
+                            </td>
+                            <td>
+                                <a href="/derin/phones/edit/@phone.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (!phones.Any())
+        {
+            <div class="text-center py-5 text-muted">
+                No phones found.
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .phone-thumb {
+        width: 40px;
+        height: 50px;
+        object-fit: contain;
+        border-radius: 6px;
+    }
+
+    .phone-thumb-empty {
+        width: 40px;
+        height: 50px;
+        background: #f0f0f0;
+        border-radius: 6px;
+        border: 1px dashed #ddd;
+    }
+
+    .table th {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #666;
+        font-weight: 600;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table td {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.75rem;
+    }
+</style>

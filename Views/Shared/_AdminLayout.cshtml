@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        .admin-sidebar {
+            background: linear-gradient(180deg, #1a1a2e, #16213e);
+            min-height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 1rem;
+            z-index: 100;
+        }
+
+        .admin-sidebar .sidebar-brand {
+            color: white;
+            font-size: 1.15rem;
+            font-weight: 700;
+            padding: 0.75rem 1.25rem;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-sidebar .nav-link {
+            color: rgba(255,255,255,0.7);
+            padding: 0.6rem 1.25rem;
+            font-size: 0.9rem;
+            transition: all 0.15s;
+        }
+
+        .admin-sidebar .nav-link:hover,
+        .admin-sidebar .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .admin-sidebar .nav-section {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 1rem 1.25rem 0.35rem;
+            font-weight: 600;
+        }
+
+        .admin-content {
+            margin-left: 250px;
+            padding: 1.5rem 2rem;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        .admin-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-topbar h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin: 0;
+        }
+
+        @@media (max-width: 768px) {
+            .admin-sidebar {
+                width: 100%;
+                min-height: auto;
+                position: relative;
+            }
+
+            .admin-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="admin-sidebar d-none d-md-block">
+        <a href="/derin" class="sidebar-brand">Admin Panel</a>
+
+        <div class="nav-section">General</div>
+        <a href="/derin" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminDashboard" ? "active" : "")">Dashboard</a>
+
+        <div class="nav-section">Content</div>
+        <a href="/derin/phones" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminPhone" ? "active" : "")">Phones</a>
+        <a href="/derin/brands" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminBrand" ? "active" : "")">Brands</a>
+        <a href="/derin/pages" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminPage" ? "active" : "")">Pages</a>
+
+        <div class="nav-section">System</div>
+        <a href="/derin/settings" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminSettings" ? "active" : "")">Site Settings</a>
+        <a href="/derin/logout" class="nav-link" style="color: rgba(255,100,100,0.8);">Logout</a>
+    </nav>
+
+    <nav class="navbar navbar-dark d-md-none" style="background: #1a1a2e;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/derin">Admin Panel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminMobileNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="adminMobileNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="/derin">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/derin/phones">Phones</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/derin/brands">Brands</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/derin/pages">Pages</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/derin/settings">Site Settings</a></li>
+                    <li class="nav-item"><a class="nav-link text-danger" href="/derin/logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-content">
+        <div class="admin-topbar">
+            <h1>@ViewData["Title"]</h1>
+            <span class="text-muted">Welcome, @User.Identity?.Name</span>
+        </div>
+        @RenderBody()
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

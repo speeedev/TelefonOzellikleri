@@ -1,0 +1,133 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var brands = ViewData["Brands"] as List<TelefonOzellikleri.Models.Brand> ?? new();
+    var phoneCounts = ViewData["PhoneCounts"] as Dictionary<int, int> ?? new();
+    var search = ViewData["Search"]?.ToString() ?? "";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div></div>
+    <a href="/derin/brands/create" class="btn btn-primary">New Brand</a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" action="/derin/brands" class="row g-3 align-items-end">
+            <div class="col-md-8">
+                <label class="form-label fw-medium">Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Brand name or slug..." value="@search" />
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1">Filter</button>
+                <a href="/derin/brands" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th style="width: 60px;">Logo</th>
+                        <th>Name</th>
+                        <th>Slug</th>
+                        <th>Phones</th>
+                        <th style="width: 160px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var brand in brands)
+                    {
+                        <tr>
+                            <td class="text-muted">@brand.Id</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(brand.LogoUrl))
+                                {
+                                    <img src="@brand.LogoUrl" alt="@brand.Name" class="brand-logo-thumb" />
+                                }
+                                else
+                                {
+                                    <div class="brand-logo-empty"></div>
+                                }
+                            </td>
+                            <td class="fw-medium">@brand.Name</td>
+                            <td><small class="text-muted">/@brand.Slug</small></td>
+                            <td>
+                                <span class="badge bg-primary bg-opacity-10 text-primary">
+                                    @(phoneCounts.ContainsKey(brand.Id) ? phoneCounts[brand.Id] : 0)
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <a href="/derin/brands/edit/@brand.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <form method="post" action="/derin/brands/delete/@brand.Id" onsubmit="return confirm('Are you sure you want to delete this brand?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (!brands.Any())
+        {
+            <div class="text-center py-5 text-muted">
+                No brands found.
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .brand-logo-thumb {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        border-radius: 6px;
+    }
+
+    .brand-logo-empty {
+        width: 40px;
+        height: 40px;
+        background: #f0f0f0;
+        border-radius: 6px;
+        border: 1px dashed #ddd;
+    }
+
+    .table th {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #666;
+        font-weight: 600;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table td {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.75rem;
+    }
+</style>

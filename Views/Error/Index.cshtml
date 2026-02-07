@@ -1,0 +1,83 @@
+@{
+    var statusCode = (int)(ViewData["StatusCode"] ?? 500);
+    var errorMessage = ViewData["ErrorMessage"]?.ToString() ?? "Beklenmeyen bir hata oluştu.";
+}
+
+<div class="error-page">
+    <div class="error-container text-center">
+        <div class="error-code">@statusCode</div>
+        <h1 class="error-title">@ViewData["Title"]</h1>
+        <p class="error-message">@errorMessage</p>
+        <div class="error-actions mt-4">
+            <a href="/" class="btn btn-primary btn-lg">
+                Ana Sayfaya Dön
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .error-page {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 60vh;
+        padding: 2rem 1rem;
+    }
+
+    .error-container {
+        max-width: 500px;
+    }
+
+    .error-code {
+        font-size: 8rem;
+        font-weight: 800;
+        line-height: 1;
+        background: linear-gradient(135deg, #1a1a2e, #16213e, #0d6efd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+
+    .error-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 0.75rem;
+    }
+
+    .error-message {
+        font-size: 1.1rem;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .error-actions .btn-primary {
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        border: none;
+        padding: 0.6rem 2rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: opacity 0.2s ease;
+    }
+
+    .error-actions .btn-primary:hover {
+        opacity: 0.9;
+    }
+
+    @@media (max-width: 576px) {
+        .error-code {
+            font-size: 5rem;
+        }
+
+        .error-title {
+            font-size: 1.3rem;
+        }
+
+        .error-message {
+            font-size: 1rem;
+        }
+    }
+</style>

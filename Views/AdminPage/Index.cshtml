@@ -1,0 +1,120 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var pages = ViewData["Pages"] as List<TelefonOzellikleri.Models.Page> ?? new();
+    var search = ViewData["Search"]?.ToString() ?? "";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div></div>
+    <a href="/derin/pages/create" class="btn btn-primary">New Page</a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" action="/derin/pages" class="row g-3 align-items-end">
+            <div class="col-md-8">
+                <label class="form-label fw-medium">Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Title or slug..." value="@search" />
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1">Filter</button>
+                <a href="/derin/pages" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Title</th>
+                        <th>Slug</th>
+                        <th>Description</th>
+                        <th>Last Updated</th>
+                        <th style="width: 160px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var page in pages)
+                    {
+                        <tr>
+                            <td class="text-muted">@(page.Id)</td>
+                            <td>
+                                <a href="/@(page.Slug)" target="_blank" class="fw-medium text-dark text-decoration-none">
+                                    @(page.PageTitle)
+                                </a>
+                            </td>
+                            <td><small class="text-muted">/@(page.Slug)</small></td>
+                            <td>
+                                <small class="text-muted">
+                                    @if (!string.IsNullOrEmpty(page.PageDescription))
+                                    {
+                                        @(page.PageDescription.Length > 60 ? page.PageDescription.Substring(0, 60) + "..." : page.PageDescription)
+                                    }
+                                    else
+                                    {
+                                        <text>-</text>
+                                    }
+                                </small>
+                            </td>
+                            <td>
+                                @if (page.UpdatedAt.HasValue)
+                                {
+                                    <small>@(page.UpdatedAt.Value.ToString("dd MMM yyyy HH:mm", new System.Globalization.CultureInfo("tr-TR")))</small>
+                                }
+                                else
+                                {
+                                    <small class="text-muted">-</small>
+                                }
+                            </td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <a href="/derin/pages/edit/@(page.Id)" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <form method="post" action="/derin/pages/delete/@(page.Id)" onsubmit="return confirm('Are you sure you want to delete this page?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (!pages.Any())
+        {
+            <div class="text-center py-5 text-muted">
+                No pages found.
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .table th {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #666;
+        font-weight: 600;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table td {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.75rem;
+    }
+</style>

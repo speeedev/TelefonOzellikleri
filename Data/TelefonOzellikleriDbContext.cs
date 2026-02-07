@@ -66,7 +66,9 @@ public partial class TelefonOzellikleriDbContext : DbContext
 
             entity.HasIndex(e => e.Slug, "pages_slug_key").IsUnique();
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("id");
             entity.Property(e => e.Content).HasColumnName("content");
             entity.Property(e => e.PageDescription)
                 .HasMaxLength(160)
@@ -91,7 +93,9 @@ public partial class TelefonOzellikleriDbContext : DbContext
 
             entity.HasIndex(e => e.Slug, "series_slug_key").IsUnique();
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("id");
             entity.Property(e => e.BrandId).HasColumnName("brand_id");
             entity.Property(e => e.SeriesName)
                 .HasMaxLength(100)
@@ -107,7 +111,9 @@ public partial class TelefonOzellikleriDbContext : DbContext
 
             entity.ToTable("site_settings");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("id");
             entity.Property(e => e.FaviconUrl)
                 .HasMaxLength(255)
                 .HasColumnName("favicon_url");
@@ -149,7 +155,9 @@ public partial class TelefonOzellikleriDbContext : DbContext
 
             entity.HasIndex(e => e.Slug, "smartphones_slug_key").IsUnique();
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("id");
             entity.Property(e => e.AiFeaturesList).HasColumnName("ai_features_list");
             entity.Property(e => e.AntutuScore).HasColumnName("antutu_score");
             entity.Property(e => e.BackMaterial)

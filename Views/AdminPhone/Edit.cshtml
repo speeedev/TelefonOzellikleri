@@ -31,10 +31,12 @@
         <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-design">Design</a></li>
         <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-display">Display</a></li>
         <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-camera">Camera</a></li>
-        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-processor">Processor</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-security">Security</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-hardware">Hardware</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-software">Software</a></li>
         <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-battery">Battery</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-network">Network</a></li>
         <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-connectivity">Connectivity</a></li>
-        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-other">Other</a></li>
     </ul>
 
     <div class="tab-content">
@@ -63,7 +65,12 @@
                         </div>
                         <div class="col-md-6">
                             <label asp-for="MainImageUrl" class="form-label">Main Image URL</label>
-                            <input asp-for="MainImageUrl" class="form-control" />
+                            <div class="input-group">
+                                <input asp-for="MainImageUrl" class="form-control" id="mainImageUrl" />
+                                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('mainImageFile').click()">Upload</button>
+                            </div>
+                            <input type="file" id="mainImageFile" class="d-none" accept="image/*" />
+                            <small id="uploadStatus" class="text-muted"></small>
                         </div>
                         <div class="col-md-3">
                             <label asp-for="PhoneStatus" class="form-label">Status</label>
@@ -80,22 +87,16 @@
                             <input asp-for="ReleaseDate" type="date" class="form-control" />
                         </div>
                         <div class="col-md-3">
-                            <label asp-for="OsType" class="form-label">OS Type</label>
-                            <select asp-for="OsType" class="form-select">
-                                <option value="">-- Select --</option>
-                                @foreach (var val in Enum.GetValues<TelefonOzellikleri.Models.Enums.OsType>())
-                                {
-                                    <option value="@val">@val</option>
-                                }
-                            </select>
+                            <label asp-for="SarHead" class="form-label">SAR Head (W/kg)</label>
+                            <input asp-for="SarHead" type="number" step="0.01" class="form-control" />
                         </div>
                         <div class="col-md-3">
-                            <label asp-for="OsVersion" class="form-label">OS Version</label>
-                            <input asp-for="OsVersion" class="form-control" />
+                            <label asp-for="SarBody" class="form-label">SAR Body (W/kg)</label>
+                            <input asp-for="SarBody" type="number" step="0.01" class="form-control" />
                         </div>
-                        <div class="col-md-6">
-                            <label asp-for="UpdateGuarantee" class="form-label">Update Guarantee</label>
-                            <input asp-for="UpdateGuarantee" class="form-control" />
+                        <div class="col-md-12">
+                            <label asp-for="BoxContents" class="form-label">Box Contents</label>
+                            <textarea asp-for="BoxContents" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
                 </div>
@@ -122,21 +123,26 @@
                             <label asp-for="Weight" class="form-label">Weight (g)</label>
                             <input asp-for="Weight" type="number" step="0.1" class="form-control" />
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label asp-for="FrameMaterial" class="form-label">Frame Material</label>
                             <input asp-for="FrameMaterial" class="form-control" />
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label asp-for="BackMaterial" class="form-label">Back Material</label>
                             <input asp-for="BackMaterial" class="form-control" />
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label asp-for="ScreenProtection" class="form-label">Screen Protection</label>
                             <input asp-for="ScreenProtection" class="form-control" />
                         </div>
                         <div class="col-md-6">
                             <label asp-for="DustWaterRes" class="form-label">Dust/Water Resistance</label>
-                            <input asp-for="DustWaterRes" class="form-control" />
+                            <input asp-for="DustWaterRes" class="form-control" placeholder="e.g. IP68" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Colors</label>
+                            <input type="text" name="ColorsRaw" class="form-control" placeholder="Comma separated (e.g. Black, White, Blue)" value="@(Model.Colors != null ? string.Join(", ", Model.Colors) : "")" />
+                            <small class="text-muted">Enter colors separated by commas</small>
                         </div>
                     </div>
                 </div>
@@ -152,30 +158,34 @@
                             <input asp-for="ScreenSize" type="number" step="0.01" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <label asp-for="ScreenTech" class="form-label">Screen Technology</label>
-                            <input asp-for="ScreenTech" class="form-control" />
-                        </div>
-                        <div class="col-md-4">
                             <label asp-for="ScreenRes" class="form-label">Resolution</label>
                             <input asp-for="ScreenRes" class="form-control" />
                         </div>
                         <div class="col-md-4">
+                            <label asp-for="ScreenTech" class="form-label">Technology</label>
+                            <input asp-for="ScreenTech" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
                             <label asp-for="RefreshRate" class="form-label">Refresh Rate (Hz)</label>
                             <input asp-for="RefreshRate" type="number" class="form-control" />
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label asp-for="PixelDensity" class="form-label">Pixel Density (ppi)</label>
                             <input asp-for="PixelDensity" type="number" class="form-control" />
                         </div>
-                        <div class="col-md-4">
-                            <label asp-for="ScreenBodyRatio" class="form-label">Screen-to-Body Ratio (%)</label>
+                        <div class="col-md-3">
+                            <label asp-for="ScreenBodyRatio" class="form-label">Screen-to-Body (%)</label>
                             <input asp-for="ScreenBodyRatio" type="number" step="0.1" class="form-control" />
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label asp-for="ScreenBrightnessNits" class="form-label">Brightness (nits)</label>
                             <input asp-for="ScreenBrightnessNits" type="number" class="form-control" />
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-3">
+                            <label asp-for="ScreenAspectRatio" class="form-label">Aspect Ratio</label>
+                            <input asp-for="ScreenAspectRatio" class="form-control" placeholder="e.g. 19.5:9" />
+                        </div>
+                        <div class="col-md-12">
                             <label class="form-label">Extra Features</label>
                             <input type="text" name="ScreenExtraFeaturesRaw" class="form-control" placeholder="Comma separated (e.g. HDR10+, Dolby Vision, Always-On)" value="@(Model.ScreenExtraFeatures != null ? string.Join(", ", Model.ScreenExtraFeatures) : "")" />
                             <small class="text-muted">Enter features separated by commas</small>
@@ -200,6 +210,9 @@
                         <div class="col-md-2"><label asp-for="Cam1Aperture" class="form-label">Aperture</label><input asp-for="Cam1Aperture" class="form-control" /></div>
                         <div class="col-md-2"><label asp-for="Cam1Focal" class="form-label">Focal</label><input asp-for="Cam1Focal" class="form-control" /></div>
                         <div class="col-md-4"><label asp-for="Cam1Features" class="form-label">Features</label><input asp-for="Cam1Features" class="form-control" /></div>
+                        <div class="col-md-2 offset-md-2"></div>
+                        <div class="col-md-2"><label asp-for="Cam1SensorSize" class="form-label">Sensor Size</label><input asp-for="Cam1SensorSize" class="form-control" placeholder='e.g. 1/1.28"' /></div>
+                        <div class="col-md-2"><label asp-for="Cam1PixelSize" class="form-label">Pixel Size</label><input asp-for="Cam1PixelSize" class="form-control" placeholder="e.g. 1.22µm" /></div>
                     </div>
 
                     <h6 class="fw-bold mb-3">2nd Camera</h6>
@@ -215,6 +228,9 @@
                         <div class="col-md-2"><label asp-for="Cam2Aperture" class="form-label">Aperture</label><input asp-for="Cam2Aperture" class="form-control" /></div>
                         <div class="col-md-2"><label asp-for="Cam2Focal" class="form-label">Focal</label><input asp-for="Cam2Focal" class="form-control" /></div>
                         <div class="col-md-2"><label asp-for="Cam2Features" class="form-label">Features</label><input asp-for="Cam2Features" class="form-control" /></div>
+                        <div class="col-md-2 offset-md-2"></div>
+                        <div class="col-md-2"><label asp-for="Cam2SensorSize" class="form-label">Sensor Size</label><input asp-for="Cam2SensorSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam2PixelSize" class="form-label">Pixel Size</label><input asp-for="Cam2PixelSize" class="form-control" /></div>
                     </div>
 
                     <h6 class="fw-bold mb-3">3rd Camera</h6>
@@ -230,6 +246,9 @@
                         <div class="col-md-2"><label asp-for="Cam3Aperture" class="form-label">Aperture</label><input asp-for="Cam3Aperture" class="form-control" /></div>
                         <div class="col-md-2"><label asp-for="Cam3Focal" class="form-label">Focal</label><input asp-for="Cam3Focal" class="form-control" /></div>
                         <div class="col-md-2"><label asp-for="Cam3Features" class="form-label">Features</label><input asp-for="Cam3Features" class="form-control" /></div>
+                        <div class="col-md-2 offset-md-2"></div>
+                        <div class="col-md-2"><label asp-for="Cam3SensorSize" class="form-label">Sensor Size</label><input asp-for="Cam3SensorSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam3PixelSize" class="form-label">Pixel Size</label><input asp-for="Cam3PixelSize" class="form-control" /></div>
                     </div>
 
                     <h6 class="fw-bold mb-3">4th Camera</h6>
@@ -245,6 +264,9 @@
                         <div class="col-md-2"><label asp-for="Cam4Aperture" class="form-label">Aperture</label><input asp-for="Cam4Aperture" class="form-control" /></div>
                         <div class="col-md-2"><label asp-for="Cam4Focal" class="form-label">Focal</label><input asp-for="Cam4Focal" class="form-control" /></div>
                         <div class="col-md-2"><label asp-for="Cam4Features" class="form-label">Features</label><input asp-for="Cam4Features" class="form-control" /></div>
+                        <div class="col-md-2 offset-md-2"></div>
+                        <div class="col-md-2"><label asp-for="Cam4SensorSize" class="form-label">Sensor Size</label><input asp-for="Cam4SensorSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam4PixelSize" class="form-label">Pixel Size</label><input asp-for="Cam4PixelSize" class="form-control" /></div>
                     </div>
 
                     <div class="row g-3 mb-4">
@@ -267,28 +289,58 @@
                         <div class="col-md-2"><label asp-for="FrontCamAperture" class="form-label">Aperture</label><input asp-for="FrontCamAperture" class="form-control" /></div>
                         <div class="col-md-2"><label asp-for="FrontCamFocal" class="form-label">Focal</label><input asp-for="FrontCamFocal" class="form-control" /></div>
                         <div class="col-md-4"><label asp-for="FrontCamFeatures" class="form-label">Features</label><input asp-for="FrontCamFeatures" class="form-control" /></div>
+                        <div class="col-md-2 offset-md-2"></div>
+                        <div class="col-md-2"><label asp-for="FrontCamSensorSize" class="form-label">Sensor Size</label><input asp-for="FrontCamSensorSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="FrontCamPixelSize" class="form-label">Pixel Size</label><input asp-for="FrontCamPixelSize" class="form-control" /></div>
                     </div>
                     <div class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label asp-for="FrontVideoRes" class="form-label">Front Video Resolution</label>
                             <input asp-for="FrontVideoRes" class="form-control" />
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <div class="form-check mt-4">
                                 <input asp-for="SecondFrontExists" class="form-check-input" />
-                                <label asp-for="SecondFrontExists" class="form-check-label">2nd Front</label>
+                                <label asp-for="SecondFrontExists" class="form-check-label">2nd</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <label asp-for="SecondFrontRes" class="form-label">2nd Front Camera Resolution</label>
+                        <div class="col-md-2">
+                            <label asp-for="SecondFrontRes" class="form-label">2nd Front Res</label>
                             <input asp-for="SecondFrontRes" class="form-control" />
+                        </div>
+                        <div class="col-md-2"><label asp-for="SecondFrontSensorSize" class="form-label">Sensor Size</label><input asp-for="SecondFrontSensorSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="SecondFrontPixelSize" class="form-label">Pixel Size</label><input asp-for="SecondFrontPixelSize" class="form-control" /></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="tab-security">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <div class="form-check mt-2">
+                                <input asp-for="HasFaceRecognition" class="form-check-input" />
+                                <label asp-for="HasFaceRecognition" class="form-check-label">Face Recognition</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check mt-2">
+                                <input asp-for="HasFingerprint" class="form-check-input" />
+                                <label asp-for="HasFingerprint" class="form-check-label">Fingerprint Reader</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="FingerprintType" class="form-label">Fingerprint Type</label>
+                            <input asp-for="FingerprintType" class="form-control" placeholder="e.g. Optical (Under-display), Ultrasonic, Side-mounted" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="tab-pane fade" id="tab-processor">
+        <div class="tab-pane fade" id="tab-hardware">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <div class="row g-3">
@@ -305,12 +357,67 @@
                             <input asp-for="Gpu" class="form-control" />
                         </div>
                         <div class="col-md-6">
+                            <label class="form-label">RAM Options</label>
+                            <input type="text" name="RamOptionsRaw" class="form-control" placeholder="Comma separated (e.g. 8GB, 12GB, 16GB)" value="@(Model.RamOptions != null ? string.Join(", ", Model.RamOptions) : "")" />
+                            <small class="text-muted">Enter options separated by commas</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Storage Options</label>
+                            <input type="text" name="StorageOptionsRaw" class="form-control" placeholder="Comma separated (e.g. 128GB, 256GB, 512GB)" value="@(Model.StorageOptions != null ? string.Join(", ", Model.StorageOptions) : "")" />
+                            <small class="text-muted">Enter options separated by commas</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="StorageType" class="form-label">Storage Type</label>
+                            <input asp-for="StorageType" class="form-control" placeholder="e.g. NVMe, UFS 4.0" />
+                        </div>
+                        <div class="col-md-4">
                             <label asp-for="AntutuScore" class="form-label">AnTuTu Score</label>
                             <input asp-for="AntutuScore" type="number" class="form-control" />
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label asp-for="GeekbenchScore" class="form-label">Geekbench Score</label>
                             <input asp-for="GeekbenchScore" class="form-control" />
+                        </div>
+                        <div class="col-md-12">
+                            <label asp-for="SensorsList" class="form-label">Sensors</label>
+                            <textarea asp-for="SensorsList" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="tab-software">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label asp-for="OsType" class="form-label">OS Type</label>
+                            <select asp-for="OsType" class="form-select">
+                                <option value="">-- Select --</option>
+                                @foreach (var val in Enum.GetValues<TelefonOzellikleri.Models.Enums.OsType>())
+                                {
+                                    <option value="@val">@val</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="OsVersion" class="form-label">OS Version</label>
+                            <input asp-for="OsVersion" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="UpdateGuarantee" class="form-label">Update Guarantee</label>
+                            <input asp-for="UpdateGuarantee" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check mt-2">
+                                <input asp-for="HasAiFeatures" class="form-check-input" />
+                                <label asp-for="HasAiFeatures" class="form-check-label">AI Features</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <label asp-for="AiFeaturesList" class="form-label">AI Features List</label>
+                            <textarea asp-for="AiFeaturesList" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
                 </div>
@@ -322,7 +429,23 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label asp-for="BatteryCapacity" class="form-label">Battery (mAh)</label>
+                            <label asp-for="BatteryType" class="form-label">Battery Type</label>
+                            <select asp-for="BatteryType" class="form-select">
+                                <option value="">-- Select --</option>
+                                @foreach (var val in Enum.GetValues<TelefonOzellikleri.Models.Enums.BatteryType>())
+                                {
+                                    var label = val switch
+                                    {
+                                        TelefonOzellikleri.Models.Enums.BatteryType.LiIon => "Li-Ion",
+                                        TelefonOzellikleri.Models.Enums.BatteryType.LiPo => "Li-Po",
+                                        _ => val.ToString()
+                                    };
+                                    <option value="@val">@label</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="BatteryCapacity" class="form-label">Capacity (mAh)</label>
                             <input asp-for="BatteryCapacity" type="number" class="form-control" />
                         </div>
                         <div class="col-md-4">
@@ -354,11 +477,23 @@
             </div>
         </div>
 
-        <div class="tab-pane fade" id="tab-connectivity">
+        <div class="tab-pane fade" id="tab-network">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <div class="row g-3">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input asp-for="Support4g" class="form-check-input" />
+                                <label asp-for="Support4g" class="form-check-label">4G</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input asp-for="Support45g" class="form-check-input" />
+                                <label asp-for="Support45g" class="form-check-label">4.5G</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
                             <div class="form-check">
                                 <input asp-for="Support5g" class="form-check-input" />
                                 <label asp-for="Support5g" class="form-check-label">5G</label>
@@ -366,91 +501,93 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-check">
-                                <input asp-for="Support4g" class="form-check-input" />
-                                <label asp-for="Support4g" class="form-check-label">4G</label>
+                                <input asp-for="EsimSupport" class="form-check-input" />
+                                <label asp-for="EsimSupport" class="form-check-label">eSIM Support</label>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="form-check">
-                                <input asp-for="Nfc" class="form-check-input" />
-                                <label asp-for="Nfc" class="form-check-label">NFC</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input asp-for="Gps" class="form-check-input" />
-                                <label asp-for="Gps" class="form-check-label">GPS</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input asp-for="IrBlaster" class="form-check-input" />
-                                <label asp-for="IrBlaster" class="form-check-label">IR Blaster</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <label asp-for="BluetoothVer" class="form-label">Bluetooth</label>
-                            <input asp-for="BluetoothVer" class="form-control" />
-                        </div>
-                        <div class="col-md-3">
-                            <label asp-for="UsbType" class="form-label">USB Type</label>
-                            <input asp-for="UsbType" class="form-control" />
-                        </div>
-                        <div class="col-md-3">
-                            <label asp-for="UsbVersion" class="form-label">USB Version</label>
-                            <input asp-for="UsbVersion" class="form-control" />
+                            <label asp-for="PhysicalSimCount" class="form-label">Physical SIM Count</label>
+                            <input asp-for="PhysicalSimCount" type="number" class="form-control" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="tab-pane fade" id="tab-other">
+        <div class="tab-pane fade" id="tab-connectivity">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <div class="row g-3">
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input asp-for="HasAiFeatures" class="form-check-input" />
-                                <label asp-for="HasAiFeatures" class="form-check-label">AI Features</label>
-                            </div>
-                        </div>
-                        <div class="col-md-9">
-                            <label asp-for="AiFeaturesList" class="form-label">AI Features List</label>
-                            <textarea asp-for="AiFeaturesList" class="form-control" rows="2"></textarea>
+                        <div class="col-md-4">
+                            <label asp-for="WifiVersion" class="form-label">Wi-Fi</label>
+                            <select asp-for="WifiVersion" class="form-select">
+                                <option value="">-- Select --</option>
+                                @foreach (var val in Enum.GetValues<TelefonOzellikleri.Models.Enums.WifiVersion>())
+                                {
+                                    var label = val switch
+                                    {
+                                        TelefonOzellikleri.Models.Enums.WifiVersion.WiFi4 => "Wi-Fi 4",
+                                        TelefonOzellikleri.Models.Enums.WifiVersion.WiFi5 => "Wi-Fi 5",
+                                        TelefonOzellikleri.Models.Enums.WifiVersion.WiFi6 => "Wi-Fi 6",
+                                        TelefonOzellikleri.Models.Enums.WifiVersion.WiFi6E => "Wi-Fi 6E",
+                                        TelefonOzellikleri.Models.Enums.WifiVersion.WiFi7 => "Wi-Fi 7",
+                                        _ => val.ToString()
+                                    };
+                                    <option value="@val">@label</option>
+                                }
+                            </select>
                         </div>
                         <div class="col-md-4">
-                            <label asp-for="SpeakerType" class="form-label">Speaker Type</label>
-                            <input asp-for="SpeakerType" class="form-control" />
+                            <label asp-for="BluetoothVer" class="form-label">Bluetooth</label>
+                            <input asp-for="BluetoothVer" class="form-control" />
                         </div>
                         <div class="col-md-4">
                             <div class="form-check mt-4">
+                                <input asp-for="Nfc" class="form-check-input" />
+                                <label asp-for="Nfc" class="form-check-label">NFC</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="UsbType" class="form-label">USB Type</label>
+                            <input asp-for="UsbType" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="UsbVersion" class="form-label">USB Version</label>
+                            <input asp-for="UsbVersion" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check mt-4">
+                                <input asp-for="IrBlaster" class="form-check-input" />
+                                <label asp-for="IrBlaster" class="form-check-label">IR Blaster</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input asp-for="Gps" class="form-check-input" />
+                                <label asp-for="Gps" class="form-check-label">GPS</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input asp-for="HasUwb" class="form-check-input" />
+                                <label asp-for="HasUwb" class="form-check-label">UWB</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input asp-for="HasSatelliteSos" class="form-check-input" />
+                                <label asp-for="HasSatelliteSos" class="form-check-label">Satellite SOS</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
                                 <input asp-for="HeadphoneJack35mm" class="form-check-input" />
                                 <label asp-for="HeadphoneJack35mm" class="form-check-label">3.5mm Jack</label>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-check mt-4">
-                                <input asp-for="EsimSupport" class="form-check-input" />
-                                <label asp-for="EsimSupport" class="form-check-label">eSIM Support</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label asp-for="PhysicalSimCount" class="form-label">Physical SIM Count</label>
-                            <input asp-for="PhysicalSimCount" type="number" class="form-control" />
-                        </div>
-                        <div class="col-md-8">
-                            <label asp-for="SensorsList" class="form-label">Sensors</label>
-                            <textarea asp-for="SensorsList" class="form-control" rows="2"></textarea>
-                        </div>
-                        <div class="col-md-12">
-                            <label asp-for="BoxContents" class="form-label">Box Contents</label>
-                            <textarea asp-for="BoxContents" class="form-control" rows="2"></textarea>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="form-label">Colors</label>
-                            <input type="text" name="ColorsRaw" class="form-control" placeholder="Comma separated (e.g. Black, White, Blue)" value="@(Model.Colors != null ? string.Join(", ", Model.Colors) : "")" />
-                            <small class="text-muted">Enter colors separated by commas</small>
+                            <label asp-for="SpeakerType" class="form-label">Speaker Type</label>
+                            <input asp-for="SpeakerType" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -465,11 +602,47 @@
     </div>
 </form>
 
+@section Scripts {
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var fileInput = document.getElementById('mainImageFile');
+    if (fileInput) {
+        fileInput.addEventListener('change', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var file = this.files[0];
+            if (!file) return;
+            if (file.size > 2 * 1024 * 1024) {
+                document.getElementById('uploadStatus').textContent = 'File size must be less than 2 MB.';
+                return;
+            }
+            var formData = new FormData();
+            formData.append('file', file);
+            document.getElementById('uploadStatus').textContent = 'Uploading...';
+            fetch('/derin/upload/image', { method: 'POST', body: formData })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (data.url) {
+                        document.getElementById('mainImageUrl').value = data.url;
+                        document.getElementById('uploadStatus').textContent = 'Upload successful.';
+                    } else {
+                        document.getElementById('uploadStatus').textContent = data.error || 'Upload failed.';
+                    }
+                })
+                .catch(function () {
+                    document.getElementById('uploadStatus').textContent = 'Upload failed.';
+                });
+        });
+    }
+});
+</script>
+}
+
 <style>
     .nav-tabs .nav-link {
         color: #555;
         font-weight: 500;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 
     .nav-tabs .nav-link.active {

@@ -156,6 +156,7 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.RefreshRate = model.RefreshRate;
             phone.PixelDensity = model.PixelDensity;
             phone.ScreenBodyRatio = model.ScreenBodyRatio;
+            phone.ScreenAspectRatio = model.ScreenAspectRatio;
             phone.ScreenBrightnessNits = model.ScreenBrightnessNits;
 
             phone.Cam1Exists = model.Cam1Exists;
@@ -163,24 +164,32 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.Cam1Aperture = model.Cam1Aperture;
             phone.Cam1Focal = model.Cam1Focal;
             phone.Cam1Features = model.Cam1Features;
+            phone.Cam1SensorSize = model.Cam1SensorSize;
+            phone.Cam1PixelSize = model.Cam1PixelSize;
             phone.Cam2Exists = model.Cam2Exists;
             phone.Cam2Type = model.Cam2Type;
             phone.Cam2Res = model.Cam2Res;
             phone.Cam2Aperture = model.Cam2Aperture;
             phone.Cam2Focal = model.Cam2Focal;
             phone.Cam2Features = model.Cam2Features;
+            phone.Cam2SensorSize = model.Cam2SensorSize;
+            phone.Cam2PixelSize = model.Cam2PixelSize;
             phone.Cam3Exists = model.Cam3Exists;
             phone.Cam3Type = model.Cam3Type;
             phone.Cam3Res = model.Cam3Res;
             phone.Cam3Aperture = model.Cam3Aperture;
             phone.Cam3Focal = model.Cam3Focal;
             phone.Cam3Features = model.Cam3Features;
+            phone.Cam3SensorSize = model.Cam3SensorSize;
+            phone.Cam3PixelSize = model.Cam3PixelSize;
             phone.Cam4Exists = model.Cam4Exists;
             phone.Cam4Type = model.Cam4Type;
             phone.Cam4Res = model.Cam4Res;
             phone.Cam4Aperture = model.Cam4Aperture;
             phone.Cam4Focal = model.Cam4Focal;
             phone.Cam4Features = model.Cam4Features;
+            phone.Cam4SensorSize = model.Cam4SensorSize;
+            phone.Cam4PixelSize = model.Cam4PixelSize;
             phone.RearVideoRes = model.RearVideoRes;
 
             phone.FrontExists = model.FrontExists;
@@ -188,16 +197,30 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.FrontCamAperture = model.FrontCamAperture;
             phone.FrontCamFocal = model.FrontCamFocal;
             phone.FrontCamFeatures = model.FrontCamFeatures;
+            phone.FrontCamSensorSize = model.FrontCamSensorSize;
+            phone.FrontCamPixelSize = model.FrontCamPixelSize;
             phone.FrontVideoRes = model.FrontVideoRes;
             phone.SecondFrontExists = model.SecondFrontExists;
             phone.SecondFrontRes = model.SecondFrontRes;
+            phone.SecondFrontSensorSize = model.SecondFrontSensorSize;
+            phone.SecondFrontPixelSize = model.SecondFrontPixelSize;
+
+            phone.HasFaceRecognition = model.HasFaceRecognition;
+            phone.HasFingerprint = model.HasFingerprint;
+            phone.FingerprintType = model.FingerprintType;
 
             phone.Chipset = model.Chipset;
             phone.Cpu = model.Cpu;
             phone.Gpu = model.Gpu;
             phone.AntutuScore = model.AntutuScore;
             phone.GeekbenchScore = model.GeekbenchScore;
+            phone.StorageType = model.StorageType;
+            phone.SensorsList = model.SensorsList;
 
+            phone.HasAiFeatures = model.HasAiFeatures;
+            phone.AiFeaturesList = model.AiFeaturesList;
+
+            phone.BatteryType = model.BatteryType;
             phone.BatteryCapacity = model.BatteryCapacity;
             phone.ChargingSpeed = model.ChargingSpeed;
             phone.WirelessCharging = model.WirelessCharging;
@@ -205,25 +228,28 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.ReverseWireless = model.ReverseWireless;
             phone.ReverseSpeed = model.ReverseSpeed;
 
-            phone.HasAiFeatures = model.HasAiFeatures;
-            phone.AiFeaturesList = model.AiFeaturesList;
-
-            phone.SpeakerType = model.SpeakerType;
-            phone.HeadphoneJack35mm = model.HeadphoneJack35mm;
-            phone.Nfc = model.Nfc;
-            phone.BluetoothVer = model.BluetoothVer;
-            phone.IrBlaster = model.IrBlaster;
-            phone.Gps = model.Gps;
-            phone.SensorsList = model.SensorsList;
-            phone.UsbType = model.UsbType;
-            phone.UsbVersion = model.UsbVersion;
-
+            phone.Support4g = model.Support4g;
+            phone.Support45g = model.Support45g;
+            phone.Support5g = model.Support5g;
             phone.EsimSupport = model.EsimSupport;
             phone.PhysicalSimCount = model.PhysicalSimCount;
+
+            phone.WifiVersion = model.WifiVersion;
+            phone.Nfc = model.Nfc;
+            phone.BluetoothVer = model.BluetoothVer;
+            phone.UsbType = model.UsbType;
+            phone.UsbVersion = model.UsbVersion;
+            phone.IrBlaster = model.IrBlaster;
+            phone.Gps = model.Gps;
+            phone.HasUwb = model.HasUwb;
+            phone.HasSatelliteSos = model.HasSatelliteSos;
+            phone.HeadphoneJack35mm = model.HeadphoneJack35mm;
+            phone.SpeakerType = model.SpeakerType;
+
             phone.BoxContents = model.BoxContents;
+            phone.SarHead = model.SarHead;
+            phone.SarBody = model.SarBody;
             ApplyListFields(phone);
-            phone.Support5g = model.Support5g;
-            phone.Support4g = model.Support4g;
 
             await _context.SaveChangesAsync();
             _logger.LogInformation("Phone updated: {Id} - {ModelName}", phone.Id, phone.ModelName);
@@ -236,6 +262,8 @@ namespace TelefonOzellikleri.Controllers.Admin
         {
             phone.Colors = ParseCommaSeparated(Request.Form["ColorsRaw"]);
             phone.ScreenExtraFeatures = ParseCommaSeparated(Request.Form["ScreenExtraFeaturesRaw"]);
+            phone.RamOptions = ParseCommaSeparated(Request.Form["RamOptionsRaw"]);
+            phone.StorageOptions = ParseCommaSeparated(Request.Form["StorageOptionsRaw"]);
         }
 
         private static List<string>? ParseCommaSeparated(string? raw)

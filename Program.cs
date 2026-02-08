@@ -49,6 +49,9 @@ builder.Services.AddRateLimiter(options =>
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("DefaultConnection"));
 dataSourceBuilder.MapEnum<OsType>("os_type_enum");
 dataSourceBuilder.MapEnum<PhoneStatus>("phone_status_enum");
+dataSourceBuilder.MapEnum<WifiVersion>("wifi_version_enum");
+dataSourceBuilder.MapEnum<BatteryType>("battery_type_enum");
+dataSourceBuilder.EnableUnmappedTypes();
 var dataSource = dataSourceBuilder.Build();
 
 builder.Services.AddDbContext<TelefonOzellikleriDbContext>(options =>

@@ -275,7 +275,7 @@ public partial class TelefonOzellikleriDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("os_version");
             entity.Property(e => e.OsType).HasColumnName("os_type");
-            entity.Property(e => e.PhoneStatus).HasColumnName("phone_status");
+            entity.Property(e => e.PhoneStatus).HasColumnName("status");
             entity.Property(e => e.PhysicalSimCount)
                 .HasDefaultValue((short)1)
                 .HasColumnName("physical_sim_count");

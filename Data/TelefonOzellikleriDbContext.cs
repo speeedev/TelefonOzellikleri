@@ -26,9 +26,6 @@ public partial class TelefonOzellikleriDbContext : DbContext
 
     public virtual DbSet<Smartphone> Smartphones { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Host=localhost;Database=telefonozellikleri;Username=postgres;Password=derindevlet");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -165,7 +162,7 @@ public partial class TelefonOzellikleriDbContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("back_material");
             entity.Property(e => e.BatteryCapacity).HasColumnName("battery_capacity");
-            entity.Property(e => e.BatteryType).HasColumnName("battery_type");
+            entity.Property(e => e.BatteryType).HasColumnName("battery_type").HasColumnType("battery_type_enum");
             entity.Property(e => e.BluetoothVer)
                 .HasMaxLength(50)
                 .HasColumnName("bluetooth_ver");
@@ -324,8 +321,8 @@ public partial class TelefonOzellikleriDbContext : DbContext
             entity.Property(e => e.OsVersion)
                 .HasMaxLength(50)
                 .HasColumnName("os_version");
-            entity.Property(e => e.OsType).HasColumnName("os_type");
-            entity.Property(e => e.PhoneStatus).HasColumnName("status");
+            entity.Property(e => e.OsType).HasColumnName("os_type").HasColumnType("os_type_enum");
+            entity.Property(e => e.PhoneStatus).HasColumnName("status").HasColumnType("phone_status_enum");
             entity.Property(e => e.PhysicalSimCount)
                 .HasDefaultValue((short)1)
                 .HasColumnName("physical_sim_count");
@@ -376,7 +373,7 @@ public partial class TelefonOzellikleriDbContext : DbContext
                 .HasColumnName("support_4g");
             entity.Property(e => e.Support45g).HasColumnName("support_4_5g");
             entity.Property(e => e.Support5g).HasColumnName("support_5g");
-            entity.Property(e => e.WifiVersion).HasColumnName("wifi_version");
+            entity.Property(e => e.WifiVersion).HasColumnName("wifi_version").HasColumnType("wifi_version_enum");
             entity.Property(e => e.Thickness).HasColumnName("thickness");
             entity.Property(e => e.UpdateGuarantee)
                 .HasMaxLength(50)

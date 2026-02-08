@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using TelefonOzellikleri.Data;
+using Npgsql;
 using TelefonOzellikleri.Middleware;
+using TelefonOzellikleri.Models.Enums;
 using TelefonOzellikleri.Routing;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,8 +46,13 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("DefaultConnection"));
+dataSourceBuilder.MapEnum<OsType>("os_type_enum");
+dataSourceBuilder.MapEnum<PhoneStatus>("phone_status_enum");
+var dataSource = dataSourceBuilder.Build();
+
 builder.Services.AddDbContext<TelefonOzellikleriDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(dataSource));
 
 var app = builder.Build();
 

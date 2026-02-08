@@ -27,7 +27,6 @@ public partial class TelefonOzellikleriDbContext : DbContext
     public virtual DbSet<Smartphone> Smartphones { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Host=localhost;Database=telefonozellikleri;Username=postgres;Password=derindevlet");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -275,6 +274,8 @@ public partial class TelefonOzellikleriDbContext : DbContext
             entity.Property(e => e.OsVersion)
                 .HasMaxLength(50)
                 .HasColumnName("os_version");
+            entity.Property(e => e.OsType).HasColumnName("os_type");
+            entity.Property(e => e.PhoneStatus).HasColumnName("phone_status");
             entity.Property(e => e.PhysicalSimCount)
                 .HasDefaultValue((short)1)
                 .HasColumnName("physical_sim_count");

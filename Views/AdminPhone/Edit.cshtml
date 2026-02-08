@@ -65,11 +65,31 @@
                             <label asp-for="MainImageUrl" class="form-label">Main Image URL</label>
                             <input asp-for="MainImageUrl" class="form-control" />
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <label asp-for="PhoneStatus" class="form-label">Status</label>
+                            <select asp-for="PhoneStatus" class="form-select">
+                                <option value="">-- Select --</option>
+                                @foreach (var val in Enum.GetValues<TelefonOzellikleri.Models.Enums.PhoneStatus>())
+                                {
+                                    <option value="@val">@val</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
                             <label asp-for="ReleaseDate" class="form-label">Release Date</label>
                             <input asp-for="ReleaseDate" type="date" class="form-control" />
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <label asp-for="OsType" class="form-label">OS Type</label>
+                            <select asp-for="OsType" class="form-select">
+                                <option value="">-- Select --</option>
+                                @foreach (var val in Enum.GetValues<TelefonOzellikleri.Models.Enums.OsType>())
+                                {
+                                    <option value="@val">@val</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
                             <label asp-for="OsVersion" class="form-label">OS Version</label>
                             <input asp-for="OsVersion" class="form-control" />
                         </div>

@@ -183,3 +183,5 @@
 /Users/emirbolat/Yazilim/Back-End/TelefonOzellikleri/obj/Debug/net10.0/TelefonOzellikleri.genruntimeconfig.cache
 /Users/emirbolat/Yazilim/Back-End/TelefonOzellikleri/obj/Debug/net10.0/ref/TelefonOzellikleri.dll
 /Users/emirbolat/Yazilim/Back-End/TelefonOzellikleri/bin/Debug/net10.0/BCrypt.Net-Next.dll
+/Users/emirbolat/Yazilim/Back-End/TelefonOzellikleri/bin/Debug/net10.0/SixLabors.ImageSharp.dll
+/Users/emirbolat/Yazilim/Back-End/TelefonOzellikleri/obj/Debug/net10.0/TelefonOzellikleri.sourcelink.json

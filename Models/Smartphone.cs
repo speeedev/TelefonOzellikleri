@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TelefonOzellikleri.Models.Enums;
 
 namespace TelefonOzellikleri.Models;
 
@@ -18,6 +19,10 @@ public partial class Smartphone
     public string? MainImageUrl { get; set; }
 
     public DateOnly? ReleaseDate { get; set; }
+
+    public PhoneStatus? PhoneStatus { get; set; }
+
+    public OsType? OsType { get; set; }
 
     public string? OsVersion { get; set; }
 

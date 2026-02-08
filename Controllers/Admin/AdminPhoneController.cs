@@ -136,6 +136,8 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.Slug = model.Slug;
             phone.MainImageUrl = model.MainImageUrl;
             phone.ReleaseDate = model.ReleaseDate;
+            phone.PhoneStatus = model.PhoneStatus;
+            phone.OsType = model.OsType;
             phone.OsVersion = model.OsVersion;
             phone.UpdateGuarantee = model.UpdateGuarantee;
 

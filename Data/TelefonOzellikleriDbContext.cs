@@ -33,7 +33,9 @@ public partial class TelefonOzellikleriDbContext : DbContext
     {
         modelBuilder
             .HasPostgresEnum("os_type_enum", new[] { "Android", "iOS", "HarmonyOS" })
-            .HasPostgresEnum("phone_status_enum", new[] { "Released", "Unannounced" });
+            .HasPostgresEnum("phone_status_enum", new[] { "Released", "Unannounced" })
+            .HasPostgresEnum("wifi_version_enum", new[] { "WiFi4", "WiFi5", "WiFi6", "WiFi6E", "WiFi7" })
+            .HasPostgresEnum("battery_type_enum", new[] { "LiIon", "LiPo" });
 
         modelBuilder.Entity<Brand>(entity =>
         {
@@ -163,6 +165,7 @@ public partial class TelefonOzellikleriDbContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("back_material");
             entity.Property(e => e.BatteryCapacity).HasColumnName("battery_capacity");
+            entity.Property(e => e.BatteryType).HasColumnName("battery_type");
             entity.Property(e => e.BluetoothVer)
                 .HasMaxLength(50)
                 .HasColumnName("bluetooth_ver");
@@ -175,6 +178,12 @@ public partial class TelefonOzellikleriDbContext : DbContext
                 .HasDefaultValue(true)
                 .HasColumnName("cam1_exists");
             entity.Property(e => e.Cam1Features).HasColumnName("cam1_features");
+            entity.Property(e => e.Cam1SensorSize)
+                .HasMaxLength(20)
+                .HasColumnName("cam1_sensor_size");
+            entity.Property(e => e.Cam1PixelSize)
+                .HasMaxLength(20)
+                .HasColumnName("cam1_pixel_size");
             entity.Property(e => e.Cam1Focal)
                 .HasMaxLength(20)
                 .HasColumnName("cam1_focal");
@@ -186,6 +195,12 @@ public partial class TelefonOzellikleriDbContext : DbContext
                 .HasColumnName("cam2_aperture");
             entity.Property(e => e.Cam2Exists).HasColumnName("cam2_exists");
             entity.Property(e => e.Cam2Features).HasColumnName("cam2_features");
+            entity.Property(e => e.Cam2SensorSize)
+                .HasMaxLength(20)
+                .HasColumnName("cam2_sensor_size");
+            entity.Property(e => e.Cam2PixelSize)
+                .HasMaxLength(20)
+                .HasColumnName("cam2_pixel_size");
             entity.Property(e => e.Cam2Focal)
                 .HasMaxLength(20)
                 .HasColumnName("cam2_focal");
@@ -200,6 +215,12 @@ public partial class TelefonOzellikleriDbContext : DbContext
                 .HasColumnName("cam3_aperture");
             entity.Property(e => e.Cam3Exists).HasColumnName("cam3_exists");
             entity.Property(e => e.Cam3Features).HasColumnName("cam3_features");
+            entity.Property(e => e.Cam3SensorSize)
+                .HasMaxLength(20)
+                .HasColumnName("cam3_sensor_size");
+            entity.Property(e => e.Cam3PixelSize)
+                .HasMaxLength(20)
+                .HasColumnName("cam3_pixel_size");
             entity.Property(e => e.Cam3Focal)
                 .HasMaxLength(20)
                 .HasColumnName("cam3_focal");
@@ -214,6 +235,12 @@ public partial class TelefonOzellikleriDbContext : DbContext
                 .HasColumnName("cam4_aperture");
             entity.Property(e => e.Cam4Exists).HasColumnName("cam4_exists");
             entity.Property(e => e.Cam4Features).HasColumnName("cam4_features");
+            entity.Property(e => e.Cam4SensorSize)
+                .HasMaxLength(20)
+                .HasColumnName("cam4_sensor_size");
+            entity.Property(e => e.Cam4PixelSize)
+                .HasMaxLength(20)
+                .HasColumnName("cam4_pixel_size");
             entity.Property(e => e.Cam4Focal)
                 .HasMaxLength(20)
                 .HasColumnName("cam4_focal");
@@ -235,6 +262,21 @@ public partial class TelefonOzellikleriDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("dust_water_res");
             entity.Property(e => e.EsimSupport).HasColumnName("esim_support");
+            entity.Property(e => e.HasSatelliteSos).HasColumnName("has_satellite_sos");
+            entity.Property(e => e.HasUwb).HasColumnName("has_uwb");
+            entity.Property(e => e.SarHead).HasColumnName("sar_head");
+            entity.Property(e => e.SarBody).HasColumnName("sar_body");
+            entity.Property(e => e.StorageType)
+                .HasMaxLength(50)
+                .HasColumnName("storage_type");
+            entity.Property(e => e.ScreenAspectRatio)
+                .HasMaxLength(20)
+                .HasColumnName("screen_aspect_ratio");
+            entity.Property(e => e.HasFaceRecognition).HasColumnName("has_face_recognition");
+            entity.Property(e => e.HasFingerprint).HasColumnName("has_fingerprint");
+            entity.Property(e => e.FingerprintType)
+                .HasMaxLength(50)
+                .HasColumnName("fingerprint_type");
             entity.Property(e => e.FrameMaterial)
                 .HasMaxLength(100)
                 .HasColumnName("frame_material");
@@ -242,6 +284,12 @@ public partial class TelefonOzellikleriDbContext : DbContext
                 .HasMaxLength(20)
                 .HasColumnName("front_cam_aperture");
             entity.Property(e => e.FrontCamFeatures).HasColumnName("front_cam_features");
+            entity.Property(e => e.FrontCamSensorSize)
+                .HasMaxLength(20)
+                .HasColumnName("front_cam_sensor_size");
+            entity.Property(e => e.FrontCamPixelSize)
+                .HasMaxLength(20)
+                .HasColumnName("front_cam_pixel_size");
             entity.Property(e => e.FrontCamFocal)
                 .HasMaxLength(20)
                 .HasColumnName("front_cam_focal");
@@ -257,6 +305,8 @@ public partial class TelefonOzellikleriDbContext : DbContext
             entity.Property(e => e.GeekbenchScore)
                 .HasMaxLength(100)
                 .HasColumnName("geekbench_score");
+            entity.Property(e => e.RamOptions).HasColumnName("ram_options");
+            entity.Property(e => e.StorageOptions).HasColumnName("storage_options");
             entity.Property(e => e.Gps)
                 .HasDefaultValue(true)
                 .HasColumnName("gps");
@@ -304,6 +354,12 @@ public partial class TelefonOzellikleriDbContext : DbContext
             entity.Property(e => e.SecondFrontRes)
                 .HasMaxLength(50)
                 .HasColumnName("second_front_res");
+            entity.Property(e => e.SecondFrontSensorSize)
+                .HasMaxLength(20)
+                .HasColumnName("second_front_sensor_size");
+            entity.Property(e => e.SecondFrontPixelSize)
+                .HasMaxLength(20)
+                .HasColumnName("second_front_pixel_size");
             entity.Property(e => e.SensorsList).HasColumnName("sensors_list");
             entity.Property(e => e.SeriesId).HasColumnName("series_id");
             entity.Property(e => e.Slug)
@@ -318,7 +374,9 @@ public partial class TelefonOzellikleriDbContext : DbContext
             entity.Property(e => e.Support4g)
                 .HasDefaultValue(true)
                 .HasColumnName("support_4g");
+            entity.Property(e => e.Support45g).HasColumnName("support_4_5g");
             entity.Property(e => e.Support5g).HasColumnName("support_5g");
+            entity.Property(e => e.WifiVersion).HasColumnName("wifi_version");
             entity.Property(e => e.Thickness).HasColumnName("thickness");
             entity.Property(e => e.UpdateGuarantee)
                 .HasMaxLength(50)

@@ -1,0 +1,121 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var series = ViewData["Series"] as List<TelefonOzellikleri.Models.Series> ?? new();
+    var brands = ViewData["Brands"] as List<TelefonOzellikleri.Models.Brand> ?? new();
+    var search = ViewData["Search"]?.ToString() ?? "";
+    var selectedBrandId = ViewData["BrandId"] as int?;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div></div>
+    <a href="/derin/series/create" class="btn btn-primary">+ New Series</a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" action="/derin/series" class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label fw-medium">Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Search by series name or slug..." value="@search" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-medium">Brand</label>
+                <select name="brandId" class="form-select">
+                    <option value="">All Brands</option>
+                    @foreach (var b in brands)
+                    {
+                        <option value="@b.Id" selected="@(selectedBrandId == b.Id)">@b.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1">Search</button>
+                <a href="/derin/series" class="btn btn-outline-secondary">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Series Name</th>
+                        <th>Slug</th>
+                        <th>Brand</th>
+                        <th style="width: 100px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in series)
+                    {
+                        <tr>
+                            <td class="text-muted">@item.Id</td>
+                            <td>
+                                <strong>@item.SeriesName</strong>
+                            </td>
+                            <td>
+                                <code class="bg-light p-1 rounded" style="font-size: 0.85rem;">@item.Slug</code>
+                            </td>
+                            <td>
+                                @if (item.Brand != null)
+                                {
+                                    <span class="badge bg-secondary">@item.Brand.Name</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="/derin/series/edit/@item.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (!series.Any())
+        {
+            <div class="text-center py-5 text-muted">
+                <p>No series found. <a href="/derin/series/create">Create one</a>.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .table th {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #666;
+        font-weight: 600;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table td {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.75rem;
+    }
+</style>

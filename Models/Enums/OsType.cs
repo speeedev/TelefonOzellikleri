@@ -4,5 +4,5 @@ public enum OsType
 {
     Android,
     iOS,
-    HarmonyOS
+    HarmonyOS,
 }

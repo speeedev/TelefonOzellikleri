@@ -1,0 +1,49 @@
+@model TelefonOzellikleri.Models.Series
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var brandList = ViewData["BrandList"] as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+    var isNew = ViewData["IsNew"] as bool? ?? false;
+}
+
+@if (ViewData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @ViewData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <form method="post" action="@(isNew ? "/derin/series/create" : $"/derin/series/edit/{Model.Id}")">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="BrandId" class="form-label">Brand <span class="text-danger">*</span></label>
+                    <select asp-for="BrandId" asp-items="brandList" class="form-select" required></select>
+                    <small class="text-danger">@Html.ValidationMessageFor(m => m.BrandId)</small>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="SeriesName" class="form-label">Series Name <span class="text-danger">*</span></label>
+                    <input asp-for="SeriesName" class="form-control" required />
+                    <small class="text-danger">@Html.ValidationMessageFor(m => m.SeriesName)</small>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Slug" class="form-label">Slug <span class="text-danger">*</span></label>
+                    <input asp-for="Slug" class="form-control" required />
+                    <small class="text-muted">URL-friendly identifier (e.g., iphone-14, galaxy-s23)</small>
+                    <small class="text-danger">@Html.ValidationMessageFor(m => m.Slug)</small>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a href="/derin/series" class="btn btn-outline-secondary">← Back</a>
+                <button type="submit" class="btn btn-primary px-4">@(isNew ? "Create Series" : "Save Changes")</button>
+            </div>
+        </form>
+    </div>
+</div>

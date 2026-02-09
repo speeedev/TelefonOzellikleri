@@ -12,4 +12,8 @@ public partial class Brand
     public string Slug { get; set; } = null!;
 
     public string? LogoUrl { get; set; }
+
+    public virtual ICollection<Series> Series { get; set; } = new List<Series>();
+
+    public virtual ICollection<Smartphone> Smartphones { get; set; } = new List<Smartphone>();
 }

@@ -51,6 +51,52 @@
             font-weight: 600;
         }
 
+        .admin-sidebar .nav-item-group {
+            position: relative;
+        }
+
+        .admin-sidebar .nav-submenu {
+            display: none;
+            background: #1a1a2e;
+            position: absolute;
+            top: 0;
+            left: 250px;
+            min-width: 140px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            z-index: 1000;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .admin-sidebar .nav-item-group:hover .nav-submenu {
+            display: block;
+        }
+
+        .admin-sidebar .nav-submenu .nav-link {
+            padding: 0.6rem 1.25rem;
+            font-size: 0.85rem;
+            display: block;
+            white-space: nowrap;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .admin-sidebar .nav-submenu .nav-link:last-child {
+            border-bottom: none;
+        }
+
+        .admin-sidebar .nav-link.has-submenu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .admin-sidebar .nav-link.has-submenu .chevron {
+            transition: transform 0.2s;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+
         .admin-content {
             margin-left: 250px;
             padding: 1.5rem 2rem;
@@ -93,12 +139,19 @@
         <a href="/derin" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminDashboard" ? "active" : "")">Dashboard</a>
 
         <div class="nav-section">Content</div>
-        <a href="/derin/phones" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminPhone" ? "active" : "")">Phones</a>
+        <div class="nav-item-group">
+            <a href="/derin/phones" class="nav-link has-submenu @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminPhone" ? "active" : "")">
+                Phones <span class="chevron">▶</span>
+            </a>
+            <div class="nav-submenu">
+                <a href="/derin/series" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminSeries" ? "active" : "")">Series</a>
+            </div>
+        </div>
         <a href="/derin/brands" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminBrand" ? "active" : "")">Brands</a>
         <a href="/derin/pages" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminPage" ? "active" : "")">Pages</a>
 
         <div class="nav-section">System</div>
-        <a href="/derin/settings" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminSettings" ? "active" : "")">Site Settings</a>
+        <a href="/derin/settings" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminSettings" ? "active" : "")">Settings</a>
         <a href="/derin/logout" class="nav-link" style="color: rgba(255,100,100,0.8);">Logout</a>
     </nav>
 
@@ -113,8 +166,9 @@
                     <li class="nav-item"><a class="nav-link" href="/derin">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="/derin/phones">Phones</a></li>
                     <li class="nav-item"><a class="nav-link" href="/derin/brands">Brands</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/derin/series">Series</a></li>
                     <li class="nav-item"><a class="nav-link" href="/derin/pages">Pages</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/derin/settings">Site Settings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/derin/settings">Settings</a></li>
                     <li class="nav-item"><a class="nav-link text-danger" href="/derin/logout">Logout</a></li>
                 </ul>
             </div>

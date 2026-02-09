@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using TelefonOzellikleri.Data;
-using Npgsql;
 using TelefonOzellikleri.Middleware;
 using TelefonOzellikleri.Models.Enums;
 using TelefonOzellikleri.Routing;
@@ -40,22 +39,16 @@ builder.Services.AddRateLimiter(options =>
     options.AddFixedWindowLimiter(policyName: "login", limiterOptions =>
     {
         limiterOptions.PermitLimit = 5;
-        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.Window = TimeSpan.FromHours(1);
         limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
         limiterOptions.QueueLimit = 0;
     });
 });
 
-var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("DefaultConnection"));
-dataSourceBuilder.MapEnum<OsType>("os_type_enum");
-dataSourceBuilder.MapEnum<PhoneStatus>("phone_status_enum");
-dataSourceBuilder.MapEnum<WifiVersion>("wifi_version_enum");
-dataSourceBuilder.MapEnum<BatteryType>("battery_type_enum");
-dataSourceBuilder.EnableUnmappedTypes();
-var dataSource = dataSourceBuilder.Build();
-
 builder.Services.AddDbContext<TelefonOzellikleriDbContext>(options =>
-    options.UseNpgsql(dataSource));
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 32)))
+           .LogTo(Console.WriteLine, LogLevel.Information)
+           .EnableSensitiveDataLogging());
 
 var app = builder.Build();
 

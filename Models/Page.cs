@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace TelefonOzellikleri.Models;
@@ -9,7 +9,7 @@ public partial class Page
 
     public string Slug { get; set; } = null!;
 
-    public string PageTitle { get; set; } = null!;
+    public string? PageTitle { get; set; }
 
     public string? PageDescription { get; set; }
 

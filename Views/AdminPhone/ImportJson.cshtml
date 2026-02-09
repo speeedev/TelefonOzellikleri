@@ -1,0 +1,62 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (ViewData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @ViewData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title mb-4">Import Phone from JSON</h5>
+        
+        <form method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            
+            <div class="mb-3">
+                <label for="jsonFile" class="form-label">Select JSON File</label>
+                <input type="file" class="form-control" id="jsonFile" name="jsonFile" accept=".json" required />
+                <small class="text-muted">Upload a JSON file exported from a phone edit page</small>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>JSON Format Example:</strong>
+                <pre style="background: #f8f9fa; padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 0.85rem;"><code>{
+  "general": {
+    "brandId": 1,
+    "name": "iPhone 15",
+    "slug": "iphone-15",
+    "mainImageUrl": "https://...",
+    "releaseDate": "2023-09-22"
+  },
+  "display": {
+    "size": 6.1,
+    "technology": "OLED",
+    "resolution": "2556x1179"
+  },
+  "design": {
+    "height": 147.8,
+    "width": 71.6,
+    "thickness": 7.8,
+    "weight": 171.0
+  }
+}</code></pre>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="/derin/phones" class="btn btn-outline-secondary">← Back</a>
+                <button type="submit" class="btn btn-primary px-4">Import Phone</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    pre {
+        max-height: 300px;
+    }
+</style>

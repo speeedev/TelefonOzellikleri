@@ -14,7 +14,7 @@
     </div>
 }
 
-<form method="post" action="@(isNew ? "/derin/phones/create" : $"/derin/phones/edit/{Model.Id}")">
+<form method="post" action="@(isNew ? "/derin/phones/create" : $"/derin/phones/edit/{Model.Id}")" id="phoneForm">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
 
@@ -37,6 +37,7 @@
         <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-battery">Battery</a></li>
         <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-network">Network</a></li>
         <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-connectivity">Connectivity</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-other">Other</a></li>
     </ul>
 
     <div class="tab-content">
@@ -44,6 +45,13 @@
         <div class="tab-pane fade show active" id="tab-general">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
+                    @if (isNew)
+                    {
+                        <div class="alert alert-info mb-3">
+                            <strong>Tip:</strong> You can paste JSON data from an exported phone using the button below.
+                            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#jsonPasteModal">📋 Paste JSON Data</button>
+                        </div>
+                    }
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label asp-for="BrandId" class="form-label">Brand</label>
@@ -67,32 +75,25 @@
                             <label asp-for="MainImageUrl" class="form-label">Main Image URL</label>
                             <div class="input-group">
                                 <input asp-for="MainImageUrl" class="form-control" id="mainImageUrl" />
-                                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('mainImageFile').click()">Upload</button>
+                                <button type="button" class="btn btn-outline-secondary"
+                                    onclick="document.getElementById('mainImageFile').click()">Upload</button>
                             </div>
                             <input type="file" id="mainImageFile" class="d-none" accept="image/*" />
                             <small id="uploadStatus" class="text-muted"></small>
                         </div>
                         <div class="col-md-3">
-                            <label asp-for="PhoneStatus" class="form-label">Status</label>
-                            <select asp-for="PhoneStatus" class="form-select">
+                            <label asp-for="Status" class="form-label">Status</label>
+                            <select asp-for="Status" class="form-select">
                                 <option value="">-- Select --</option>
                                 @foreach (var val in Enum.GetValues<TelefonOzellikleri.Models.Enums.PhoneStatus>())
                                 {
-                                    <option value="@val">@val</option>
+                                    <option value="@val.ToString()">@val</option>
                                 }
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <label asp-for="ReleaseDate" class="form-label">Release Date</label>
                             <input asp-for="ReleaseDate" type="date" class="form-control" />
-                        </div>
-                        <div class="col-md-3">
-                            <label asp-for="SarHead" class="form-label">SAR Head (W/kg)</label>
-                            <input asp-for="SarHead" type="number" step="0.01" class="form-control" />
-                        </div>
-                        <div class="col-md-3">
-                            <label asp-for="SarBody" class="form-label">SAR Body (W/kg)</label>
-                            <input asp-for="SarBody" type="number" step="0.01" class="form-control" />
                         </div>
                         <div class="col-md-12">
                             <label asp-for="BoxContents" class="form-label">Box Contents</label>
@@ -141,7 +142,9 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Colors</label>
-                            <input type="text" name="ColorsRaw" class="form-control" placeholder="Comma separated (e.g. Black, White, Blue)" value="@(Model.Colors != null ? string.Join(", ", Model.Colors) : "")" />
+                            <input type="text" name="ColorsRaw" class="form-control"
+                                placeholder="Comma separated (e.g. Black, White, Blue)"
+                                value="@(Model.Colors != null ? string.Join(", ", Model.Colors) : "")" />
                             <small class="text-muted">Enter colors separated by commas</small>
                         </div>
                     </div>
@@ -187,7 +190,9 @@
                         </div>
                         <div class="col-md-12">
                             <label class="form-label">Extra Features</label>
-                            <input type="text" name="ScreenExtraFeaturesRaw" class="form-control" placeholder="Comma separated (e.g. HDR10+, Dolby Vision, Always-On)" value="@(Model.ScreenExtraFeatures != null ? string.Join(", ", Model.ScreenExtraFeatures) : "")" />
+                            <input type="text" name="ScreenExtraFeaturesRaw" class="form-control"
+                                placeholder="Comma separated (e.g. HDR10+, Dolby Vision, Always-On)"
+                                value="@(Model.ScreenExtraFeatures != null ? string.Join(", ", Model.ScreenExtraFeatures) : "")" />
                             <small class="text-muted">Enter features separated by commas</small>
                         </div>
                     </div>
@@ -202,71 +207,99 @@
                     <div class="row g-3 mb-4">
                         <div class="col-md-2">
                             <div class="form-check mt-4">
-                                <input asp-for="Cam1Exists" class="form-check-input" />
-                                <label asp-for="Cam1Exists" class="form-check-label">Exists</label>
+                                <input type="checkbox" id="Cam1Exists" name="Cam1Exists" class="form-check-input" value="true" @(Model.Cam1Exists == true ? "checked" : "") />
+                                <label for="Cam1Exists" class="form-check-label">Exists</label>
                             </div>
                         </div>
-                        <div class="col-md-2"><label asp-for="Cam1Res" class="form-label">Resolution</label><input asp-for="Cam1Res" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam1Aperture" class="form-label">Aperture</label><input asp-for="Cam1Aperture" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam1Focal" class="form-label">Focal</label><input asp-for="Cam1Focal" class="form-control" /></div>
-                        <div class="col-md-4"><label asp-for="Cam1Features" class="form-label">Features</label><input asp-for="Cam1Features" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam1Res" class="form-label">Resolution</label><input
+                                asp-for="Cam1Res" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam1Aperture" class="form-label">Aperture</label><input
+                                asp-for="Cam1Aperture" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam1Focal" class="form-label">Focal</label><input
+                                asp-for="Cam1Focal" class="form-control" /></div>
+                        <div class="col-md-4"><label asp-for="Cam1Features" class="form-label">Features</label><input
+                                asp-for="Cam1Features" class="form-control" /></div>
                         <div class="col-md-2 offset-md-2"></div>
-                        <div class="col-md-2"><label asp-for="Cam1SensorSize" class="form-label">Sensor Size</label><input asp-for="Cam1SensorSize" class="form-control" placeholder='e.g. 1/1.28"' /></div>
-                        <div class="col-md-2"><label asp-for="Cam1PixelSize" class="form-label">Pixel Size</label><input asp-for="Cam1PixelSize" class="form-control" placeholder="e.g. 1.22µm" /></div>
+                        <div class="col-md-2"><label asp-for="Cam1SensorSize" class="form-label">Sensor
+                                Size</label><input asp-for="Cam1SensorSize" class="form-control"
+                                placeholder='e.g. 1/1.28"' /></div>
+                        <div class="col-md-2"><label asp-for="Cam1PixelSize" class="form-label">Pixel Size</label><input
+                                asp-for="Cam1PixelSize" class="form-control" placeholder="e.g. 1.22µm" /></div>
                     </div>
 
                     <h6 class="fw-bold mb-3">2nd Camera</h6>
                     <div class="row g-3 mb-4">
                         <div class="col-md-2">
                             <div class="form-check mt-4">
-                                <input asp-for="Cam2Exists" class="form-check-input" />
-                                <label asp-for="Cam2Exists" class="form-check-label">Exists</label>
+                                <input type="checkbox" id="Cam2Exists" name="Cam2Exists" class="form-check-input" value="true" @(Model.Cam2Exists == true ? "checked" : "") />
+                                <label for="Cam2Exists" class="form-check-label">Exists</label>
                             </div>
                         </div>
-                        <div class="col-md-2"><label asp-for="Cam2Type" class="form-label">Type</label><input asp-for="Cam2Type" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam2Res" class="form-label">Resolution</label><input asp-for="Cam2Res" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam2Aperture" class="form-label">Aperture</label><input asp-for="Cam2Aperture" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam2Focal" class="form-label">Focal</label><input asp-for="Cam2Focal" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam2Features" class="form-label">Features</label><input asp-for="Cam2Features" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam2Type" class="form-label">Type</label><input
+                                asp-for="Cam2Type" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam2Res" class="form-label">Resolution</label><input
+                                asp-for="Cam2Res" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam2Aperture" class="form-label">Aperture</label><input
+                                asp-for="Cam2Aperture" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam2Focal" class="form-label">Focal</label><input
+                                asp-for="Cam2Focal" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam2Features" class="form-label">Features</label><input
+                                asp-for="Cam2Features" class="form-control" /></div>
                         <div class="col-md-2 offset-md-2"></div>
-                        <div class="col-md-2"><label asp-for="Cam2SensorSize" class="form-label">Sensor Size</label><input asp-for="Cam2SensorSize" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam2PixelSize" class="form-label">Pixel Size</label><input asp-for="Cam2PixelSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam2SensorSize" class="form-label">Sensor
+                                Size</label><input asp-for="Cam2SensorSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam2PixelSize" class="form-label">Pixel Size</label><input
+                                asp-for="Cam2PixelSize" class="form-control" /></div>
                     </div>
 
                     <h6 class="fw-bold mb-3">3rd Camera</h6>
                     <div class="row g-3 mb-4">
                         <div class="col-md-2">
                             <div class="form-check mt-4">
-                                <input asp-for="Cam3Exists" class="form-check-input" />
-                                <label asp-for="Cam3Exists" class="form-check-label">Exists</label>
+                                <input type="checkbox" id="Cam3Exists" name="Cam3Exists" class="form-check-input" value="true" @(Model.Cam3Exists == true ? "checked" : "") />
+                                <label for="Cam3Exists" class="form-check-label">Exists</label>
                             </div>
                         </div>
-                        <div class="col-md-2"><label asp-for="Cam3Type" class="form-label">Type</label><input asp-for="Cam3Type" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam3Res" class="form-label">Resolution</label><input asp-for="Cam3Res" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam3Aperture" class="form-label">Aperture</label><input asp-for="Cam3Aperture" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam3Focal" class="form-label">Focal</label><input asp-for="Cam3Focal" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam3Features" class="form-label">Features</label><input asp-for="Cam3Features" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam3Type" class="form-label">Type</label><input
+                                asp-for="Cam3Type" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam3Res" class="form-label">Resolution</label><input
+                                asp-for="Cam3Res" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam3Aperture" class="form-label">Aperture</label><input
+                                asp-for="Cam3Aperture" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam3Focal" class="form-label">Focal</label><input
+                                asp-for="Cam3Focal" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam3Features" class="form-label">Features</label><input
+                                asp-for="Cam3Features" class="form-control" /></div>
                         <div class="col-md-2 offset-md-2"></div>
-                        <div class="col-md-2"><label asp-for="Cam3SensorSize" class="form-label">Sensor Size</label><input asp-for="Cam3SensorSize" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam3PixelSize" class="form-label">Pixel Size</label><input asp-for="Cam3PixelSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam3SensorSize" class="form-label">Sensor
+                                Size</label><input asp-for="Cam3SensorSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam3PixelSize" class="form-label">Pixel Size</label><input
+                                asp-for="Cam3PixelSize" class="form-control" /></div>
                     </div>
 
                     <h6 class="fw-bold mb-3">4th Camera</h6>
                     <div class="row g-3 mb-4">
                         <div class="col-md-2">
                             <div class="form-check mt-4">
-                                <input asp-for="Cam4Exists" class="form-check-input" />
-                                <label asp-for="Cam4Exists" class="form-check-label">Exists</label>
+                                <input type="checkbox" id="Cam4Exists" name="Cam4Exists" class="form-check-input" value="true" @(Model.Cam4Exists == true ? "checked" : "") />
+                                <label for="Cam4Exists" class="form-check-label">Exists</label>
                             </div>
                         </div>
-                        <div class="col-md-2"><label asp-for="Cam4Type" class="form-label">Type</label><input asp-for="Cam4Type" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam4Res" class="form-label">Resolution</label><input asp-for="Cam4Res" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam4Aperture" class="form-label">Aperture</label><input asp-for="Cam4Aperture" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam4Focal" class="form-label">Focal</label><input asp-for="Cam4Focal" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam4Features" class="form-label">Features</label><input asp-for="Cam4Features" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam4Type" class="form-label">Type</label><input
+                                asp-for="Cam4Type" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam4Res" class="form-label">Resolution</label><input
+                                asp-for="Cam4Res" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam4Aperture" class="form-label">Aperture</label><input
+                                asp-for="Cam4Aperture" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam4Focal" class="form-label">Focal</label><input
+                                asp-for="Cam4Focal" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam4Features" class="form-label">Features</label><input
+                                asp-for="Cam4Features" class="form-control" /></div>
                         <div class="col-md-2 offset-md-2"></div>
-                        <div class="col-md-2"><label asp-for="Cam4SensorSize" class="form-label">Sensor Size</label><input asp-for="Cam4SensorSize" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="Cam4PixelSize" class="form-label">Pixel Size</label><input asp-for="Cam4PixelSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam4SensorSize" class="form-label">Sensor
+                                Size</label><input asp-for="Cam4SensorSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="Cam4PixelSize" class="form-label">Pixel Size</label><input
+                                asp-for="Cam4PixelSize" class="form-control" /></div>
                     </div>
 
                     <div class="row g-3 mb-4">
@@ -281,17 +314,25 @@
                     <div class="row g-3 mb-4">
                         <div class="col-md-2">
                             <div class="form-check mt-4">
-                                <input asp-for="FrontExists" class="form-check-input" />
-                                <label asp-for="FrontExists" class="form-check-label">Exists</label>
+                                <input type="checkbox" id="FrontExists" name="FrontExists" class="form-check-input" value="true" @(Model.FrontExists == true ? "checked" : "") />
+                                <label for="FrontExists" class="form-check-label">Exists</label>
                             </div>
                         </div>
-                        <div class="col-md-2"><label asp-for="FrontCamRes" class="form-label">Resolution</label><input asp-for="FrontCamRes" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="FrontCamAperture" class="form-label">Aperture</label><input asp-for="FrontCamAperture" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="FrontCamFocal" class="form-label">Focal</label><input asp-for="FrontCamFocal" class="form-control" /></div>
-                        <div class="col-md-4"><label asp-for="FrontCamFeatures" class="form-label">Features</label><input asp-for="FrontCamFeatures" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="FrontCamRes" class="form-label">Resolution</label><input
+                                asp-for="FrontCamRes" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="FrontCamAperture"
+                                class="form-label">Aperture</label><input asp-for="FrontCamAperture"
+                                class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="FrontCamFocal" class="form-label">Focal</label><input
+                                asp-for="FrontCamFocal" class="form-control" /></div>
+                        <div class="col-md-4"><label asp-for="FrontCamFeatures"
+                                class="form-label">Features</label><input asp-for="FrontCamFeatures"
+                                class="form-control" /></div>
                         <div class="col-md-2 offset-md-2"></div>
-                        <div class="col-md-2"><label asp-for="FrontCamSensorSize" class="form-label">Sensor Size</label><input asp-for="FrontCamSensorSize" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="FrontCamPixelSize" class="form-label">Pixel Size</label><input asp-for="FrontCamPixelSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="FrontCamSensorSize" class="form-label">Sensor
+                                Size</label><input asp-for="FrontCamSensorSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="FrontCamPixelSize" class="form-label">Pixel
+                                Size</label><input asp-for="FrontCamPixelSize" class="form-control" /></div>
                     </div>
                     <div class="row g-3">
                         <div class="col-md-3">
@@ -300,16 +341,18 @@
                         </div>
                         <div class="col-md-1">
                             <div class="form-check mt-4">
-                                <input asp-for="SecondFrontExists" class="form-check-input" />
-                                <label asp-for="SecondFrontExists" class="form-check-label">2nd</label>
+                                <input type="checkbox" id="SecondFrontExists" name="SecondFrontExists" class="form-check-input" value="true" @(Model.SecondFrontExists == true ? "checked" : "") />
+                                <label for="SecondFrontExists" class="form-check-label">2nd</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <label asp-for="SecondFrontRes" class="form-label">2nd Front Res</label>
                             <input asp-for="SecondFrontRes" class="form-control" />
                         </div>
-                        <div class="col-md-2"><label asp-for="SecondFrontSensorSize" class="form-label">Sensor Size</label><input asp-for="SecondFrontSensorSize" class="form-control" /></div>
-                        <div class="col-md-2"><label asp-for="SecondFrontPixelSize" class="form-label">Pixel Size</label><input asp-for="SecondFrontPixelSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="SecondFrontSensorSize" class="form-label">Sensor
+                                Size</label><input asp-for="SecondFrontSensorSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="SecondFrontPixelSize" class="form-label">Pixel
+                                Size</label><input asp-for="SecondFrontPixelSize" class="form-control" /></div>
                     </div>
                 </div>
             </div>
@@ -321,19 +364,20 @@
                     <div class="row g-3">
                         <div class="col-md-3">
                             <div class="form-check mt-2">
-                                <input asp-for="HasFaceRecognition" class="form-check-input" />
-                                <label asp-for="HasFaceRecognition" class="form-check-label">Face Recognition</label>
+                                <input type="checkbox" id="HasFaceRecognition" name="HasFaceRecognition" class="form-check-input" value="true" @(Model.HasFaceRecognition == true ? "checked" : "") />
+                                <label for="HasFaceRecognition" class="form-check-label">Face Recognition</label>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-check mt-2">
-                                <input asp-for="HasFingerprint" class="form-check-input" />
-                                <label asp-for="HasFingerprint" class="form-check-label">Fingerprint Reader</label>
+                                <input type="checkbox" id="HasFingerprint" name="HasFingerprint" class="form-check-input" value="true" @(Model.HasFingerprint == true ? "checked" : "") />
+                                <label for="HasFingerprint" class="form-check-label">Fingerprint Reader</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <label asp-for="FingerprintType" class="form-label">Fingerprint Type</label>
-                            <input asp-for="FingerprintType" class="form-control" placeholder="e.g. Optical (Under-display), Ultrasonic, Side-mounted" />
+                            <input asp-for="FingerprintType" class="form-control"
+                                placeholder="e.g. Optical (Under-display), Ultrasonic, Side-mounted" />
                         </div>
                     </div>
                 </div>
@@ -358,12 +402,16 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">RAM Options</label>
-                            <input type="text" name="RamOptionsRaw" class="form-control" placeholder="Comma separated (e.g. 8GB, 12GB, 16GB)" value="@(Model.RamOptions != null ? string.Join(", ", Model.RamOptions) : "")" />
+                            <input type="text" name="RamOptionsRaw" class="form-control"
+                                placeholder="Comma separated (e.g. 8GB, 12GB, 16GB)"
+                                value="@(Model.RamOptions != null ? string.Join(", ", Model.RamOptions) : "")" />
                             <small class="text-muted">Enter options separated by commas</small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Storage Options</label>
-                            <input type="text" name="StorageOptionsRaw" class="form-control" placeholder="Comma separated (e.g. 128GB, 256GB, 512GB)" value="@(Model.StorageOptions != null ? string.Join(", ", Model.StorageOptions) : "")" />
+                            <input type="text" name="StorageOptionsRaw" class="form-control"
+                                placeholder="Comma separated (e.g. 128GB, 256GB, 512GB)"
+                                value="@(Model.StorageOptions != null ? string.Join(", ", Model.StorageOptions) : "")" />
                             <small class="text-muted">Enter options separated by commas</small>
                         </div>
                         <div class="col-md-6">
@@ -397,7 +445,7 @@
                                 <option value="">-- Select --</option>
                                 @foreach (var val in Enum.GetValues<TelefonOzellikleri.Models.Enums.OsType>())
                                 {
-                                    <option value="@val">@val</option>
+                                    <option value="@val.ToString()">@val.ToString()</option>
                                 }
                             </select>
                         </div>
@@ -411,8 +459,8 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-check mt-2">
-                                <input asp-for="HasAiFeatures" class="form-check-input" />
-                                <label asp-for="HasAiFeatures" class="form-check-label">AI Features</label>
+                                <input type="checkbox" id="HasAiFeatures" name="HasAiFeatures" class="form-check-input" value="true" @(Model.HasAiFeatures == true ? "checked" : "") />
+                                <label for="HasAiFeatures" class="form-check-label">AI Features</label>
                             </div>
                         </div>
                         <div class="col-md-9">
@@ -440,7 +488,7 @@
                                         TelefonOzellikleri.Models.Enums.BatteryType.LiPo => "Li-Po",
                                         _ => val.ToString()
                                     };
-                                    <option value="@val">@label</option>
+                                    <option value="@val.ToString()">@label</option>
                                 }
                             </select>
                         </div>
@@ -454,8 +502,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-check mt-4">
-                                <input asp-for="WirelessCharging" class="form-check-input" />
-                                <label asp-for="WirelessCharging" class="form-check-label">Wireless Charging</label>
+                                <input type="checkbox" id="WirelessCharging" name="WirelessCharging" class="form-check-input" value="true" @(Model.WirelessCharging == true ? "checked" : "") />
+                                <label for="WirelessCharging" class="form-check-label">Wireless Charging</label>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -464,8 +512,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-check mt-4">
-                                <input asp-for="ReverseWireless" class="form-check-input" />
-                                <label asp-for="ReverseWireless" class="form-check-label">Reverse Wireless</label>
+                                <input type="checkbox" id="ReverseWireless" name="ReverseWireless" class="form-check-input" value="true" @(Model.ReverseWireless == true ? "checked" : "") />
+                                <label for="ReverseWireless" class="form-check-label">Reverse Wireless</label>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -483,26 +531,26 @@
                     <div class="row g-3">
                         <div class="col-md-2">
                             <div class="form-check">
-                                <input asp-for="Support4g" class="form-check-input" />
-                                <label asp-for="Support4g" class="form-check-label">4G</label>
+                                <input type="checkbox" id="Support4g" name="Support4g" class="form-check-input" value="true" @(Model.Support4g == true ? "checked" : "") />
+                                <label for="Support4g" class="form-check-label">4G</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-check">
-                                <input asp-for="Support45g" class="form-check-input" />
-                                <label asp-for="Support45g" class="form-check-label">4.5G</label>
+                                <input type="checkbox" id="Support45g" name="Support45g" class="form-check-input" value="true" @(Model.Support45g == true ? "checked" : "") />
+                                <label for="Support45g" class="form-check-label">4.5G</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-check">
-                                <input asp-for="Support5g" class="form-check-input" />
-                                <label asp-for="Support5g" class="form-check-label">5G</label>
+                                <input type="checkbox" id="Support5g" name="Support5g" class="form-check-input" value="true" @(Model.Support5g == true ? "checked" : "") />
+                                <label for="Support5g" class="form-check-label">5G</label>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-check">
-                                <input asp-for="EsimSupport" class="form-check-input" />
-                                <label asp-for="EsimSupport" class="form-check-label">eSIM Support</label>
+                                <input type="checkbox" id="EsimSupport" name="EsimSupport" class="form-check-input" value="true" @(Model.EsimSupport == true ? "checked" : "") />
+                                <label for="EsimSupport" class="form-check-label">eSIM Support</label>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -533,7 +581,7 @@
                                         TelefonOzellikleri.Models.Enums.WifiVersion.WiFi7 => "Wi-Fi 7",
                                         _ => val.ToString()
                                     };
-                                    <option value="@val">@label</option>
+                                    <option value="@val.ToString()">@label</option>
                                 }
                             </select>
                         </div>
@@ -543,8 +591,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-check mt-4">
-                                <input asp-for="Nfc" class="form-check-input" />
-                                <label asp-for="Nfc" class="form-check-label">NFC</label>
+                                <input type="checkbox" id="Nfc" name="Nfc" class="form-check-input" value="true" @(Model.Nfc == true ? "checked" : "") />
+                                <label for="Nfc" class="form-check-label">NFC</label>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -557,85 +605,521 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-check mt-4">
-                                <input asp-for="IrBlaster" class="form-check-input" />
-                                <label asp-for="IrBlaster" class="form-check-label">IR Blaster</label>
+                                <input type="checkbox" id="IrBlaster" name="IrBlaster" class="form-check-input" value="true" @(Model.IrBlaster == true ? "checked" : "") />
+                                <label for="IrBlaster" class="form-check-label">IR Blaster</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-check">
-                                <input asp-for="Gps" class="form-check-input" />
-                                <label asp-for="Gps" class="form-check-label">GPS</label>
+                                <input type="checkbox" id="Gps" name="Gps" class="form-check-input" value="true" @(Model.Gps == true ? "checked" : "") />
+                                <label for="Gps" class="form-check-label">GPS</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-check">
-                                <input asp-for="HasUwb" class="form-check-input" />
-                                <label asp-for="HasUwb" class="form-check-label">UWB</label>
+                                <input type="checkbox" id="HasUwb" name="HasUwb" class="form-check-input" value="true" @(Model.HasUwb == true ? "checked" : "") />
+                                <label for="HasUwb" class="form-check-label">UWB</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-check">
-                                <input asp-for="HasSatelliteSos" class="form-check-input" />
-                                <label asp-for="HasSatelliteSos" class="form-check-label">Satellite SOS</label>
+                                <input type="checkbox" id="HasSatelliteSos" name="HasSatelliteSos" class="form-check-input" value="true" @(Model.HasSatelliteSos == true ? "checked" : "") />
+                                <label for="HasSatelliteSos" class="form-check-label">Satellite SOS</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-check">
-                                <input asp-for="HeadphoneJack35mm" class="form-check-input" />
-                                <label asp-for="HeadphoneJack35mm" class="form-check-label">3.5mm Jack</label>
+                                <input type="checkbox" id="HeadphoneJack35mm" name="HeadphoneJack35mm" class="form-check-input" value="true" @(Model.HeadphoneJack35mm == true ? "checked" : "") />
+                                <label for="HeadphoneJack35mm" class="form-check-label">3.5mm Jack</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label asp-for="SpeakerType" class="form-label">Speaker Type</label>
-                            <input asp-for="SpeakerType" class="form-control" />
+                            <select asp-for="SpeakerType" class="form-select">
+                                <option value="">-- Select --</option>
+                                @foreach (var val in Enum.GetValues<TelefonOzellikleri.Models.Enums.SpeakerType>())
+                                {
+                                    <option value="@val.ToString()">@val.ToString()</option>
+                                }
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- OTHER TAB -->
+        <div class="tab-pane fade" id="tab-other">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">SAR Values</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="SarHead" class="form-label">SAR Head (W/kg)</label>
+                            <input asp-for="SarHead" type="number" step="0.01" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="SarBody" class="form-label">SAR Body (W/kg)</label>
+                            <input asp-for="SarBody" type="number" step="0.01" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="d-flex justify-content-between mt-4 mb-4">
-        <a href="/derin/phones" class="btn btn-outline-secondary">Back</a>
-        <button type="submit" class="btn btn-primary px-4">@(isNew ? "Create" : "Save")</button>
+        <div class="d-flex gap-2">
+            <a href="/derin/phones" class="btn btn-outline-secondary">← Back</a>
+            @if (!isNew)
+            {
+                <a href="/derin/phones/export/@Model.Id" class="btn btn-outline-success btn-sm" title="Download phone data as JSON">📥 Export JSON</a>
+            }
+        </div>
+        <button type="submit" class="btn btn-primary px-4">@(isNew ? "Create Phone" : "Save Changes")</button>
     </div>
 </form>
 
+<!-- JSON Paste Modal -->
+<div class="modal fade" id="jsonPasteModal" tabindex="-1" aria-labelledby="jsonPasteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="jsonPasteModalLabel">Paste JSON Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <textarea id="jsonInput" class="form-control" rows="10" placeholder="Paste JSON data here..."></textarea>
+                <small class="text-muted mt-2 d-block">Paste valid JSON containing fields like "general", "display", "design", etc.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="parseAndFillJson()">Fill Fields</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    var fileInput = document.getElementById('mainImageFile');
-    if (fileInput) {
-        fileInput.addEventListener('change', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var file = this.files[0];
-            if (!file) return;
-            if (file.size > 2 * 1024 * 1024) {
-                document.getElementById('uploadStatus').textContent = 'File size must be less than 2 MB.';
-                return;
+    <script>
+        function setFieldValue(elementId, value) {
+            var element = document.getElementById(elementId);
+            if (element && value) {
+                element.value = value;
             }
-            var formData = new FormData();
-            formData.append('file', file);
-            document.getElementById('uploadStatus').textContent = 'Uploading...';
-            fetch('/derin/upload/image', { method: 'POST', body: formData })
-                .then(function (r) { return r.json(); })
-                .then(function (data) {
-                    if (data.url) {
-                        document.getElementById('mainImageUrl').value = data.url;
-                        document.getElementById('uploadStatus').textContent = 'Upload successful.';
-                    } else {
-                        document.getElementById('uploadStatus').textContent = data.error || 'Upload failed.';
-                    }
-                })
-                .catch(function () {
-                    document.getElementById('uploadStatus').textContent = 'Upload failed.';
-                });
+        }
+
+        // Handle form submission - ensure unchecked checkboxes are sent as false
+        document.getElementById('phoneForm').addEventListener('submit', function(e) {
+            const checkboxFields = [
+                'Cam1Exists', 'Cam2Exists', 'Cam3Exists', 'Cam4Exists',
+                'FrontExists', 'SecondFrontExists',
+                'Support4g', 'Support5g', 'Support45g',
+                'Nfc', 'Gps', 'IrBlaster', 'HasUwb', 'HasSatelliteSos', 'EsimSupport',
+                'HeadphoneJack35mm',
+                'WirelessCharging', 'ReverseWireless',
+                'HasAiFeatures', 'HasFaceRecognition', 'HasFingerprint'
+            ];
+            
+            checkboxFields.forEach(function(fieldName) {
+                const checkbox = document.getElementById(fieldName);
+                if (checkbox && !checkbox.checked) {
+                    // Create a hidden input for unchecked checkboxes
+                    const hidden = document.createElement('input');
+                    hidden.type = 'hidden';
+                    hidden.name = fieldName;
+                    hidden.value = 'false';
+                    checkbox.parentNode.appendChild(hidden);
+                }
+            });
         });
-    }
-});
-</script>
+
+        function parseAndFillJson() {
+            try {
+                var jsonText = document.getElementById('jsonInput').value;
+                if (!jsonText.trim()) {
+                    alert('Please paste JSON data.');
+                    return;
+                }
+
+                var data = JSON.parse(jsonText);
+
+                // General
+                if (data.general) {
+                    setFieldValue('ModelName', data.general.name);
+                    setFieldValue('Slug', data.general.slug);
+                    setFieldValue('MainImageUrl', data.general.mainImageUrl);
+                    setFieldValue('ReleaseDate', data.general.releaseDate);
+                    setFieldValue('Status', data.general.status);
+                    setFieldValue('BrandId', data.general.brandId);
+                    setFieldValue('SeriesId', data.general.seriesId);
+                    setFieldValue('BoxContents', data.general.boxContents);
+                    if (data.general.colors && Array.isArray(data.general.colors)) {
+                        var colorsInput = document.querySelector('input[name="ColorsRaw"]');
+                        if (colorsInput) {
+                            colorsInput.value = data.general.colors.join(', ');
+                        }
+                    }
+                }
+
+                // Display
+                if (data.display) {
+                    setFieldValue('ScreenSize', data.display.size);
+                    setFieldValue('ScreenTech', data.display.technology);
+                    setFieldValue('ScreenRes', data.display.resolution);
+                    setFieldValue('RefreshRate', data.display.refreshRate);
+                    setFieldValue('PixelDensity', data.display.pixelDensity);
+                    setFieldValue('ScreenBodyRatio', data.display.bodyRatio);
+                    setFieldValue('ScreenAspectRatio', data.display.aspectRatio);
+                    setFieldValue('ScreenBrightnessNits', data.display.brightness);
+                    setFieldValue('ScreenProtection', data.display.protection);
+                    if (data.display.extraFeatures && Array.isArray(data.display.extraFeatures)) {
+                        var extraFeaturesInput = document.querySelector('input[name="ScreenExtraFeaturesRaw"]');
+                        if (extraFeaturesInput) {
+                            extraFeaturesInput.value = data.display.extraFeatures.join(', ');
+                        }
+                    }
+                }
+
+                // Design
+                if (data.design) {
+                    setFieldValue('Height', data.design.height);
+                    setFieldValue('Width', data.design.width);
+                    setFieldValue('Thickness', data.design.thickness);
+                    setFieldValue('Weight', data.design.weight);
+                    setFieldValue('FrameMaterial', data.design.frameMaterial);
+                    setFieldValue('BackMaterial', data.design.backMaterial);
+                    setFieldValue('DustWaterRes', data.design.dustWaterResistance);
+                }
+
+                // Camera
+                if (data.camera && data.camera.rear && data.camera.rear.main) {
+                    var mainCheckbox = document.getElementById('Cam1Exists');
+                    if (mainCheckbox) mainCheckbox.checked = true;
+                    
+                    var main = data.camera.rear.main;
+                    setFieldValue('Cam1Res', main.resolution);
+                    setFieldValue('Cam1Aperture', main.aperture);
+                    setFieldValue('Cam1Focal', main.focal);
+                    setFieldValue('Cam1SensorSize', main.sensorSize);
+                    setFieldValue('Cam1PixelSize', main.pixelSize);
+                    setFieldValue('Cam1Features', main.features);
+                }
+
+                if (data.camera && data.camera.rear && data.camera.rear.secondary) {
+                    var cam2Checkbox = document.getElementById('Cam2Exists');
+                    if (cam2Checkbox) cam2Checkbox.checked = true;
+                    
+                    var secondary = data.camera.rear.secondary;
+                    setFieldValue('Cam2Type', secondary.type);
+                    setFieldValue('Cam2Res', secondary.resolution);
+                    setFieldValue('Cam2Aperture', secondary.aperture);
+                    setFieldValue('Cam2Focal', secondary.focal);
+                    setFieldValue('Cam2SensorSize', secondary.sensorSize);
+                    setFieldValue('Cam2PixelSize', secondary.pixelSize);
+                    setFieldValue('Cam2Features', secondary.features);
+                }
+
+                if (data.camera && data.camera.rear && data.camera.rear.tertiary) {
+                    var cam3Checkbox = document.getElementById('Cam3Exists');
+                    if (cam3Checkbox) cam3Checkbox.checked = true;
+                    
+                    var tertiary = data.camera.rear.tertiary;
+                    setFieldValue('Cam3Type', tertiary.type);
+                    setFieldValue('Cam3Res', tertiary.resolution);
+                    setFieldValue('Cam3Aperture', tertiary.aperture);
+                    setFieldValue('Cam3Focal', tertiary.focal);
+                    setFieldValue('Cam3SensorSize', tertiary.sensorSize);
+                    setFieldValue('Cam3PixelSize', tertiary.pixelSize);
+                    setFieldValue('Cam3Features', tertiary.features);
+                }
+
+                if (data.camera && data.camera.rear && data.camera.rear.quaternary) {
+                    var cam4Checkbox = document.getElementById('Cam4Exists');
+                    if (cam4Checkbox) cam4Checkbox.checked = true;
+                    
+                    var quaternary = data.camera.rear.quaternary;
+                    setFieldValue('Cam4Type', quaternary.type);
+                    setFieldValue('Cam4Res', quaternary.resolution);
+                    setFieldValue('Cam4Aperture', quaternary.aperture);
+                    setFieldValue('Cam4Focal', quaternary.focal);
+                    setFieldValue('Cam4SensorSize', quaternary.sensorSize);
+                    setFieldValue('Cam4PixelSize', quaternary.pixelSize);
+                    setFieldValue('Cam4Features', quaternary.features);
+                }
+
+                if (data.camera && data.camera.rear) {
+                    setFieldValue('RearVideoRes', data.camera.rear.videoResolution);
+                }
+
+                if (data.camera && data.camera.front) {
+                    var frontCheckbox = document.getElementById('FrontExists');
+                    if (frontCheckbox) frontCheckbox.checked = true;
+                    
+                    var front = data.camera.front;
+                    setFieldValue('FrontCamRes', front.resolution);
+                    setFieldValue('FrontCamAperture', front.aperture);
+                    setFieldValue('FrontCamFocal', front.focal);
+                    setFieldValue('FrontCamSensorSize', front.sensorSize);
+                    setFieldValue('FrontCamPixelSize', front.pixelSize);
+                    setFieldValue('FrontCamFeatures', front.features);
+                    setFieldValue('FrontVideoRes', front.videoResolution);
+                    if (front.secondFrontResolution) {
+                        var secondFrontCheckbox = document.getElementById('SecondFrontExists');
+                        if (secondFrontCheckbox) secondFrontCheckbox.checked = true;
+                        setFieldValue('SecondFrontRes', front.secondFrontResolution);
+                    }
+                }
+
+                // Battery
+                if (data.battery) {
+                    setFieldValue('BatteryType', data.battery.type);
+                    setFieldValue('BatteryCapacity', data.battery.capacity);
+                    setFieldValue('ChargingSpeed', data.battery.chargingSpeed);
+                    if (data.battery.wirelessCharging) {
+                        var wirelessCheckbox = document.getElementById('WirelessCharging');
+                        if (wirelessCheckbox) wirelessCheckbox.checked = true;
+                    }
+                    setFieldValue('WirelessSpeed', data.battery.wirelessSpeed);
+                    if (data.battery.reverseWireless) {
+                        var reverseCheckbox = document.getElementById('ReverseWireless');
+                        if (reverseCheckbox) reverseCheckbox.checked = true;
+                    }
+                    setFieldValue('ReverseSpeed', data.battery.reverseSpeed);
+                }
+
+                // Hardware
+                if (data.hardware) {
+                    setFieldValue('Chipset', data.hardware.chipset);
+                    setFieldValue('Cpu', data.hardware.cpu);
+                    setFieldValue('Gpu', data.hardware.gpu);
+                    setFieldValue('AntutuScore', data.hardware.antutuScore);
+                    setFieldValue('GeekbenchScore', data.hardware.geekbenchScore);
+                    setFieldValue('StorageType', data.hardware.storageType);
+                    if (data.hardware.ramOptions && Array.isArray(data.hardware.ramOptions)) {
+                        var ramInput = document.querySelector('input[name="RamOptionsRaw"]');
+                        if (ramInput) {
+                            ramInput.value = data.hardware.ramOptions.join(', ');
+                        }
+                    }
+                    if (data.hardware.storageOptions && Array.isArray(data.hardware.storageOptions)) {
+                        var storageInput = document.querySelector('input[name="StorageOptionsRaw"]');
+                        if (storageInput) {
+                            storageInput.value = data.hardware.storageOptions.join(', ');
+                        }
+                    }
+                    setFieldValue('SensorsList', data.hardware.sensors);
+                }
+
+                // Software
+                if (data.software) {
+                    setFieldValue('OsType', data.software.osType);
+                    setFieldValue('OsVersion', data.software.osVersion);
+                    setFieldValue('UpdateGuarantee', data.software.updateGuarantee);
+                    if (data.software.hasAiFeatures) {
+                        var aiCheckbox = document.getElementById('HasAiFeatures');
+                        if (aiCheckbox) aiCheckbox.checked = true;
+                    }
+                    setFieldValue('AiFeaturesList', data.software.aiFeaturesList);
+                }
+
+                // Connectivity
+                if (data.connectivity) {
+                    setFieldValue('WifiVersion', data.connectivity.wifiVersion);
+                    setFieldValue('BluetoothVer', data.connectivity.bluetoothVersion);
+                    setFieldValue('UsbType', data.connectivity.usbType);
+                    setFieldValue('UsbVersion', data.connectivity.usbVersion);
+                    setFieldValue('PhysicalSimCount', data.connectivity.physicalSimCount);
+                    setFieldValue('SpeakerType', data.connectivity.speakerType);
+                    
+                    // Connectivity checkboxes
+                    if (data.connectivity.nfc) {
+                        var nfcCheckbox = document.getElementById('Nfc');
+                        if (nfcCheckbox) nfcCheckbox.checked = true;
+                    }
+                    if (data.connectivity['5g']) {
+                        var support5gCheckbox = document.getElementById('Support5g');
+                        if (support5gCheckbox) support5gCheckbox.checked = true;
+                    }
+                    if (data.connectivity['4g']) {
+                        var support4gCheckbox = document.getElementById('Support4g');
+                        if (support4gCheckbox) support4gCheckbox.checked = true;
+                    }
+                    if (data.connectivity['4_5g']) {
+                        var support45gCheckbox = document.getElementById('Support45g');
+                        if (support45gCheckbox) support45gCheckbox.checked = true;
+                    }
+                    if (data.connectivity.gps) {
+                        var gpsCheckbox = document.getElementById('Gps');
+                        if (gpsCheckbox) gpsCheckbox.checked = true;
+                    }
+                    if (data.connectivity.irBlaster) {
+                        var irBlasterCheckbox = document.getElementById('IrBlaster');
+                        if (irBlasterCheckbox) irBlasterCheckbox.checked = true;
+                    }
+                    if (data.connectivity.uwb) {
+                        var uwbCheckbox = document.getElementById('HasUwb');
+                        if (uwbCheckbox) uwbCheckbox.checked = true;
+                    }
+                    if (data.connectivity.satelliteSos) {
+                        var satSosCheckbox = document.getElementById('HasSatelliteSos');
+                        if (satSosCheckbox) satSosCheckbox.checked = true;
+                    }
+                    if (data.connectivity.esim) {
+                        var esimCheckbox = document.getElementById('EsimSupport');
+                        if (esimCheckbox) esimCheckbox.checked = true;
+                    }
+                }
+
+                // Security
+                if (data.security) {
+                    if (data.security.faceRecognition) {
+                        var faceCheckbox = document.getElementById('HasFaceRecognition');
+                        if (faceCheckbox) faceCheckbox.checked = true;
+                    }
+                    if (data.security.fingerprint) {
+                        var fingerprintCheckbox = document.getElementById('HasFingerprint');
+                        if (fingerprintCheckbox) fingerprintCheckbox.checked = true;
+                    }
+                    setFieldValue('FingerprintType', data.security.fingerprintType);
+                }
+
+                // Other (SAR Values)
+                if (data.other) {
+                    setFieldValue('SarHead', data.other.sarHead);
+                    setFieldValue('SarBody', data.other.sarBody);
+                }
+
+                alert('JSON data filled successfully! Please complete any remaining fields manually.');
+                var modal = bootstrap.Modal.getInstance(document.getElementById('jsonPasteModal'));
+                modal.hide();
+            } catch (error) {
+                alert('JSON parsing error: ' + error.message);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var fileInput = document.getElementById('mainImageFile');
+            if (fileInput) {
+                fileInput.addEventListener('change', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var file = this.files[0];
+                    if (!file) return;
+                    if (file.size > 2 * 1024 * 1024) {
+                        document.getElementById('uploadStatus').textContent = 'File size must be less than 2 MB.';
+                        return;
+                    }
+                    var formData = new FormData();
+                    formData.append('file', file);
+                    document.getElementById('uploadStatus').textContent = 'Uploading...';
+                    fetch('/derin/upload/image', { method: 'POST', body: formData })
+                        .then(function (r) { return r.json(); })
+                        .then(function (data) {
+                            if (data.url) {
+                                document.getElementById('mainImageUrl').value = data.url;
+                                document.getElementById('uploadStatus').textContent = 'Upload successful.';
+                            } else {
+                                document.getElementById('uploadStatus').textContent = data.error || 'Upload failed.';
+                            }
+                        })
+                        .catch(function () {
+                            document.getElementById('uploadStatus').textContent = 'Upload failed.';
+                        });
+                });
+            }
+
+            // Auto-check camera "Exists" checkboxes when any related field has value
+            function setupCameraAutoCheck() {
+                // Main Camera (Cam1)
+                const cam1Fields = ['Cam1Res', 'Cam1Aperture', 'Cam1Focal', 'Cam1SensorSize', 'Cam1PixelSize', 'Cam1Features'];
+                cam1Fields.forEach(function(fieldId) {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        field.addEventListener('input', function() {
+                            const cam1Checkbox = document.getElementById('Cam1Exists');
+                            if (cam1Checkbox && this.value.trim()) {
+                                cam1Checkbox.checked = true;
+                            }
+                        });
+                    }
+                });
+
+                // 2nd Camera (Cam2)
+                const cam2Fields = ['Cam2Type', 'Cam2Res', 'Cam2Aperture', 'Cam2Focal', 'Cam2SensorSize', 'Cam2PixelSize', 'Cam2Features'];
+                cam2Fields.forEach(function(fieldId) {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        field.addEventListener('input', function() {
+                            const cam2Checkbox = document.getElementById('Cam2Exists');
+                            if (cam2Checkbox && this.value.trim()) {
+                                cam2Checkbox.checked = true;
+                            }
+                        });
+                    }
+                });
+
+                // 3rd Camera (Cam3)
+                const cam3Fields = ['Cam3Type', 'Cam3Res', 'Cam3Aperture', 'Cam3Focal', 'Cam3SensorSize', 'Cam3PixelSize', 'Cam3Features'];
+                cam3Fields.forEach(function(fieldId) {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        field.addEventListener('input', function() {
+                            const cam3Checkbox = document.getElementById('Cam3Exists');
+                            if (cam3Checkbox && this.value.trim()) {
+                                cam3Checkbox.checked = true;
+                            }
+                        });
+                    }
+                });
+
+                // 4th Camera (Cam4)
+                const cam4Fields = ['Cam4Type', 'Cam4Res', 'Cam4Aperture', 'Cam4Focal', 'Cam4SensorSize', 'Cam4PixelSize', 'Cam4Features'];
+                cam4Fields.forEach(function(fieldId) {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        field.addEventListener('input', function() {
+                            const cam4Checkbox = document.getElementById('Cam4Exists');
+                            if (cam4Checkbox && this.value.trim()) {
+                                cam4Checkbox.checked = true;
+                            }
+                        });
+                    }
+                });
+
+                // Front Camera
+                const frontFields = ['FrontCamRes', 'FrontCamAperture', 'FrontCamFocal', 'FrontCamSensorSize', 'FrontCamPixelSize', 'FrontCamFeatures', 'FrontVideoRes'];
+                frontFields.forEach(function(fieldId) {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        field.addEventListener('input', function() {
+                            const frontCheckbox = document.getElementById('FrontExists');
+                            if (frontCheckbox && this.value.trim()) {
+                                frontCheckbox.checked = true;
+                            }
+                        });
+                    }
+                });
+
+                // Second Front Camera
+                const secondFrontFields = ['SecondFrontRes', 'SecondFrontSensorSize', 'SecondFrontPixelSize'];
+                secondFrontFields.forEach(function(fieldId) {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        field.addEventListener('input', function() {
+                            const secondFrontCheckbox = document.getElementById('SecondFrontExists');
+                            if (secondFrontCheckbox && this.value.trim()) {
+                                secondFrontCheckbox.checked = true;
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Initialize camera auto-check
+            setupCameraAutoCheck();
+        });
+    </script>
 }
 
 <style>

@@ -77,14 +77,16 @@
                             <input asp-for="Slug" class="form-control" />
                         </div>
                         <div class="col-md-6">
-                            <label asp-for="MainImageUrl" class="form-label">Main Image URL</label>
-                            <div class="input-group">
-                                <input asp-for="MainImageUrl" class="form-control" id="mainImageUrl" />
-                                <button type="button" class="btn btn-outline-secondary"
-                                    onclick="document.getElementById('mainImageFile').click()">Upload</button>
-                            </div>
-                            <input type="file" id="mainImageFile" class="d-none" accept="image/*" />
-                            <small id="uploadStatus" class="text-muted"></small>
+                            @await Html.PartialAsync("_ImageUpload", new TelefonOzellikleri.Models.ViewModels.ImageUploadViewModel
+                            {
+                                LabelText = "Main Image URL",
+                                UrlInputId = "mainImageUrl",
+                                FileInputId = "mainImageFile",
+                                StatusId = "uploadStatus",
+                                InputName = "MainImageUrl",
+                                UploadFolder = "phones",
+                                CurrentValue = Model?.MainImageUrl
+                            })
                         </div>
                         <div class="col-md-3">
                             <label asp-for="Status" class="form-label">Status</label>
@@ -1009,36 +1011,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            var fileInput = document.getElementById('mainImageFile');
-            if (fileInput) {
-                fileInput.addEventListener('change', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    var file = this.files[0];
-                    if (!file) return;
-                    if (file.size > 2 * 1024 * 1024) {
-                        document.getElementById('uploadStatus').textContent = 'File size must be less than 2 MB.';
-                        return;
-                    }
-                    var formData = new FormData();
-                    formData.append('file', file);
-                    document.getElementById('uploadStatus').textContent = 'Uploading...';
-                    fetch('/derin/upload/image', { method: 'POST', body: formData })
-                        .then(function (r) { return r.json(); })
-                        .then(function (data) {
-                            if (data.url) {
-                                document.getElementById('mainImageUrl').value = data.url;
-                                document.getElementById('uploadStatus').textContent = 'Upload successful.';
-                            } else {
-                                document.getElementById('uploadStatus').textContent = data.error || 'Upload failed.';
-                            }
-                        })
-                        .catch(function () {
-                            document.getElementById('uploadStatus').textContent = 'Upload failed.';
-                        });
-                });
-            }
-
             // Auto-check camera "Exists" checkboxes when any related field has value
             function setupCameraAutoCheck() {
                 // Main Camera (Cam1)

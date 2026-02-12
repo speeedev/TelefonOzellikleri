@@ -1,0 +1,63 @@
+@model TelefonOzellikleri.Models.ViewModels.ImageUploadViewModel
+@{
+    if (Model == null) { return; }
+    var urlInputId = Model.UrlInputId;
+    var fileInputId = Model.FileInputId;
+    var statusId = Model.StatusId;
+    var uploadFolder = Model.UploadFolder ?? "phones";
+}
+<div class="image-upload-wrapper" data-url-input-id="@urlInputId" data-file-input-id="@fileInputId" data-status-id="@statusId" data-upload-folder="@uploadFolder">
+    <label class="form-label" for="@urlInputId">@Model.LabelText</label>
+    <div class="input-group">
+        <input type="text"
+               id="@urlInputId"
+               name="@Model.InputName"
+               class="form-control"
+               value="@Model.CurrentValue"
+               placeholder="https://..." />
+        <button type="button" class="btn btn-outline-secondary" data-image-upload-trigger>Yükle</button>
+    </div>
+    <input type="file" id="@fileInputId" class="d-none" accept="image/*" />
+    <small id="@statusId" class="text-muted"></small>
+</div>
+<script>
+    (function () {
+        var wrapper = document.querySelector('.image-upload-wrapper[data-file-input-id="@fileInputId"]');
+        if (!wrapper) return;
+        var urlInputId = wrapper.getAttribute('data-url-input-id');
+        var fileInputId = wrapper.getAttribute('data-file-input-id');
+        var statusId = wrapper.getAttribute('data-status-id');
+        var uploadFolder = wrapper.getAttribute('data-upload-folder') || 'phones';
+        var trigger = wrapper.querySelector('[data-image-upload-trigger]');
+        var fileInput = document.getElementById(fileInputId);
+        if (!trigger || !fileInput) return;
+        trigger.addEventListener('click', function () { fileInput.click(); });
+        fileInput.addEventListener('change', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var file = this.files[0];
+            if (!file) return;
+            if (file.size > 2 * 1024 * 1024) {
+                document.getElementById(statusId).textContent = 'Dosya boyutu 2 MB\'dan küçük olmalı.';
+                return;
+            }
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('folder', uploadFolder);
+            document.getElementById(statusId).textContent = 'Yükleniyor...';
+            fetch('/derin/upload/image', { method: 'POST', body: formData })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (data.url) {
+                        document.getElementById(urlInputId).value = data.url;
+                        document.getElementById(statusId).textContent = 'Yükleme başarılı.';
+                    } else {
+                        document.getElementById(statusId).textContent = data.error || 'Yükleme başarısız.';
+                    }
+                })
+                .catch(function () {
+                    document.getElementById(statusId).textContent = 'Yükleme başarısız.';
+                });
+        });
+    })();
+</script>

@@ -134,7 +134,9 @@
                         }
                         @if (phone.Weight.HasValue)
                         {
-                            <tr><th>Ağırlık</th><td>@phone.Weight g</td></tr>
+                            var w = phone.Weight.Value;
+                            var weightText = w == Math.Floor(w) ? w.ToString("0") : w.ToString("0.00");
+                            <tr><th>Ağırlık</th><td>@weightText g</td></tr>
                         }
                         @if (!string.IsNullOrEmpty(phone.FrameMaterial))
                         {
@@ -607,11 +609,11 @@
                         <tbody>
                             @if (phone.SarHead.HasValue)
                             {
-                                <tr><th>SAR Değeri (Baş)</th><td>@phone.SarHead W/kg</td></tr>
+                                <tr><th>SAR Değeri (Baş)</th><td>@phone.SarHead.Value.ToString("0.##") W/kg</td></tr>
                             }
                             @if (phone.SarBody.HasValue)
                             {
-                                <tr><th>SAR Değeri (Vücut)</th><td>@phone.SarBody W/kg</td></tr>
+                                <tr><th>SAR Değeri (Vücut)</th><td>@phone.SarBody.Value.ToString("0.##") W/kg</td></tr>
                             }
                         </tbody>
                     </table>

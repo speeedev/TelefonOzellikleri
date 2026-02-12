@@ -88,12 +88,12 @@ namespace TelefonOzellikleri.Controllers.Admin
                 return View("Edit", model);
             }
 
-            var slugExists = await _context.Smartphones.AnyAsync(s => s.Slug == model.Slug);
-            if (slugExists)
+            var slugAvailable = await _context.IsSlugAvailableAsync(model.Slug);
+            if (!slugAvailable)
             {
                 ViewData["Title"] = "New Phone";
                 ViewData["IsNew"] = true;
-                ViewData["Error"] = "A phone with this slug already exists.";
+                ViewData["Error"] = "This slug is already used by a page, phone, or brand. Slugs must be unique across the site.";
                 await PopulateDropdowns(model.BrandId, model.SeriesId);
                 return View("Edit", model);
             }
@@ -135,6 +135,15 @@ namespace TelefonOzellikleri.Controllers.Admin
             var phone = await _context.Smartphones.FindAsync(id);
             if (phone == null)
                 return NotFound();
+
+            var slugAvailable = await _context.IsSlugAvailableAsync(model.Slug, excludeSmartphoneId: id);
+            if (!slugAvailable)
+            {
+                ViewData["Title"] = $"Edit: {phone.ModelName}";
+                ViewData["Error"] = "This slug is already used by a page, phone, or brand. Slugs must be unique across the site.";
+                await PopulateDropdowns(phone.BrandId, phone.SeriesId);
+                return View("Edit", model);
+            }
 
             phone.BrandId = model.BrandId;
             phone.SeriesId = model.SeriesId;

@@ -64,12 +64,12 @@ namespace TelefonOzellikleri.Controllers.Admin
                 return View("Edit", model);
             }
 
-            var slugExists = await _context.Brands.AnyAsync(b => b.Slug == model.Slug);
-            if (slugExists)
+            var slugAvailable = await _context.IsSlugAvailableAsync(model.Slug);
+            if (!slugAvailable)
             {
                 ViewData["Title"] = "New Brand";
                 ViewData["IsNew"] = true;
-                ViewData["Error"] = "A brand with this slug already exists.";
+                ViewData["Error"] = "This slug is already used by a page, phone, or brand. Slugs must be unique across the site.";
                 return View("Edit", model);
             }
 
@@ -112,11 +112,11 @@ namespace TelefonOzellikleri.Controllers.Admin
                 return View(brand);
             }
 
-            var slugExists = await _context.Brands.AnyAsync(b => b.Slug == model.Slug && b.Id != id);
-            if (slugExists)
+            var slugAvailable = await _context.IsSlugAvailableAsync(model.Slug, excludeBrandId: id);
+            if (!slugAvailable)
             {
                 ViewData["Title"] = $"Edit: {brand.Name}";
-                ViewData["Error"] = "A brand with this slug already exists.";
+                ViewData["Error"] = "This slug is already used by a page, phone, or brand. Slugs must be unique across the site.";
                 return View(brand);
             }
 

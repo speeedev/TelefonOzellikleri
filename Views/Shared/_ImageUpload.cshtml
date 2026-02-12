@@ -15,7 +15,7 @@
                class="form-control"
                value="@Model.CurrentValue"
                placeholder="https://..." />
-        <button type="button" class="btn btn-outline-secondary" data-image-upload-trigger>Yükle</button>
+        <button type="button" class="btn btn-outline-secondary" data-image-upload-trigger>Upload</button>
     </div>
     <input type="file" id="@fileInputId" class="d-none" accept="image/*" />
     <small id="@statusId" class="text-muted"></small>
@@ -38,25 +38,25 @@
             var file = this.files[0];
             if (!file) return;
             if (file.size > 2 * 1024 * 1024) {
-                document.getElementById(statusId).textContent = 'Dosya boyutu 2 MB\'dan küçük olmalı.';
+                document.getElementById(statusId).textContent = 'File size must be less than 2 MB.';
                 return;
             }
             var formData = new FormData();
             formData.append('file', file);
             formData.append('folder', uploadFolder);
-            document.getElementById(statusId).textContent = 'Yükleniyor...';
+            document.getElementById(statusId).textContent = 'Uploading...';
             fetch('/derin/upload/image', { method: 'POST', body: formData })
                 .then(function (r) { return r.json(); })
                 .then(function (data) {
                     if (data.url) {
                         document.getElementById(urlInputId).value = data.url;
-                        document.getElementById(statusId).textContent = 'Yükleme başarılı.';
+                        document.getElementById(statusId).textContent = 'Upload successful.';
                     } else {
-                        document.getElementById(statusId).textContent = data.error || 'Yükleme başarısız.';
+                        document.getElementById(statusId).textContent = data.error || 'Upload failed.';
                     }
                 })
                 .catch(function () {
-                    document.getElementById(statusId).textContent = 'Yükleme başarısız.';
+                    document.getElementById(statusId).textContent = 'Upload failed.';
                 });
         });
     })();

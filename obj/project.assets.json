@@ -1398,19 +1398,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/emir.bolat/.nuget/packages/": {}
+    "/Users/emirbolat/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/TelefonOzellikleri.csproj",
+      "projectUniqueName": "/Users/emirbolat/Yazilim/Back-End/TelefonOzellikleri/TelefonOzellikleri.csproj",
       "projectName": "TelefonOzellikleri",
-      "projectPath": "/Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/TelefonOzellikleri.csproj",
-      "packagesPath": "/Users/emir.bolat/.nuget/packages/",
-      "outputPath": "/Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/obj/",
+      "projectPath": "/Users/emirbolat/Yazilim/Back-End/TelefonOzellikleri/TelefonOzellikleri.csproj",
+      "packagesPath": "/Users/emirbolat/.nuget/packages/",
+      "outputPath": "/Users/emirbolat/Yazilim/Back-End/TelefonOzellikleri/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/emir.bolat/.nuget/NuGet/NuGet.Config"
+        "/Users/emirbolat/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"

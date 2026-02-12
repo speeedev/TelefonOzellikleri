@@ -145,7 +145,8 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.Status = model.Status;
             phone.OsType = model.OsType;
             phone.OsVersion = model.OsVersion;
-            phone.UpdateGuarantee = model.UpdateGuarantee;
+            phone.UpdateGuaranteeYears = model.UpdateGuaranteeYears;
+            phone.UpdateGuaranteeVersion = model.UpdateGuaranteeVersion;
 
             phone.Height = model.Height;
             phone.Width = model.Width;
@@ -480,7 +481,8 @@ namespace TelefonOzellikleri.Controllers.Admin
                 {
                     OsType = phone.OsType?.ToString(),
                     OsVersion = phone.OsVersion,
-                    UpdateGuarantee = phone.UpdateGuarantee,
+                    UpdateGuaranteeYears = phone.UpdateGuaranteeYears,
+                    UpdateGuaranteeVersion = phone.UpdateGuaranteeVersion,
                     HasAiFeatures = phone.HasAiFeatures,
                     AiFeaturesList = phone.AiFeaturesList
                 },
@@ -616,7 +618,8 @@ namespace TelefonOzellikleri.Controllers.Admin
                 
                 OsType = !string.IsNullOrEmpty(dto.Software?.OsType) ? Enum.Parse<OsType>(dto.Software.OsType, ignoreCase: true) : null,
                 OsVersion = dto.Software?.OsVersion,
-                UpdateGuarantee = dto.Software?.UpdateGuarantee,
+                UpdateGuaranteeYears = dto.Software?.UpdateGuaranteeYears,
+                UpdateGuaranteeVersion = dto.Software?.UpdateGuaranteeVersion,
                 HasAiFeatures = dto.Software?.HasAiFeatures,
                 AiFeaturesList = dto.Software?.AiFeaturesList,
                 

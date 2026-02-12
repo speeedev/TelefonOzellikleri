@@ -408,9 +408,12 @@ public partial class TelefonOzellikleriDbContext : DbContext
             entity.Property(e => e.Thickness)
                 .HasPrecision(10, 2)
                 .HasColumnName("thickness");
-            entity.Property(e => e.UpdateGuarantee)
+            entity.Property(e => e.UpdateGuaranteeYears)
                 .HasMaxLength(50)
                 .HasColumnName("update_guarantee");
+            entity.Property(e => e.UpdateGuaranteeVersion)
+                .HasMaxLength(50)
+                .HasColumnName("update_guarantee_version");
             entity.Property(e => e.UsbType)
                 .HasMaxLength(50)
                 .HasColumnName("usb_type");

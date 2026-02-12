@@ -28,7 +28,9 @@ public partial class Smartphone
 
     public string? OsVersion { get; set; }
 
-    public string? UpdateGuarantee { get; set; }
+    public string? UpdateGuaranteeYears { get; set; }
+
+    public string? UpdateGuaranteeVersion { get; set; }
 
     public decimal? Height { get; set; }
 

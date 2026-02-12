@@ -267,8 +267,11 @@ public class SmartphoneJsonDto
         [JsonPropertyName("osVersion")]
         public string? OsVersion { get; set; }
 
-        [JsonPropertyName("updateGuarantee")]
-        public string? UpdateGuarantee { get; set; }
+        [JsonPropertyName("updateGuaranteeYears")]
+        public string? UpdateGuaranteeYears { get; set; }
+
+        [JsonPropertyName("updateGuaranteeVersion")]
+        public string? UpdateGuaranteeVersion { get; set; }
 
         [JsonPropertyName("hasAiFeatures")]
         public bool? HasAiFeatures { get; set; }

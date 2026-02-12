@@ -6,6 +6,11 @@
     var isNew = ViewData["IsNew"] as bool? ?? false;
 }
 
+@section Styles {
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+}
+
 @if (ViewData["Error"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -454,8 +459,12 @@
                             <input asp-for="OsVersion" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <label asp-for="UpdateGuarantee" class="form-label">Update Guarantee</label>
-                            <input asp-for="UpdateGuarantee" class="form-control" />
+                            <label asp-for="UpdateGuaranteeYears" class="form-label">Update Guarantee (Years)</label>
+                            <input asp-for="UpdateGuaranteeYears" class="form-control" placeholder="e.g. 5 yıl" />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="UpdateGuaranteeVersion" class="form-label">Update Until Version</label>
+                            <input asp-for="UpdateGuaranteeVersion" class="form-control" placeholder="e.g. iOS 30" />
                         </div>
                         <div class="col-md-3">
                             <div class="form-check mt-2">
@@ -915,7 +924,8 @@
                 if (data.software) {
                     setFieldValue('OsType', data.software.osType);
                     setFieldValue('OsVersion', data.software.osVersion);
-                    setFieldValue('UpdateGuarantee', data.software.updateGuarantee);
+                    setFieldValue('UpdateGuaranteeYears', data.software.updateGuaranteeYears);
+                    setFieldValue('UpdateGuaranteeVersion', data.software.updateGuaranteeVersion);
                     if (data.software.hasAiFeatures) {
                         var aiCheckbox = document.getElementById('HasAiFeatures');
                         if (aiCheckbox) aiCheckbox.checked = true;
@@ -1118,6 +1128,17 @@
 
             // Initialize camera auto-check
             setupCameraAutoCheck();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize Select2 for all select elements
+            $('select').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                allowClear: true
+            });
         });
     </script>
 }

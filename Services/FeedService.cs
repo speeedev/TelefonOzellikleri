@@ -71,7 +71,6 @@ public class FeedService
         // Extra boşlukları temizle
         decoded = System.Text.RegularExpressions.Regex.Replace(decoded, @"\s+", " ").Trim();
 
-        // 150 karakterden sonra kısalt
-        return decoded.Length > 150 ? decoded.Substring(0, 150) + "..." : decoded;
+        return decoded;
     }
 }

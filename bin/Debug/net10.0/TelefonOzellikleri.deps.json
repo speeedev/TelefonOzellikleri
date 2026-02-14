@@ -11,7 +11,8 @@
           "BCrypt.Net-Next": "4.0.3",
           "Microsoft.EntityFrameworkCore.Design": "8.0.8",
           "Pomelo.EntityFrameworkCore.MySql": "8.0.2",
-          "SixLabors.ImageSharp": "3.1.12"
+          "SixLabors.ImageSharp": "3.1.12",
+          "System.ServiceModel.Syndication": "5.0.0"
         },
         "runtime": {
           "TelefonOzellikleri.dll": {}
@@ -411,6 +412,14 @@
             "fileVersion": "6.0.21.52210"
           }
         }
+      },
+      "System.ServiceModel.Syndication/5.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/System.ServiceModel.Syndication.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        }
       }
     }
   },
@@ -580,6 +589,13 @@
       "sha512": "sha512-iUR1eHrL8Cwd82neQCJ00MpwNIBs4NZgXzrPqx8NJf/k4+mwBO0XCRmHYJT4OLSwDDqh5nBLJWkz5cROnrGhRA==",
       "path": "system.composition.typedparts/6.0.0",
       "hashPath": "system.composition.typedparts.6.0.0.nupkg.sha512"
+    },
+    "System.ServiceModel.Syndication/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xjwRFydlevI/DMLlBcDRbOmofJTZNoJ0FCkEPdMw9i+85lDbl8Pw001LJKQbRSeHSVJCEuPfAvEuC1TAumxcmw==",
+      "path": "system.servicemodel.syndication/5.0.0",
+      "hashPath": "system.servicemodel.syndication.5.0.0.nupkg.sha512"
     }
   }
 }

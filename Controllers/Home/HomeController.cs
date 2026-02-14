@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TelefonOzellikleri.Data;
 using TelefonOzellikleri.Models.ViewModels;
+using TelefonOzellikleri.Services;
 
 namespace TelefonOzellikleri.Controllers
 {
@@ -9,10 +10,12 @@ namespace TelefonOzellikleri.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TelefonOzellikleriDbContext _context;
-        public HomeController(ILogger<HomeController> logger, TelefonOzellikleriDbContext context)
+        private readonly FeedService _feedService;
+        public HomeController(ILogger<HomeController> logger, TelefonOzellikleriDbContext context, FeedService feedService)
         {
             _logger = logger;
             _context = context;
+            _feedService = feedService;
         }
         public async Task<IActionResult> Index()
         {
@@ -39,6 +42,8 @@ namespace TelefonOzellikleri.Controllers
                     })
                 .ToListAsync();
 
+            var news = await _feedService.GetNewsAsync();
+
             var viewModel = new HomeViewModel
             {
                 SiteTitle = siteSettings?.SiteTitle ?? "",
@@ -49,6 +54,7 @@ namespace TelefonOzellikleri.Controllers
             ViewData["Title"] = viewModel.SiteTitle;
             ViewData["Description"] = viewModel.SiteDescription;
             ViewData["FooterText"] = siteSettings?.FooterText;
+            ViewData["News"] = news;
 
             return View(viewModel);
         }

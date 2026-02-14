@@ -1,0 +1,161 @@
+@using TelefonOzellikleri.Models
+@using TelefonOzellikleri.Services
+
+@model List<FeedItem>
+
+<!-- Son Haberler -->
+<section class="recent-news-section">
+    <div class="section-header mb-4">
+        <h2 class="section-title">Akıllı Telefon Haberleri</h2>
+        <p class="text-muted">En son akıllı telefon gelişmeleri ve haberlerini takip edin</p>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="news-grid">
+            @foreach (var item in Model.Take(6))
+            {
+                <article class="news-card">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <div class="news-card-image">
+                            <img src="@item.ImageUrl" alt="@item.Title" loading="lazy" />
+                        </div>
+                    }
+                    <div class="news-card-content">
+                        <h3 class="news-card-title">
+                            <a href="@item.Link" target="_blank" rel="noopener noreferrer">@item.Title</a>
+                        </h3>
+                        <p class="news-card-summary">
+                            @item.Description
+                        </p>
+                        <a href="@item.Link" target="_blank" rel="noopener noreferrer" class="news-read-more">
+                            Haberi Oku →
+                        </a>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <p class="text-muted">Şu anda haber yüklenemiyor. Lütfen daha sonra tekrar deneyin.</p>
+        </div>
+    }
+</section>
+
+<style>
+    .recent-news-section {
+        padding: 2rem 0;
+        border-top: 1px solid #e5e7eb;
+        margin-top: 3rem;
+    }
+
+    .news-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .news-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .news-card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        transform: translateY(-4px);
+    }
+
+    .news-card-image {
+        width: 100%;
+        height: 180px;
+        overflow: hidden;
+        background: #f0f0f0;
+    }
+
+    .news-card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .news-card:hover .news-card-image img {
+        transform: scale(1.05);
+    }
+
+    .news-card-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .news-card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1a1a2e;
+        margin: 0 0 0.75rem 0;
+        line-height: 1.4;
+    }
+
+    .news-card-title a {
+        color: #1a1a2e;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .news-card-title a:hover {
+        color: #007bff;
+    }
+
+    .news-card-summary {
+        font-size: 0.95rem;
+        color: #555;
+        margin: 0 0 1rem 0;
+        line-height: 1.5;
+        flex-grow: 1;
+    }
+
+    .news-card-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 0.85rem;
+        color: #888;
+    }
+
+    .news-read-more {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+        align-self: flex-start;
+    }
+
+    .news-read-more:hover {
+        color: #0056b3;
+    }
+
+    @@media (max-width: 768px) {
+        .news-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .news-card-title {
+            font-size: 1rem;
+        }
+
+        .news-card-summary {
+            font-size: 0.9rem;
+        }
+    }
+</style>

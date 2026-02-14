@@ -6,12 +6,15 @@ using TelefonOzellikleri.Data;
 using TelefonOzellikleri.Middleware;
 using TelefonOzellikleri.Models.Enums;
 using TelefonOzellikleri.Routing;
+using TelefonOzellikleri.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient<FeedService>();
+builder.Services.AddScoped<FeedService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

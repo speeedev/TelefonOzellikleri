@@ -66,6 +66,9 @@
     }
 </section>
 
+<!-- Partial View: Son Haberler -->
+@await Html.PartialAsync("_RecentNews", (List<TelefonOzellikleri.Models.FeedItem>?)ViewData["News"])
+
 <style>
     .latest-phones-section {
         padding: 1rem 0 2rem;

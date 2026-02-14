@@ -550,6 +550,19 @@
         "build": {
           "buildTransitive/netcoreapp3.1/_._": {}
         }
+      },
+      "System.ServiceModel.Syndication/5.0.0": {
+        "type": "package",
+        "compile": {
+          "ref/netcoreapp2.1/System.ServiceModel.Syndication.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.ServiceModel.Syndication.dll": {
+            "related": ".xml"
+          }
+        }
       }
     }
   },
@@ -1387,6 +1400,34 @@
         "system.composition.typedparts.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "System.ServiceModel.Syndication/5.0.0": {
+      "sha512": "xjwRFydlevI/DMLlBcDRbOmofJTZNoJ0FCkEPdMw9i+85lDbl8Pw001LJKQbRSeHSVJCEuPfAvEuC1TAumxcmw==",
+      "type": "package",
+      "path": "system.servicemodel.syndication/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net461/System.ServiceModel.Syndication.dll",
+        "lib/net461/System.ServiceModel.Syndication.xml",
+        "lib/netstandard2.0/System.ServiceModel.Syndication.dll",
+        "lib/netstandard2.0/System.ServiceModel.Syndication.xml",
+        "ref/net461/System.ServiceModel.Syndication.dll",
+        "ref/net461/System.ServiceModel.Syndication.xml",
+        "ref/netcoreapp2.1/System.ServiceModel.Syndication.dll",
+        "ref/netcoreapp2.1/System.ServiceModel.Syndication.xml",
+        "ref/netstandard2.0/System.ServiceModel.Syndication.dll",
+        "ref/netstandard2.0/System.ServiceModel.Syndication.xml",
+        "runtimes/win/lib/net461/System.ServiceModel.Syndication.dll",
+        "runtimes/win/lib/net461/System.ServiceModel.Syndication.xml",
+        "system.servicemodel.syndication.5.0.0.nupkg.sha512",
+        "system.servicemodel.syndication.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -1394,7 +1435,8 @@
       "BCrypt.Net-Next >= 4.0.3",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.8",
       "Pomelo.EntityFrameworkCore.MySql >= 8.0.2",
-      "SixLabors.ImageSharp >= 3.1.12"
+      "SixLabors.ImageSharp >= 3.1.12",
+      "System.ServiceModel.Syndication >= 4.9.0"
     ]
   },
   "packageFolders": {
@@ -1457,6 +1499,10 @@
           "SixLabors.ImageSharp": {
             "target": "Package",
             "version": "[3.1.12, )"
+          },
+          "System.ServiceModel.Syndication": {
+            "target": "Package",
+            "version": "[4.9.0, )"
           }
         },
         "imports": [
@@ -1895,5 +1941,17 @@
         }
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "TelefonOzellikleri, System.ServiceModel.Syndication (>= 4.9.0) öğesine bağlı ancak System.ServiceModel.Syndication 4.9.0 bulunamadı. Bunun yerine System.ServiceModel.Syndication 5.0.0 çözümlendi.",
+      "libraryId": "System.ServiceModel.Syndication",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
 }

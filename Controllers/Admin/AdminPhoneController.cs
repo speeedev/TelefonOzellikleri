@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System.Text.Json;
 using TelefonOzellikleri.Data;
 using TelefonOzellikleri.Models;
@@ -15,11 +16,13 @@ namespace TelefonOzellikleri.Controllers.Admin
     {
         private readonly TelefonOzellikleriDbContext _context;
         private readonly ILogger<AdminPhoneController> _logger;
+        private readonly IMemoryCache _cache;
 
-        public AdminPhoneController(TelefonOzellikleriDbContext context, ILogger<AdminPhoneController> logger)
+        public AdminPhoneController(TelefonOzellikleriDbContext context, ILogger<AdminPhoneController> logger, IMemoryCache cache)
         {
             _context = context;
             _logger = logger;
+            _cache = cache;
         }
 
         [Route("derin/phones")]
@@ -270,6 +273,9 @@ namespace TelefonOzellikleri.Controllers.Admin
 
             await _context.SaveChangesAsync();
             _logger.LogInformation("Phone updated: {Id} - {ModelName}", phone.Id, phone.ModelName);
+
+            if (!string.IsNullOrWhiteSpace(phone.Slug))
+                _cache.Remove($"phone_detail_{phone.Slug.ToLowerInvariant()}");
 
             TempData["Success"] = $"{phone.ModelName} updated successfully.";
             return RedirectToAction("Edit", new { id = phone.Id });

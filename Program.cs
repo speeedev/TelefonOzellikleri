@@ -15,6 +15,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<FeedService>();
 builder.Services.AddScoped<FeedService>();
+builder.Services.AddResponseCaching();
+builder.Services.AddMemoryCache();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -68,6 +70,8 @@ app.UseMiddleware<MaintenanceMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseResponseCaching();
 
 app.UseRateLimiter();
 

@@ -1440,19 +1440,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/emirbolat/.nuget/packages/": {}
+    "/Users/emir.bolat/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/emirbolat/Yazilim/Back-End/TelefonOzellikleri/TelefonOzellikleri.csproj",
+      "projectUniqueName": "/Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/TelefonOzellikleri.csproj",
       "projectName": "TelefonOzellikleri",
-      "projectPath": "/Users/emirbolat/Yazilim/Back-End/TelefonOzellikleri/TelefonOzellikleri.csproj",
-      "packagesPath": "/Users/emirbolat/.nuget/packages/",
-      "outputPath": "/Users/emirbolat/Yazilim/Back-End/TelefonOzellikleri/obj/",
+      "projectPath": "/Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/TelefonOzellikleri.csproj",
+      "packagesPath": "/Users/emir.bolat/.nuget/packages/",
+      "outputPath": "/Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/emirbolat/.nuget/NuGet/NuGet.Config"
+        "/Users/emir.bolat/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -1947,7 +1947,7 @@
       "code": "NU1603",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "TelefonOzellikleri, System.ServiceModel.Syndication (>= 4.9.0) öğesine bağlı ancak System.ServiceModel.Syndication 4.9.0 bulunamadı. Bunun yerine System.ServiceModel.Syndication 5.0.0 çözümlendi.",
+      "message": "TelefonOzellikleri depends on System.ServiceModel.Syndication (>= 4.9.0) but System.ServiceModel.Syndication 4.9.0 was not found. System.ServiceModel.Syndication 5.0.0 was resolved instead.",
       "libraryId": "System.ServiceModel.Syndication",
       "targetGraphs": [
         "net10.0"

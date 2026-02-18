@@ -67,7 +67,7 @@
 </section>
 
 <!-- Partial View: Son Haberler -->
-@await Html.PartialAsync("_RecentNews", (List<TelefonOzellikleri.Models.FeedItem>?)ViewData["News"])
+@await Html.PartialAsync("_RecentNews", Model.News)
 
 <style>
     .latest-phones-section {

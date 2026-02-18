@@ -48,13 +48,14 @@ namespace TelefonOzellikleri.Controllers
             {
                 SiteTitle = siteSettings?.SiteTitle ?? "",
                 SiteDescription = siteSettings?.SiteDescription ?? "",
+                FooterText = siteSettings?.FooterText,
+                News = news,
                 LatestPhones = latestPhones
             };
 
             ViewData["Title"] = viewModel.SiteTitle;
             ViewData["Description"] = viewModel.SiteDescription;
-            ViewData["FooterText"] = siteSettings?.FooterText;
-            ViewData["News"] = news;
+            ViewData["FooterText"] = viewModel.FooterText;
 
             return View(viewModel);
         }

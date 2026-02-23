@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using System.Text.Json;
+using TelefonOzellikleri.Cache;
 using TelefonOzellikleri.Data;
 using TelefonOzellikleri.Models;
 using TelefonOzellikleri.Models.Dtos;
@@ -107,6 +108,9 @@ namespace TelefonOzellikleri.Controllers.Admin
             _context.Smartphones.Add(model);
 
             await _context.SaveChangesAsync();
+
+            _cache.Remove(CacheKeys.HomePage);
+            _cache.Remove(CacheKeys.PhoneDetail(model.Slug ?? string.Empty));
 
             _logger.LogInformation("Phone created: {Id} - {ModelName}", model.Id, model.ModelName);
             TempData["Success"] = $"{model.ModelName} created successfully.";
@@ -274,8 +278,9 @@ namespace TelefonOzellikleri.Controllers.Admin
             await _context.SaveChangesAsync();
             _logger.LogInformation("Phone updated: {Id} - {ModelName}", phone.Id, phone.ModelName);
 
+            _cache.Remove(CacheKeys.HomePage);
             if (!string.IsNullOrWhiteSpace(phone.Slug))
-                _cache.Remove($"phone_detail_{phone.Slug.ToLowerInvariant()}");
+                _cache.Remove(CacheKeys.PhoneDetail(phone.Slug));
 
             TempData["Success"] = $"{phone.ModelName} updated successfully.";
             return RedirectToAction("Edit", new { id = phone.Id });
@@ -292,6 +297,10 @@ namespace TelefonOzellikleri.Controllers.Admin
 
             _context.Smartphones.Remove(phone);
             await _context.SaveChangesAsync();
+
+            _cache.Remove(CacheKeys.HomePage);
+            if (!string.IsNullOrWhiteSpace(phone.Slug))
+                _cache.Remove(CacheKeys.PhoneDetail(phone.Slug));
 
             _logger.LogInformation("Phone deleted: {Id} - {ModelName}", phone.Id, phone.ModelName);
             TempData["Success"] = $"{phone.ModelName} deleted successfully.";
@@ -352,6 +361,9 @@ namespace TelefonOzellikleri.Controllers.Admin
                     phone.UpdatedAt = DateTime.Now;
                     _context.Smartphones.Add(phone);
                     await _context.SaveChangesAsync();
+
+                    _cache.Remove(CacheKeys.HomePage);
+                    _cache.Remove(CacheKeys.PhoneDetail(phone.Slug ?? string.Empty));
 
                     _logger.LogInformation("Phone imported from JSON: {Id} - {ModelName}", phone.Id, phone.ModelName);
                     TempData["Success"] = $"{phone.ModelName} imported successfully from JSON.";

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using TelefonOzellikleri.Cache;
 using TelefonOzellikleri.Data;
 using TelefonOzellikleri.Models;
 
@@ -11,11 +13,13 @@ namespace TelefonOzellikleri.Controllers.Admin
     {
         private readonly TelefonOzellikleriDbContext _context;
         private readonly ILogger<AdminPageController> _logger;
+        private readonly IMemoryCache _cache;
 
-        public AdminPageController(TelefonOzellikleriDbContext context, ILogger<AdminPageController> logger)
+        public AdminPageController(TelefonOzellikleriDbContext context, ILogger<AdminPageController> logger, IMemoryCache cache)
         {
             _context = context;
             _logger = logger;
+            _cache = cache;
         }
 
         [Route("derin/pages")]
@@ -26,7 +30,7 @@ namespace TelefonOzellikleri.Controllers.Admin
             var query = _context.Pages.AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
-                query = query.Where(p => p.PageTitle.Contains(search) || p.Slug.Contains(search));
+                query = query.Where(p => (p.PageTitle != null && p.PageTitle.Contains(search)) || p.Slug.Contains(search));
 
             var pages = await query.OrderByDescending(p => p.UpdatedAt).ToListAsync();
 
@@ -67,6 +71,8 @@ namespace TelefonOzellikleri.Controllers.Admin
             model.UpdatedAt = DateTime.Now;
             _context.Pages.Add(model);
             await _context.SaveChangesAsync();
+
+            _cache.Remove(CacheKeys.HomePage);
 
             _logger.LogInformation("Page created: {Id} - {Title}", model.Id, model.PageTitle);
             TempData["Success"] = $"{model.PageTitle} created successfully.";
@@ -112,6 +118,7 @@ namespace TelefonOzellikleri.Controllers.Admin
                 return View(page);
             }
 
+            var oldSlug = page.Slug;
             page.PageTitle = model.PageTitle;
             page.Slug = model.Slug;
             page.PageDescription = model.PageDescription;
@@ -119,6 +126,11 @@ namespace TelefonOzellikleri.Controllers.Admin
             page.UpdatedAt = DateTime.Now;
 
             await _context.SaveChangesAsync();
+
+            _cache.Remove(CacheKeys.HomePage);
+            _cache.Remove(CacheKeys.PageDetail(oldSlug));
+            _cache.Remove(CacheKeys.PageDetail(page.Slug));
+
             _logger.LogInformation("Page updated: {Id} - {Title}", page.Id, page.PageTitle);
 
             TempData["Success"] = $"{page.PageTitle} updated successfully.";
@@ -134,8 +146,13 @@ namespace TelefonOzellikleri.Controllers.Admin
             if (page == null)
                 return NotFound();
 
+            var slug = page.Slug;
             _context.Pages.Remove(page);
             await _context.SaveChangesAsync();
+
+            _cache.Remove(CacheKeys.HomePage);
+            _cache.Remove(CacheKeys.PageDetail(slug));
+
             _logger.LogInformation("Page deleted: {Id} - {Title}", id, page.PageTitle);
 
             TempData["Success"] = $"{page.PageTitle} deleted successfully.";

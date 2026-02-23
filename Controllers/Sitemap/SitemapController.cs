@@ -28,10 +28,10 @@ namespace TelefonOzellikleri.Controllers
 
             var urlElements = new List<XElement>();
 
-            // Ana sayfa
+            // Home page
             urlElements.Add(CreateUrlElement(ns, baseUrl, "/", "daily", "1.0"));
 
-            // Telefonlar
+            // Phones
             var phones = await _context.Smartphones
                 .Select(s => s.Slug)
                 .ToListAsync();
@@ -41,7 +41,7 @@ namespace TelefonOzellikleri.Controllers
                 urlElements.Add(CreateUrlElement(ns, baseUrl, $"/{slug}", "weekly", "0.8"));
             }
 
-            // Sayfalar
+            // Pages
             var pages = await _context.Pages
                 .Select(p => new { p.Slug, p.UpdatedAt })
                 .ToListAsync();

@@ -19,7 +19,7 @@ public class FeedService
 
     public async Task<List<FeedItem>> GetNewsAsync()
     {
-        // Cache kontrolü
+        // Cache check
         if (_cachedItems != null && DateTime.UtcNow < _cacheTime.AddMinutes(CacheDurationMinutes))
         {
             return _cachedItems;
@@ -62,13 +62,13 @@ public class FeedService
         // HTML entity decode
         var decoded = System.Net.WebUtility.HtmlDecode(description);
 
-        // CDATA'da tanımlanan karakterleri temizle
+        // Clean characters defined in CDATA
         decoded = System.Text.RegularExpressions.Regex.Replace(decoded, @"<!\[CDATA\[(.*?)\]\]>", "$1");
 
-        // HTML tag'lerini kaldır
+        // Remove HTML tags
         decoded = System.Text.RegularExpressions.Regex.Replace(decoded, "<[^>]+>", "");
 
-        // Extra boşlukları temizle
+        // Clean extra whitespace
         decoded = System.Text.RegularExpressions.Regex.Replace(decoded, @"\s+", " ").Trim();
 
         return decoded;

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using TelefonOzellikleri.Cache;
 using TelefonOzellikleri.Data;
 using TelefonOzellikleri.Models;
 using TelefonOzellikleri.Models.ViewModels;
@@ -9,6 +10,8 @@ namespace TelefonOzellikleri.Controllers
 {
     public class SmartphoneDetailController : Controller
     {
+        private const int PhoneCacheMinutes = 360; // 6 hours
+
         private readonly ILogger<SmartphoneDetailController> _logger;
         private readonly TelefonOzellikleriDbContext _context;
         private readonly IMemoryCache _cache;
@@ -26,18 +29,19 @@ namespace TelefonOzellikleri.Controllers
             if (string.IsNullOrWhiteSpace(slug))
                 return NotFound();
 
-            string cacheKey = $"phone_detail_{slug.ToLower()}";
-
-            if (!_cache.TryGetValue(cacheKey, out SmartphoneDetailViewModel viewModel))
+            var viewModel = await _cache.GetOrCreateAsync(CacheKeys.PhoneDetail(slug), async entry =>
             {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(PhoneCacheMinutes);
+
                 var phone = await _context.Smartphones
                     .AsNoTracking()
                     .FirstOrDefaultAsync(p => p.Slug == slug);
 
                 if (phone == null)
                 {
-                    _logger.LogWarning("Telefon bulunamadı: {Slug}", slug);
-                    return NotFound();
+                    _logger.LogWarning("Phone not found: {Slug}", slug);
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1); // Short TTL for newly added phones
+                    return (SmartphoneDetailViewModel?)null;
                 }
 
                 var brand = await _context.Brands
@@ -46,8 +50,8 @@ namespace TelefonOzellikleri.Controllers
 
                 if (brand == null)
                 {
-                    _logger.LogWarning("Marka bulunamadı: BrandId={BrandId}", phone.BrandId);
-                    return NotFound();
+                    _logger.LogWarning("Brand not found: BrandId={BrandId}", phone.BrandId);
+                    return (SmartphoneDetailViewModel?)null;
                 }
 
                 Series? series = null;
@@ -58,24 +62,17 @@ namespace TelefonOzellikleri.Controllers
                         .FirstOrDefaultAsync(s => s.Id == phone.SeriesId.Value);
                 }
 
-                viewModel = new SmartphoneDetailViewModel
+                _logger.LogInformation("Phone loaded from DB and cached: {Slug}", slug);
+                return new SmartphoneDetailViewModel
                 {
                     Phone = phone,
                     Brand = brand,
                     Series = series
                 };
+            });
 
-                var cacheOptions = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromHours(6));
-
-                _cache.Set(cacheKey, viewModel, cacheOptions);
-
-                _logger.LogInformation("Telefon DB'den çekildi ve cache'e alındı: {Slug}", slug);
-            }
-            else
-            {
-                _logger.LogInformation("Telefon cache'den getirildi: {Slug}", slug);
-            }
+            if (viewModel == null)
+                return NotFound();
 
             ViewData["Title"] = $"{viewModel.Brand.Name} {viewModel.Phone.ModelName} Özellikleri";
             ViewData["Description"] =

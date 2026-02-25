@@ -112,6 +112,7 @@ namespace TelefonOzellikleri.Controllers
                     ? viewModel.Phone.MainImageUrl
                     : baseUrl + (viewModel.Phone.MainImageUrl.StartsWith("/") ? "" : "/") + viewModel.Phone.MainImageUrl;
             }
+            ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/{slug}";
 
             return View(viewModel);
         }

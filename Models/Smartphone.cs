@@ -46,7 +46,13 @@ public partial class Smartphone
 
     public string? ScreenProtection { get; set; }
 
-    public string? DustWaterRes { get; set; }
+    public string? DustResistance { get; set; }
+
+    public bool? DustResistanceExists { get; set; }
+
+    public string? WaterResistance { get; set; }
+
+    public bool? WaterResistanceExists { get; set; }
 
     public decimal? ScreenSize { get; set; }
 

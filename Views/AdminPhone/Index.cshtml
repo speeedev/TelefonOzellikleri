@@ -71,7 +71,7 @@
                             <td>
                                 @if (!string.IsNullOrEmpty((string?)phone.MainImageUrl))
                                 {
-                                    <img src="@phone.MainImageUrl" alt="" class="phone-thumb" />
+                                    <img src="@phone.MainImageUrl" alt="@(brandDict.ContainsKey((int)phone.BrandId) ? $"{brandDict[(int)phone.BrandId]} {phone.ModelName}" : phone.ModelName)" class="phone-thumb" />
                                 }
                                 else
                                 {

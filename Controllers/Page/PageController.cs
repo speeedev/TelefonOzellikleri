@@ -23,7 +23,7 @@ namespace TelefonOzellikleri.Controllers
             _cache = cache;
         }
 
-        [Route("{slug:pageSlug}")]
+        [Route("page/{slug:pageSlug}")]
         public async Task<IActionResult> Index(string slug)
         {
             var page = await _cache.GetOrCreateAsync(CacheKeys.PageDetail(slug), async entry =>
@@ -51,6 +51,7 @@ namespace TelefonOzellikleri.Controllers
             var title = SeoHelper.TruncateTitle(page.PageTitle);
             ViewData["Title"] = string.IsNullOrEmpty(title) ? (page.PageTitle ?? "Sayfa") : title;
             ViewData["Description"] = SeoHelper.TruncateDescription(page.PageDescription);
+            ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/page/{slug}";
 
             return View(page);
         }

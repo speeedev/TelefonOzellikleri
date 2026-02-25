@@ -143,9 +143,25 @@
                             <label asp-for="ScreenProtection" class="form-label">Screen Protection</label>
                             <input asp-for="ScreenProtection" class="form-control" />
                         </div>
-                        <div class="col-md-6">
-                            <label asp-for="DustWaterRes" class="form-label">Dust/Water Resistance</label>
-                            <input asp-for="DustWaterRes" class="form-control" placeholder="e.g. IP68" />
+                        <div class="col-md-2">
+                            <div class="form-check mt-4">
+                                <input type="checkbox" id="DustResistanceExists" name="DustResistanceExists" class="form-check-input" value="true" @(Model.DustResistanceExists == true ? "checked" : "") />
+                                <label for="DustResistanceExists" class="form-check-label">Toz Dayanıklılığı Var</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label asp-for="DustResistance" class="form-label">Dust Resistance</label>
+                            <input asp-for="DustResistance" class="form-control" placeholder="e.g. 6, IP6X" />
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check mt-4">
+                                <input type="checkbox" id="WaterResistanceExists" name="WaterResistanceExists" class="form-check-input" value="true" @(Model.WaterResistanceExists == true ? "checked" : "") />
+                                <label for="WaterResistanceExists" class="form-check-label">Su Dayanıklılığı Var</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label asp-for="WaterResistance" class="form-label">Water Resistance</label>
+                            <input asp-for="WaterResistance" class="form-control" placeholder="e.g. 8, IPX8" />
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Colors</label>
@@ -806,7 +822,8 @@
                     setFieldValue('Weight', data.design.weight);
                     setFieldValue('FrameMaterial', data.design.frameMaterial);
                     setFieldValue('BackMaterial', data.design.backMaterial);
-                    setFieldValue('DustWaterRes', data.design.dustWaterResistance);
+                    setFieldValue('DustResistance', data.design.dustResistance ?? (data.design.dustWaterResistance && data.design.dustWaterResistance.match(/^IP(\d)/) ? data.design.dustWaterResistance[2] : null));
+                    setFieldValue('WaterResistance', data.design.waterResistance ?? (data.design.dustWaterResistance && data.design.dustWaterResistance.match(/^IP.(\d)/) ? data.design.dustWaterResistance[3] : null));
                 }
 
                 // Camera

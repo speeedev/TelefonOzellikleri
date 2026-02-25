@@ -52,11 +52,11 @@
                         <tr>
                             <td class="text-muted">@(page.Id)</td>
                             <td>
-                                <a href="/@(page.Slug)" target="_blank" class="fw-medium text-dark text-decoration-none">
+                                <a href="/page/@(page.Slug)" target="_blank" class="fw-medium text-dark text-decoration-none">
                                     @(page.PageTitle)
                                 </a>
                             </td>
-                            <td><small class="text-muted">/@(page.Slug)</small></td>
+                            <td><small class="text-muted">/page/@(page.Slug)</small></td>
                             <td>
                                 <small class="text-muted">
                                     @if (!string.IsNullOrEmpty(page.PageDescription))

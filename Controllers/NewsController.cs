@@ -18,6 +18,7 @@ public class NewsController : Controller
     {
         ViewData["Title"] = SeoHelper.TruncateTitle("Akıllı Telefon Haberleri - Son Gelişmeler");
         ViewData["Description"] = SeoHelper.TruncateDescription("En güncel akıllı telefon haberleri, lansmanlar ve sektör gelişmeleri. Mobil teknoloji dünyasından son dakika haberleri.");
+        ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/akilli-telefon-haberleri";
         var news = await _feedService.GetNewsAsync();
         return View(news);
     }

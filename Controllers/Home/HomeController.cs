@@ -76,6 +76,7 @@ namespace TelefonOzellikleri.Controllers
             ViewData["Title"] = string.IsNullOrEmpty(title) ? "Akıllı Telefon Özellikleri ve Karşılaştırmaları" : title;
             ViewData["Description"] = string.IsNullOrEmpty(description) ? "Akıllı telefon teknik özellikleri, kamera, ekran, batarya karşılaştırmaları. En güncel modelleri inceleyin." : description;
             ViewData["FooterText"] = viewModel.FooterText;
+            ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/";
             if (!string.IsNullOrEmpty(viewModel.SiteLogoUrl))
             {
                 var baseUrl = $"{Request.Scheme}://{Request.Host}";

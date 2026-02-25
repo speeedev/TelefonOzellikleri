@@ -267,9 +267,14 @@ public partial class TelefonOzellikleriDbContext : DbContext
             entity.Property(e => e.Cpu)
                 .HasMaxLength(150)
                 .HasColumnName("cpu");
-            entity.Property(e => e.DustWaterRes)
-                .HasMaxLength(50)
-                .HasColumnName("dust_water_res");
+            entity.Property(e => e.DustResistance)
+                .HasMaxLength(20)
+                .HasColumnName("dust_resistance");
+            entity.Property(e => e.DustResistanceExists).HasColumnName("dust_resistance_exists");
+            entity.Property(e => e.WaterResistance)
+                .HasMaxLength(20)
+                .HasColumnName("water_resistance");
+            entity.Property(e => e.WaterResistanceExists).HasColumnName("water_resistance_exists");
             entity.Property(e => e.EsimSupport).HasColumnName("esim_support");
             entity.Property(e => e.FingerprintType)
                 .HasMaxLength(50)

@@ -175,7 +175,10 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.FrameMaterial = model.FrameMaterial;
             phone.BackMaterial = model.BackMaterial;
             phone.ScreenProtection = model.ScreenProtection;
-            phone.DustWaterRes = model.DustWaterRes;
+            phone.DustResistance = model.DustResistance;
+            phone.DustResistanceExists = model.DustResistanceExists;
+            phone.WaterResistance = model.WaterResistance;
+            phone.WaterResistanceExists = model.WaterResistanceExists;
 
             phone.ScreenSize = model.ScreenSize;
             phone.ScreenTech = model.ScreenTech;
@@ -437,7 +440,10 @@ namespace TelefonOzellikleri.Controllers.Admin
                     Weight = phone.Weight,
                     FrameMaterial = phone.FrameMaterial,
                     BackMaterial = phone.BackMaterial,
-                    DustWaterRes = phone.DustWaterRes
+                    DustResistance = phone.DustResistance,
+                    DustResistanceExists = phone.DustResistanceExists,
+                    WaterResistance = phone.WaterResistance,
+                    WaterResistanceExists = phone.WaterResistanceExists
                 },
                 Camera = new SmartphoneJsonDto.CameraInfo
                 {
@@ -591,7 +597,10 @@ namespace TelefonOzellikleri.Controllers.Admin
                 Weight = dto.Design?.Weight,
                 FrameMaterial = dto.Design?.FrameMaterial,
                 BackMaterial = dto.Design?.BackMaterial,
-                DustWaterRes = dto.Design?.DustWaterRes,
+                DustResistance = dto.Design?.DustResistance ?? TryParseDustFromLegacy(dto.Design?.DustWaterRes),
+                DustResistanceExists = dto.Design?.DustResistanceExists,
+                WaterResistance = dto.Design?.WaterResistance ?? TryParseWaterFromLegacy(dto.Design?.DustWaterRes),
+                WaterResistanceExists = dto.Design?.WaterResistanceExists,
                 
                 Cam1Exists = dto.Camera?.Rear?.Main != null,
                 Cam1Res = dto.Camera?.Rear?.Main?.Resolution,

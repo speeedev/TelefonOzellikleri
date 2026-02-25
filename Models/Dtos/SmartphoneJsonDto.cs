@@ -126,6 +126,18 @@ public class SmartphoneJsonDto
         [JsonPropertyName("backMaterial")]
         public string? BackMaterial { get; set; }
 
+        [JsonPropertyName("dustResistance")]
+        public string? DustResistance { get; set; }
+
+        [JsonPropertyName("dustResistanceExists")]
+        public bool? DustResistanceExists { get; set; }
+
+        [JsonPropertyName("waterResistance")]
+        public string? WaterResistance { get; set; }
+
+        [JsonPropertyName("waterResistanceExists")]
+        public bool? WaterResistanceExists { get; set; }
+
         [JsonPropertyName("dustWaterResistance")]
         public string? DustWaterRes { get; set; }
     }

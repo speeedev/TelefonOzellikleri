@@ -210,9 +210,16 @@
                         {
                             <tr><th>Arka Kapak Malzemesi</th><td>@phone.BackMaterial</td></tr>
                         }
-                        @if (!string.IsNullOrEmpty(phone.DustWaterRes))
+                        @if (phone.DustResistanceExists == true || phone.WaterResistanceExists == true || !string.IsNullOrEmpty(phone.DustResistance) || !string.IsNullOrEmpty(phone.WaterResistance))
                         {
-                            <tr><th>Su/Toz Dayanıklılığı</th><td>@phone.DustWaterRes</td></tr>
+                            @if (phone.DustResistanceExists == true || !string.IsNullOrEmpty(phone.DustResistance))
+                            {
+                                <tr><th>Toz Dayanıklılığı</th><td>@(phone.DustResistance ?? "Var")</td></tr>
+                            }
+                            @if (phone.WaterResistanceExists == true || !string.IsNullOrEmpty(phone.WaterResistance))
+                            {
+                                <tr><th>Su Dayanıklılığı</th><td>@(phone.WaterResistance ?? "Var")</td></tr>
+                            }
                         }
                     </tbody>
                 </table>

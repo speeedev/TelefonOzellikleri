@@ -11,7 +11,7 @@
     }
     @{
         var baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
-        var canonicalUrl = ViewData["CanonicalUrl"] as string ?? $"{baseUrl}{Context.Request.Path}{Context.Request.QueryString}";
+        var canonicalUrl = ViewData["CanonicalUrl"] as string ?? $"{baseUrl}{Context.Request.Path}";
         var ogTitle = ViewData["OgTitle"] as string ?? ViewData["Title"]?.ToString() ?? "TelefonOzellikleri.Net";
         var ogDescription = ViewData["OgDescription"] as string ?? ViewData["Description"]?.ToString() ?? "Akıllı telefon özellikleri, karşılaştırmaları ve teknik detaylar.";
         var ogImage = ViewData["OgImage"] as string ?? $"{baseUrl}/images/og-default.jpg";

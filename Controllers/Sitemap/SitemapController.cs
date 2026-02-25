@@ -48,7 +48,7 @@ namespace TelefonOzellikleri.Controllers
 
             foreach (var page in pages)
             {
-                urlElements.Add(CreateUrlElement(ns, baseUrl, $"/{page.Slug}", "monthly", "0.6", page.UpdatedAt));
+                urlElements.Add(CreateUrlElement(ns, baseUrl, $"/page/{page.Slug}", "monthly", "0.6", page.UpdatedAt));
             }
 
             var sitemap = new XDocument(

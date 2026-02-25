@@ -258,10 +258,23 @@
                         {
                             <tr><th>Parlaklık</th><td>@phone.ScreenBrightnessNits nits</td></tr>
                         }
-                        @if (phone.AlwaysOnDisplay.HasValue)
-                        {
-                            <tr><th>AOD (Her Zaman Açık Ekran)</th><td>@(phone.AlwaysOnDisplay == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
-                        }
+                        <tr>
+                            <th>AOD (Her Zaman Açık Ekran)</th>
+                            <td>
+                                @if (phone.AlwaysOnDisplay == true)
+                                {
+                                    <text>✅ Var</text>
+                                }
+                                else if (phone.AlwaysOnDisplay == false)
+                                {
+                                    <text>❌ Yok</text>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                        </tr>
                         @if (!string.IsNullOrEmpty(phone.ScreenProtection))
                         {
                             <tr><th>Ekran Koruması</th><td>@phone.ScreenProtection</td></tr>

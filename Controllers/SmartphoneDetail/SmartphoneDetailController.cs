@@ -63,7 +63,6 @@ namespace TelefonOzellikleri.Controllers
                         .FirstOrDefaultAsync(s => s.Id == phone.SeriesId.Value);
                 }
 
-                _logger.LogInformation("Phone loaded from DB and cached: {Slug}", slug);
                 return new SmartphoneDetailViewModel
                 {
                     Phone = phone,

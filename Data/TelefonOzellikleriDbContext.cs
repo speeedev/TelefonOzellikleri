@@ -303,7 +303,7 @@ public partial class TelefonOzellikleriDbContext : DbContext
             entity.Property(e => e.FrontExists)
                 .HasColumnName("front_exists");
             entity.Property(e => e.FrontVideoRes)
-                .HasMaxLength(100)
+                .HasMaxLength(255)
                 .HasColumnName("front_video_res");
             entity.Property(e => e.GeekbenchScore)
                 .HasMaxLength(100)
@@ -343,7 +343,7 @@ public partial class TelefonOzellikleriDbContext : DbContext
                 .HasColumnType("json")
                 .HasColumnName("ram_options");
             entity.Property(e => e.RearVideoRes)
-                .HasMaxLength(100)
+                .HasMaxLength(255)
                 .HasColumnName("rear_video_res");
             entity.Property(e => e.RefreshRate).HasColumnName("refresh_rate");
             entity.Property(e => e.ReleaseDate).HasColumnName("release_date");

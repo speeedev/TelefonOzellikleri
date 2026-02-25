@@ -1,8 +1,8 @@
 @model TelefonOzellikleri.Models.ViewModels.SearchViewModel
 
-<section class="search-section">
+<section class="search-section" aria-label="Telefon arama">
     <div class="section-header mb-4">
-        <h2 class="section-title">Telefon Ara</h2>
+        <h1 class="section-title">Telefon Ara</h1>
         <p class="text-muted">Model adı veya marka ile arayın</p>
     </div>
 
@@ -30,13 +30,13 @@
             <div class="row g-4">
                 @foreach (var phone in Model.Results)
                 {
-                    <div class="col-6 col-md-4 col-lg-3">
+                    <article class="col-6 col-md-4 col-lg-3">
                         <a href="/@phone.Slug" class="text-decoration-none">
                             <div class="phone-card">
                                 <div class="phone-card-img">
                                     @if (!string.IsNullOrEmpty(phone.MainImageUrl))
                                     {
-                                        <img src="@phone.MainImageUrl" alt="@phone.BrandName @phone.ModelName" loading="lazy" />
+                                        <img src="@phone.MainImageUrl" alt="@phone.BrandName @phone.ModelName" width="200" height="220" loading="lazy" />
                                     }
                                     else
                                     {
@@ -48,7 +48,7 @@
                                 <div class="phone-card-body">
                                     @if (!string.IsNullOrEmpty(phone.BrandLogoUrl))
                                     {
-                                        <img src="@phone.BrandLogoUrl" alt="@phone.BrandName" class="phone-card-brand-logo" />
+                                        <img src="@phone.BrandLogoUrl" alt="@phone.BrandName" class="phone-card-brand-logo" width="80" height="24" />
                                     }
                                     else
                                     {
@@ -72,7 +72,7 @@
                                 </div>
                             </div>
                         </a>
-                    </div>
+                    </article>
                 }
             </div>
         }

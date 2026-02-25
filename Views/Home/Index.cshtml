@@ -1,5 +1,25 @@
 @model TelefonOzellikleri.Models.ViewModels.HomeViewModel
 
+@section StructuredData {
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@@type": "WebSite",
+    "name": "TelefonOzellikleri.Net",
+    "url": "@(Context.Request.Scheme)://@(Context.Request.Host)",
+    "description": "Akıllı telefon özellikleri ve karşılaştırmaları",
+    "potentialAction": {
+        "@@type": "SearchAction",
+        "target": {
+            "@@type": "EntryPoint",
+            "urlTemplate": "@(Context.Request.Scheme)://@(Context.Request.Host)/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+    }
+}
+</script>
+}
+
 <header class="page-header mb-4">
     <h1 class="page-title">@(string.IsNullOrEmpty(Model.SiteTitle) ? "Akıllı Telefon Özellikleri ve Karşılaştırmaları" : Model.SiteTitle)</h1>
     @if (!string.IsNullOrEmpty(Model.SiteDescription))
@@ -20,13 +40,13 @@
         <div class="row g-4">
             @foreach (var phone in Model.LatestPhones)
             {
-                <div class="col-6 col-md-4 col-lg-3">
+                <article class="col-6 col-md-4 col-lg-3">
                     <a href="/@phone.Slug" class="text-decoration-none">
                         <div class="phone-card">
                             <div class="phone-card-img">
                                 @if (!string.IsNullOrEmpty(phone.MainImageUrl))
                                 {
-                                    <img src="@phone.MainImageUrl" alt="@phone.BrandName @phone.ModelName" loading="lazy" />
+                                    <img src="@phone.MainImageUrl" alt="@phone.BrandName @phone.ModelName" width="200" height="220" loading="lazy" />
                                 }
                                 else
                                 {
@@ -38,7 +58,7 @@
                             <div class="phone-card-body">
                                 @if (!string.IsNullOrEmpty(phone.BrandLogoUrl))
                                 {
-                                    <img src="@phone.BrandLogoUrl" alt="@phone.BrandName" class="phone-card-brand-logo" />
+                                    <img src="@phone.BrandLogoUrl" alt="@phone.BrandName" class="phone-card-brand-logo" width="80" height="24" />
                                 }
                                 else
                                 {
@@ -62,7 +82,7 @@
                             </div>
                         </div>
                     </a>
-                </div>
+                </article>
             }
         </div>
     }

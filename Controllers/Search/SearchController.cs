@@ -39,6 +39,7 @@ public class SearchController : Controller
         var results = await _searchService.SearchAsync(viewModel.Query, MaxSearchResults);
         viewModel.Results = results.ToList();
         _logger.LogInformation("Search for '{Query}' returned {Count} results", viewModel.Query, results.Count);
+        ViewData["Robots"] = "noindex, follow";
 
         return View(viewModel);
     }

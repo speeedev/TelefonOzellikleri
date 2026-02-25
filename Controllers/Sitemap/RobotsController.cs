@@ -14,6 +14,7 @@ namespace TelefonOzellikleri.Controllers
             var robotsTxt = $"""
                 User-agent: *
                 Allow: /
+                Disallow: /derin/
                 Disallow: /Error/
 
                 Sitemap: {baseUrl}/sitemap.xml

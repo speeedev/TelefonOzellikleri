@@ -61,6 +61,7 @@ namespace TelefonOzellikleri.Controllers
                 {
                     SiteTitle = siteSettings?.SiteTitle ?? "",
                     SiteDescription = siteSettings?.SiteDescription ?? "",
+                    SiteLogoUrl = siteSettings?.LogoUrl,
                     FooterText = siteSettings?.FooterText,
                     News = news,
                     LatestPhones = latestPhones
@@ -75,6 +76,13 @@ namespace TelefonOzellikleri.Controllers
             ViewData["Title"] = string.IsNullOrEmpty(title) ? "Akıllı Telefon Özellikleri ve Karşılaştırmaları" : title;
             ViewData["Description"] = string.IsNullOrEmpty(description) ? "Akıllı telefon teknik özellikleri, kamera, ekran, batarya karşılaştırmaları. En güncel modelleri inceleyin." : description;
             ViewData["FooterText"] = viewModel.FooterText;
+            if (!string.IsNullOrEmpty(viewModel.SiteLogoUrl))
+            {
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                ViewData["OgImage"] = viewModel.SiteLogoUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                    ? viewModel.SiteLogoUrl
+                    : baseUrl + (viewModel.SiteLogoUrl.StartsWith("/") ? "" : "/") + viewModel.SiteLogoUrl;
+            }
 
             return View(viewModel);
         }

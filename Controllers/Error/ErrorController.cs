@@ -22,6 +22,7 @@ namespace TelefonOzellikleri.Controllers
             ViewData["Title"] = SeoHelper.TruncateTitle($"{title} | TelefonOzellikleri.Net");
             ViewData["StatusCode"] = code;
             ViewData["ErrorMessage"] = message;
+            ViewData["Robots"] = "noindex, nofollow";
 
             Response.StatusCode = code;
 

@@ -1,18 +1,55 @@
 @model TelefonOzellikleri.Models.ViewModels.SmartphoneDetailViewModel
+@using TelefonOzellikleri.Helpers
 
 @{
     var phone = Model.Phone;
     var brand = Model.Brand;
     var series = Model.Series;
+    var baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+    var productImage = !string.IsNullOrEmpty(phone.MainImageUrl)
+        ? (phone.MainImageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? phone.MainImageUrl : baseUrl + (phone.MainImageUrl.StartsWith("/") ? "" : "/") + phone.MainImageUrl)
+        : null;
+    var productUrl = $"{baseUrl}/{phone.Slug}";
+    var productName = $"{brand.Name} {phone.ModelName}";
 }
 
-<div class="container my-4">
+@section StructuredData {
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@@type": "Product",
+    "name": @Html.Raw(SchemaHelper.EscapeJsonString(productName)),
+    "description": @Html.Raw(SchemaHelper.EscapeJsonString($"{productName} teknik özellikleri, kamera, ekran, batarya ve donanım detayları")),
+    "url": @Html.Raw(SchemaHelper.EscapeJsonString(productUrl)),
+    @if (!string.IsNullOrEmpty(productImage))
+    {
+        <text>"image": @Html.Raw(SchemaHelper.EscapeJsonString(productImage)),</text>
+    }
+    "brand": {
+        "@@type": "Brand",
+        "name": @Html.Raw(SchemaHelper.EscapeJsonString(brand.Name))
+    }
+}
+</script>
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@@type": "BreadcrumbList",
+    "itemListElement": [
+        { "@@type": "ListItem", "position": 1, "name": "Ana Sayfa", "item": @Html.Raw(SchemaHelper.EscapeJsonString(baseUrl)) },
+        { "@@type": "ListItem", "position": 2, "name": @Html.Raw(SchemaHelper.EscapeJsonString(productName)), "item": @Html.Raw(SchemaHelper.EscapeJsonString(productUrl)) }
+    ]
+}
+</script>
+}
+
+<article class="container my-4">
     <!-- Telefon Başlık ve Görsel -->
     <div class="row mb-4">
         <div class="col-md-4 text-center mb-3 mb-md-0">
             @if (!string.IsNullOrEmpty(phone.MainImageUrl))
             {
-                <img src="@phone.MainImageUrl" alt="@brand.Name @phone.ModelName" class="phone-main-image img-fluid" />
+                <img src="@phone.MainImageUrl" alt="@brand.Name @phone.ModelName" class="phone-main-image img-fluid" width="400" height="500" />
             }
             else
             {
@@ -25,7 +62,7 @@
             <div class="phone-header-card">
                 @if (!string.IsNullOrEmpty(brand.LogoUrl))
                 {
-                    <img src="@brand.LogoUrl" alt="@brand.Name" class="brand-logo mb-2" />
+                    <img src="@brand.LogoUrl" alt="@brand.Name" class="brand-logo mb-2" width="120" height="36" />
                 }
                 <h1 class="phone-title">@brand.Name @phone.ModelName</h1>
                 @if (series != null)
@@ -635,7 +672,45 @@
 
         </div>
     </div>
-</div>
+
+    @if (Model.SameBrandPhones.Count > 0)
+    {
+        <section class="same-brand-phones mt-5 pt-4 border-top" aria-label="Aynı markanın diğer modelleri">
+            <h2 class="same-brand-title mb-3">@brand.Name'ın Son Çıkan Modelleri</h2>
+            <div class="row g-4">
+                @foreach (var p in Model.SameBrandPhones)
+                {
+                    <article class="col-6 col-md-4 col-lg-2">
+                        <a href="/@p.Slug" class="text-decoration-none">
+                            <div class="phone-card same-brand-card">
+                                <div class="phone-card-img">
+                                    @if (!string.IsNullOrEmpty(p.MainImageUrl))
+                                    {
+                                        <img src="@p.MainImageUrl" alt="@p.BrandName @p.ModelName" width="150" height="180" loading="lazy" />
+                                    }
+                                    else
+                                    {
+                                        <div class="phone-card-placeholder">
+                                            <span>Görsel Yok</span>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="phone-card-body">
+                                    <h3 class="phone-card-title">@p.ModelName</h3>
+                                    <div class="phone-card-specs">
+                                        @if (p.ScreenSize.HasValue) { <span class="spec-chip">@p.ScreenSize"</span> }
+                                        @if (!string.IsNullOrEmpty(p.Cam1Res)) { <span class="spec-chip">@p.Cam1Res</span> }
+                                        @if (p.BatteryCapacity.HasValue) { <span class="spec-chip">@p.BatteryCapacity mAh</span> }
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+                }
+            </div>
+        </section>
+    }
+</article>
 
 <style>
     .phone-main-image {
@@ -745,6 +820,87 @@
         text-decoration: underline;
     }
 
+    .same-brand-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a1a2e;
+    }
+
+    .same-brand-phones .phone-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+    }
+
+    .same-brand-phones .phone-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .same-brand-phones .phone-card-img {
+        width: 100%;
+        height: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        padding: 0.75rem;
+    }
+
+    .same-brand-phones .phone-card-img img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .same-brand-phones .phone-card-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #aaa;
+        font-size: 0.75rem;
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+    }
+
+    .same-brand-phones .phone-card-body {
+        padding: 0.5rem 0.75rem 0.75rem;
+    }
+
+    .same-brand-phones .phone-card-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #1a1a2e;
+        margin: 0;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .same-brand-phones .phone-card-specs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        margin-top: 0.35rem;
+    }
+
+    .same-brand-phones .spec-chip {
+        display: inline-block;
+        background: #f0f4f8;
+        color: #555;
+        padding: 0.15rem 0.4rem;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        font-weight: 500;
+    }
+
     @@media (max-width: 768px) {
         .phone-title {
             font-size: 1.4rem;
@@ -763,6 +919,10 @@
 
         .phone-header-card {
             padding: 1rem 1.25rem;
+        }
+
+        .same-brand-phones .phone-card-img {
+            height: 120px;
         }
     }
 </style>

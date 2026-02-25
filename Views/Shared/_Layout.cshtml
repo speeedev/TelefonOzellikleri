@@ -9,13 +9,46 @@
     {
         <meta name="description" content="@ViewData["Description"]" />
     }
+    @{
+        var baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+        var canonicalUrl = ViewData["CanonicalUrl"] as string ?? $"{baseUrl}{Context.Request.Path}{Context.Request.QueryString}";
+        var ogTitle = ViewData["OgTitle"] as string ?? ViewData["Title"]?.ToString() ?? "TelefonOzellikleri.Net";
+        var ogDescription = ViewData["OgDescription"] as string ?? ViewData["Description"]?.ToString() ?? "Akıllı telefon özellikleri, karşılaştırmaları ve teknik detaylar.";
+        var ogImage = ViewData["OgImage"] as string ?? $"{baseUrl}/images/og-default.jpg";
+    }
+    <link rel="canonical" href="@canonicalUrl" />
+    @if (ViewData["Robots"] != null)
+    {
+        <meta name="robots" content="@ViewData["Robots"]" />
+    }
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TelefonOzellikleri.Net" />
+    <meta property="og:title" content="@ogTitle" />
+    <meta property="og:description" content="@ogDescription" />
+    <meta property="og:url" content="@canonicalUrl" />
+    <meta property="og:image" content="@ogImage" />
+    <meta property="og:locale" content="tr_TR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@ogTitle" />
+    <meta name="twitter:description" content="@ogDescription" />
+    <meta name="twitter:image" content="@ogImage" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "Organization",
+        "name": "TelefonOzellikleri.Net",
+        "url": "@baseUrl",
+        "description": "Akıllı telefon özellikleri, karşılaştırmaları ve teknik detaylar"
+    }
+    </script>
+    @await RenderSectionAsync("StructuredData", required: false)
 </head>
 
 <body>
-    <header>
-        <nav class="navbar navbar-light bg-white border-bottom box-shadow mb-3">
+    <header role="banner">
+        <nav class="navbar navbar-light bg-white border-bottom box-shadow mb-3" aria-label="Ana menü">
             <div class="container-fluid d-flex flex-wrap justify-content-center justify-content-md-between align-items-center gap-2">
                 <a class="navbar-brand display-6 mb-0" asp-controller="Home" asp-action="Index">TelefonOzellikleri.Net</a>
                 <form method="get" action="/search" class="d-flex search-form" role="search">
@@ -26,12 +59,12 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main id="main-content" role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted" role="contentinfo">
         <div class="container">
             @ViewData["FooterText"]
         </div>

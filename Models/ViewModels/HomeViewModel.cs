@@ -6,6 +6,7 @@ namespace TelefonOzellikleri.Models.ViewModels
     {
         public string SiteTitle { get; set; } = string.Empty;
         public string SiteDescription { get; set; } = string.Empty;
+        public string? SiteLogoUrl { get; set; }
         public string? FooterText { get; set; }
         public List<FeedItem> News { get; set; } = new();
         public List<LatestPhoneItem> LatestPhones { get; set; } = new();

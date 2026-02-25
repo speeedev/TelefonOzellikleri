@@ -1,4 +1,16 @@
 @model TelefonOzellikleri.Models.Page
+@using TelefonOzellikleri.Helpers
+
+@section StructuredData {
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@@type": "WebPage",
+    "name": @Html.Raw(SchemaHelper.EscapeJsonString(Model.PageTitle ?? "Sayfa")),
+    "description": @Html.Raw(SchemaHelper.EscapeJsonString(Model.PageDescription ?? ""))
+}
+</script>
+}
 
 <div class="container my-5">
     <div class="row">

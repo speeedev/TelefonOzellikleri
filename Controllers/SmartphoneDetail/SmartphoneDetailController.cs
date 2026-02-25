@@ -75,9 +75,43 @@ namespace TelefonOzellikleri.Controllers
             if (viewModel == null)
                 return NotFound();
 
+            var sameBrandPhones = await _context.Smartphones
+                .AsNoTracking()
+                .Where(s => s.BrandId == viewModel.Phone.BrandId && s.Id != viewModel.Phone.Id)
+                .OrderByDescending(s => s.ReleaseDate ?? DateOnly.MinValue)
+                .ThenByDescending(s => s.Id)
+                .Take(6)
+                .Join(_context.Brands,
+                    phone => phone.BrandId,
+                    brand => brand.Id,
+                    (phone, brand) => new LatestPhoneItem
+                    {
+                        Slug = phone.Slug,
+                        ModelName = phone.ModelName,
+                        BrandName = brand.Name,
+                        BrandLogoUrl = brand.LogoUrl,
+                        MainImageUrl = phone.MainImageUrl,
+                        Chipset = phone.Chipset,
+                        BatteryCapacity = phone.BatteryCapacity,
+                        Cam1Res = phone.Cam1Res,
+                        ScreenSize = phone.ScreenSize,
+                        ReleaseDate = phone.ReleaseDate
+                    })
+                .ToListAsync();
+            viewModel.SameBrandPhones = sameBrandPhones;
+
             ViewData["Title"] = SeoHelper.TruncateTitle($"{viewModel.Brand.Name} {viewModel.Phone.ModelName} Özellikleri");
             ViewData["Description"] = SeoHelper.TruncateDescription(
                 $"{viewModel.Brand.Name} {viewModel.Phone.ModelName} teknik özellikleri, kamera, ekran, batarya, işlemci ve diğer detayları.");
+            ViewData["OgTitle"] = $"{viewModel.Brand.Name} {viewModel.Phone.ModelName} Özellikleri";
+            ViewData["OgDescription"] = ViewData["Description"];
+            if (!string.IsNullOrEmpty(viewModel.Phone.MainImageUrl))
+            {
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                ViewData["OgImage"] = viewModel.Phone.MainImageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                    ? viewModel.Phone.MainImageUrl
+                    : baseUrl + (viewModel.Phone.MainImageUrl.StartsWith("/") ? "" : "/") + viewModel.Phone.MainImageUrl;
+            }
 
             return View(viewModel);
         }

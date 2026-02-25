@@ -12,4 +12,6 @@ public static class CacheKeys
 
     public static string PageDetail(string slug) =>
         $"page_detail_{slug.ToLowerInvariant()}";
+
+    public const string NewsFeed = "news_feed";
 }

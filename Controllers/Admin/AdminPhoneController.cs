@@ -9,6 +9,7 @@ using TelefonOzellikleri.Data;
 using TelefonOzellikleri.Models;
 using TelefonOzellikleri.Models.Dtos;
 using TelefonOzellikleri.Models.Enums;
+using TelefonOzellikleri.Services.Search;
 
 namespace TelefonOzellikleri.Controllers.Admin
 {
@@ -18,12 +19,14 @@ namespace TelefonOzellikleri.Controllers.Admin
         private readonly TelefonOzellikleriDbContext _context;
         private readonly ILogger<AdminPhoneController> _logger;
         private readonly IMemoryCache _cache;
+        private readonly IPhoneSearchService _searchService;
 
-        public AdminPhoneController(TelefonOzellikleriDbContext context, ILogger<AdminPhoneController> logger, IMemoryCache cache)
+        public AdminPhoneController(TelefonOzellikleriDbContext context, ILogger<AdminPhoneController> logger, IMemoryCache cache, IPhoneSearchService searchService)
         {
             _context = context;
             _logger = logger;
             _cache = cache;
+            _searchService = searchService;
         }
 
         [Route("derin/phones")]
@@ -111,6 +114,7 @@ namespace TelefonOzellikleri.Controllers.Admin
 
             _cache.Remove(CacheKeys.HomePage);
             _cache.Remove(CacheKeys.PhoneDetail(model.Slug ?? string.Empty));
+            await _searchService.IndexAsync(model.Id);
 
             _logger.LogInformation("Phone created: {Id} - {ModelName}", model.Id, model.ModelName);
             TempData["Success"] = $"{model.ModelName} created successfully.";
@@ -281,6 +285,7 @@ namespace TelefonOzellikleri.Controllers.Admin
             _cache.Remove(CacheKeys.HomePage);
             if (!string.IsNullOrWhiteSpace(phone.Slug))
                 _cache.Remove(CacheKeys.PhoneDetail(phone.Slug));
+            await _searchService.IndexAsync(phone.Id);
 
             TempData["Success"] = $"{phone.ModelName} updated successfully.";
             return RedirectToAction("Edit", new { id = phone.Id });
@@ -295,14 +300,20 @@ namespace TelefonOzellikleri.Controllers.Admin
             if (phone == null)
                 return NotFound();
 
+            var phoneId = phone.Id;
+            var modelName = phone.ModelName;
+            var slug = phone.Slug;
             _context.Smartphones.Remove(phone);
             await _context.SaveChangesAsync();
 
             _cache.Remove(CacheKeys.HomePage);
-            if (!string.IsNullOrWhiteSpace(phone.Slug))
-                _cache.Remove(CacheKeys.PhoneDetail(phone.Slug));
+            if (!string.IsNullOrWhiteSpace(slug))
+            {
+                _cache.Remove(CacheKeys.PhoneDetail(slug));
+                await _searchService.DeleteFromIndexAsync(slug);
+            }
 
-            _logger.LogInformation("Phone deleted: {Id} - {ModelName}", phone.Id, phone.ModelName);
+            _logger.LogInformation("Phone deleted: {Id} - {ModelName}", phoneId, modelName);
             TempData["Success"] = $"{phone.ModelName} deleted successfully.";
             return RedirectToAction("Index");
         }
@@ -364,6 +375,7 @@ namespace TelefonOzellikleri.Controllers.Admin
 
                     _cache.Remove(CacheKeys.HomePage);
                     _cache.Remove(CacheKeys.PhoneDetail(phone.Slug ?? string.Empty));
+                    await _searchService.IndexAsync(phone.Id);
 
                     _logger.LogInformation("Phone imported from JSON: {Id} - {ModelName}", phone.Id, phone.ModelName);
                     TempData["Success"] = $"{phone.ModelName} imported successfully from JSON.";

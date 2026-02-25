@@ -1,5 +1,13 @@
 @model TelefonOzellikleri.Models.ViewModels.HomeViewModel
 
+<header class="page-header mb-4">
+    <h1 class="page-title">@(string.IsNullOrEmpty(Model.SiteTitle) ? "Akıllı Telefon Özellikleri ve Karşılaştırmaları" : Model.SiteTitle)</h1>
+    @if (!string.IsNullOrEmpty(Model.SiteDescription))
+    {
+        <p class="page-lead text-muted">@Model.SiteDescription</p>
+    }
+</header>
+
 <!-- Son Eklenen Telefonlar -->
 <section class="latest-phones-section">
     <div class="section-header mb-4">
@@ -70,6 +78,27 @@
 @await Html.PartialAsync("_RecentNews", Model.News)
 
 <style>
+    .page-header {
+        padding-top: 0.5rem;
+    }
+
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-lead {
+        font-size: 1.1rem;
+        margin-bottom: 0;
+    }
+
+    .search-section .search-form .input-group {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
     .latest-phones-section {
         padding: 1rem 0 2rem;
     }

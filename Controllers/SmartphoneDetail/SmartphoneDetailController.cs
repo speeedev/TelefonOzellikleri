@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using TelefonOzellikleri.Cache;
 using TelefonOzellikleri.Data;
+using TelefonOzellikleri.Helpers;
 using TelefonOzellikleri.Models;
 using TelefonOzellikleri.Models.ViewModels;
 
@@ -74,9 +75,9 @@ namespace TelefonOzellikleri.Controllers
             if (viewModel == null)
                 return NotFound();
 
-            ViewData["Title"] = $"{viewModel.Brand.Name} {viewModel.Phone.ModelName} Özellikleri";
-            ViewData["Description"] =
-                $"{viewModel.Brand.Name} {viewModel.Phone.ModelName} teknik özellikleri, kamera, ekran, batarya, işlemci ve daha fazlası.";
+            ViewData["Title"] = SeoHelper.TruncateTitle($"{viewModel.Brand.Name} {viewModel.Phone.ModelName} Özellikleri");
+            ViewData["Description"] = SeoHelper.TruncateDescription(
+                $"{viewModel.Brand.Name} {viewModel.Phone.ModelName} teknik özellikleri, kamera, ekran, batarya, işlemci ve diğer detayları.");
 
             return View(viewModel);
         }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using TelefonOzellikleri.Cache;
 using TelefonOzellikleri.Data;
+using TelefonOzellikleri.Helpers;
 using TelefonOzellikleri.Models;
 
 namespace TelefonOzellikleri.Controllers
@@ -47,8 +48,9 @@ namespace TelefonOzellikleri.Controllers
             if (page == null)
                 return NotFound();
 
-            ViewData["Title"] = page.PageTitle;
-            ViewData["Description"] = page.PageDescription;
+            var title = SeoHelper.TruncateTitle(page.PageTitle);
+            ViewData["Title"] = string.IsNullOrEmpty(title) ? (page.PageTitle ?? "Sayfa") : title;
+            ViewData["Description"] = SeoHelper.TruncateDescription(page.PageDescription);
 
             return View(page);
         }

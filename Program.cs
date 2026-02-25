@@ -1,12 +1,15 @@
 using System.Threading.RateLimiting;
+using Elastic.Clients.Elasticsearch;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using TelefonOzellikleri.Configuration;
 using TelefonOzellikleri.Data;
 using TelefonOzellikleri.Middleware;
 using TelefonOzellikleri.Models.Enums;
 using TelefonOzellikleri.Routing;
 using TelefonOzellikleri.Services;
+using TelefonOzellikleri.Services.Search;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,17 @@ builder.Services.AddHttpClient<FeedService>();
 builder.Services.AddScoped<FeedService>();
 builder.Services.AddResponseCaching();
 builder.Services.AddMemoryCache();
+
+builder.Services.Configure<ElasticsearchSettings>(builder.Configuration.GetSection(ElasticsearchSettings.SectionName));
+builder.Services.AddSingleton<ElasticsearchClient>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var url = config["Elasticsearch:Url"] ?? "http://localhost:9200";
+    return new ElasticsearchClient(new ElasticsearchClientSettings(new Uri(url)));
+});
+builder.Services.AddScoped<ElasticsearchPhoneSearchService>();
+builder.Services.AddScoped<DbPhoneSearchService>();
+builder.Services.AddScoped<IPhoneSearchService, CompositePhoneSearchService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -86,5 +100,13 @@ app.MapControllerRoute(
 
 app.MapRazorPages()
    .WithStaticAssets();
+
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    using var scope = app.Services.CreateScope();
+    var searchService = scope.ServiceProvider.GetService<IPhoneSearchService>();
+    if (searchService != null)
+        _ = Task.Run(() => searchService.IndexAllAsync());
+});
 
 app.Run();

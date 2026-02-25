@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TelefonOzellikleri.Helpers;
 
 namespace TelefonOzellikleri.Controllers
 {
@@ -18,7 +19,7 @@ namespace TelefonOzellikleri.Controllers
                 _ => ("Hata", "Beklenmeyen bir hata oluştu.")
             };
 
-            ViewData["Title"] = title;
+            ViewData["Title"] = SeoHelper.TruncateTitle($"{title} | TelefonOzellikleri.Net");
             ViewData["StatusCode"] = code;
             ViewData["ErrorMessage"] = message;
 

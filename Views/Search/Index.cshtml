@@ -1,0 +1,194 @@
+@model TelefonOzellikleri.Models.ViewModels.SearchViewModel
+
+<section class="search-section">
+    <div class="section-header mb-4">
+        <h2 class="section-title">Telefon Ara</h2>
+        <p class="text-muted">Model adı veya marka ile arayın</p>
+    </div>
+
+    <form method="get" action="/search" class="search-form mb-4">
+        <div class="input-group">
+            <input type="search"
+                   name="q"
+                   class="form-control form-control-lg"
+                   placeholder="Örn: iPhone 15, Samsung Galaxy..."
+                   value="@Model.Query"
+                   autofocus
+                   aria-label="Arama" />
+            <button type="submit" class="btn btn-primary btn-lg px-4">
+                <span class="d-none d-sm-inline">Ara</span>
+                <span class="d-inline d-sm-none">🔍</span>
+            </button>
+        </div>
+    </form>
+
+    @if (!string.IsNullOrEmpty(Model.Query))
+    {
+        if (Model.Results.Count > 0)
+        {
+            <p class="text-muted mb-3">"@Model.Query" için @Model.Results.Count sonuç bulundu.</p>
+            <div class="row g-4">
+                @foreach (var phone in Model.Results)
+                {
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <a href="/@phone.Slug" class="text-decoration-none">
+                            <div class="phone-card">
+                                <div class="phone-card-img">
+                                    @if (!string.IsNullOrEmpty(phone.MainImageUrl))
+                                    {
+                                        <img src="@phone.MainImageUrl" alt="@phone.BrandName @phone.ModelName" loading="lazy" />
+                                    }
+                                    else
+                                    {
+                                        <div class="phone-card-placeholder">
+                                            <span>Görsel Yok</span>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="phone-card-body">
+                                    @if (!string.IsNullOrEmpty(phone.BrandLogoUrl))
+                                    {
+                                        <img src="@phone.BrandLogoUrl" alt="@phone.BrandName" class="phone-card-brand-logo" />
+                                    }
+                                    else
+                                    {
+                                        <span class="phone-card-brand-text">@phone.BrandName</span>
+                                    }
+                                    <h3 class="phone-card-title">@phone.ModelName</h3>
+                                    <div class="phone-card-specs">
+                                        @if (phone.ScreenSize.HasValue)
+                                        {
+                                            <span class="spec-chip">@phone.ScreenSize"</span>
+                                        }
+                                        @if (!string.IsNullOrEmpty(phone.Cam1Res))
+                                        {
+                                            <span class="spec-chip">@phone.Cam1Res</span>
+                                        }
+                                        @if (phone.BatteryCapacity.HasValue)
+                                        {
+                                            <span class="spec-chip">@phone.BatteryCapacity mAh</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <p class="text-muted">"@Model.Query" için sonuç bulunamadı.</p>
+                <p class="text-muted small">Farklı anahtar kelimeler deneyebilirsiniz.</p>
+            </div>
+        }
+    }
+</section>
+
+<style>
+    .search-section {
+        padding: 1rem 0 2rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 0.25rem;
+    }
+
+    .search-form .input-group {
+        max-width: 500px;
+    }
+
+    .phone-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+    }
+
+    .phone-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .phone-card-img {
+        width: 100%;
+        height: 220px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        padding: 1rem;
+    }
+
+    .phone-card-img img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .phone-card-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #aaa;
+        font-size: 0.85rem;
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+    }
+
+    .phone-card-body {
+        padding: 0.85rem 1rem 1rem;
+    }
+
+    .phone-card-brand-logo {
+        height: 18px;
+        object-fit: contain;
+        margin-bottom: 0.25rem;
+        display: block;
+        opacity: 0.7;
+    }
+
+    .phone-card-brand-text {
+        font-size: 0.75rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+
+    .phone-card-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #1a1a2e;
+        margin: 0.25rem 0 0.5rem;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .phone-card-specs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+    }
+
+    .spec-chip {
+        display: inline-block;
+        background: #f0f4f8;
+        color: #555;
+        padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+</style>

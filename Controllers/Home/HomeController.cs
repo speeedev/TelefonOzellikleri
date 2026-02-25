@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using TelefonOzellikleri.Cache;
 using TelefonOzellikleri.Data;
+using TelefonOzellikleri.Helpers;
 using TelefonOzellikleri.Models.ViewModels;
 using TelefonOzellikleri.Services;
 
@@ -10,7 +11,7 @@ namespace TelefonOzellikleri.Controllers
 {
     public class HomeController : Controller
     {
-        private const int HomePageCacheMinutes = 5;
+        private const int HomePageCacheMinutes = 60;
 
         private readonly ILogger<HomeController> _logger;
         private readonly TelefonOzellikleriDbContext _context;
@@ -69,8 +70,10 @@ namespace TelefonOzellikleri.Controllers
             if (viewModel == null)
                 return NotFound();
 
-            ViewData["Title"] = viewModel.SiteTitle;
-            ViewData["Description"] = viewModel.SiteDescription;
+            var title = SeoHelper.TruncateTitle(viewModel.SiteTitle);
+            var description = SeoHelper.TruncateDescription(viewModel.SiteDescription);
+            ViewData["Title"] = string.IsNullOrEmpty(title) ? "Akıllı Telefon Özellikleri ve Karşılaştırmaları" : title;
+            ViewData["Description"] = string.IsNullOrEmpty(description) ? "Akıllı telefon teknik özellikleri, kamera, ekran, batarya karşılaştırmaları. En güncel modelleri inceleyin." : description;
             ViewData["FooterText"] = viewModel.FooterText;
 
             return View(viewModel);

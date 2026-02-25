@@ -340,3 +340,5 @@
 /Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/obj/Debug/net10.0/ref/TelefonOzellikleri.dll
 /Users/emirbolat/Yazilim/Back-End/TelefonOzellikleri/bin/Debug/net10.0/System.ServiceModel.Syndication.dll
 /Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/bin/Debug/net10.0/System.ServiceModel.Syndication.dll
+/Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/bin/Debug/net10.0/Elastic.Clients.Elasticsearch.dll
+/Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/bin/Debug/net10.0/Elastic.Transport.dll

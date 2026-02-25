@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "TZwVkD78K4I=",
+  "dgSpecHash": "lxhG1ybZmao=",
   "success": true,
   "projectFilePath": "/Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/TelefonOzellikleri.csproj",
   "expectedPackageFiles": [
     "/Users/emir.bolat/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
+    "/Users/emir.bolat/.nuget/packages/elastic.clients.elasticsearch/8.19.14/elastic.clients.elasticsearch.8.19.14.nupkg.sha512",
+    "/Users/emir.bolat/.nuget/packages/elastic.transport/0.10.3/elastic.transport.0.10.3.nupkg.sha512",
     "/Users/emir.bolat/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/emir.bolat/.nuget/packages/microsoft.bcl.asyncinterfaces/6.0.0/microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
     "/Users/emir.bolat/.nuget/packages/microsoft.codeanalysis.analyzers/3.3.3/microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",

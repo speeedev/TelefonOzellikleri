@@ -1,6 +1,7 @@
 @model TelefonOzellikleri.Models.ViewModels.SmartphoneDetailViewModel
 @using TelefonOzellikleri.Helpers
 @using System.Net
+@using Microsoft.AspNetCore.Html
 
 @functions {
     IHtmlContent RenderAsList(string? value) {
@@ -8,7 +9,7 @@
         var parts = value.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length <= 1) return Html.Raw(WebUtility.HtmlEncode(value));
         var sb = new System.Text.StringBuilder();
-        sb.Append("<ul class=\"list-unstyled mb-0\">");
+        sb.Append("<ul class=\"mb-0 ps-3\">");
         foreach (var p in parts) {
             sb.Append("<li>").Append(WebUtility.HtmlEncode(p)).Append("</li>");
         }
@@ -18,7 +19,7 @@
     IHtmlContent RenderListAsBullets(List<string>? items) {
         if (items == null || items.Count == 0) return Html.Raw("");
         var sb = new System.Text.StringBuilder();
-        sb.Append("<ul class=\"list-unstyled mb-0\">");
+        sb.Append("<ul class=\"mb-0 ps-3\">");
         foreach (var item in items) {
             sb.Append("<li>").Append(WebUtility.HtmlEncode(item)).Append("</li>");
         }

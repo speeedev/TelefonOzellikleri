@@ -9,6 +9,7 @@
       "TelefonOzellikleri/1.0.0": {
         "dependencies": {
           "BCrypt.Net-Next": "4.0.3",
+          "Elastic.Clients.Elasticsearch": "8.19.14",
           "Microsoft.EntityFrameworkCore.Design": "8.0.8",
           "Pomelo.EntityFrameworkCore.MySql": "8.0.2",
           "SixLabors.ImageSharp": "3.1.12",
@@ -23,6 +24,25 @@
           "lib/net6.0/BCrypt.Net-Next.dll": {
             "assemblyVersion": "4.0.3.0",
             "fileVersion": "4.0.3.0"
+          }
+        }
+      },
+      "Elastic.Clients.Elasticsearch/8.19.14": {
+        "dependencies": {
+          "Elastic.Transport": "0.10.3"
+        },
+        "runtime": {
+          "lib/net10.0/Elastic.Clients.Elasticsearch.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.19.14.0"
+          }
+        }
+      },
+      "Elastic.Transport/0.10.3": {
+        "runtime": {
+          "lib/net10.0/Elastic.Transport.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.10.3.0"
           }
         }
       },
@@ -435,6 +455,20 @@
       "sha512": "sha512-W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA==",
       "path": "bcrypt.net-next/4.0.3",
       "hashPath": "bcrypt.net-next.4.0.3.nupkg.sha512"
+    },
+    "Elastic.Clients.Elasticsearch/8.19.14": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2t+qzFU0zh4KquwWpc1KbQ3rIn1Jta9MExDgct8P9PJc59REUbX5kQZowTxQds+jOyi3lVK66dObD13UO74gbg==",
+      "path": "elastic.clients.elasticsearch/8.19.14",
+      "hashPath": "elastic.clients.elasticsearch.8.19.14.nupkg.sha512"
+    },
+    "Elastic.Transport/0.10.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DkHBUyfj1xpbDYfDHNWqCQHeAmZbEPrBqKA3dPMpfHQjzicG8269p+aXh3VrnEojfk4YVoj6DuI1SiwFdHmIzw==",
+      "path": "elastic.transport/0.10.3",
+      "hashPath": "elastic.transport.0.10.3.nupkg.sha512"
     },
     "Humanizer.Core/2.14.1": {
       "type": "package",

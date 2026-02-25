@@ -15,25 +15,21 @@
         <div class="news-grid">
             @foreach (var item in Model.Take(6))
             {
-                <article class="news-card">
-                    @if (!string.IsNullOrEmpty(item.ImageUrl))
-                    {
-                        <div class="news-card-image">
-                            <img src="@item.ImageUrl" alt="@item.Title" width="320" height="180" loading="lazy" />
+                <a href="@item.Link" target="_blank" rel="noopener noreferrer" class="news-card-link">
+                    <article class="news-card">
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <div class="news-card-image">
+                                <img src="@item.ImageUrl" alt="@item.Title" width="320" height="180" loading="lazy" />
+                            </div>
+                        }
+                        <div class="news-card-content">
+                            <h3 class="news-card-title">@item.Title</h3>
+                            <p class="news-card-summary">@item.Description</p>
+                            <span class="news-read-more">Haberi Oku →</span>
                         </div>
-                    }
-                    <div class="news-card-content">
-                        <h3 class="news-card-title">
-                            <a href="@item.Link" target="_blank" rel="noopener noreferrer">@item.Title</a>
-                        </h3>
-                        <p class="news-card-summary">
-                            @item.Description
-                        </p>
-                        <a href="@item.Link" target="_blank" rel="noopener noreferrer" class="news-read-more">
-                            Haberi Oku →
-                        </a>
-                    </div>
-                </article>
+                    </article>
+                </a>
             }
         </div>
     }
@@ -56,6 +52,16 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         gap: 1.5rem;
+    }
+
+    .news-card-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .news-card-link:hover {
+        color: inherit;
     }
 
     .news-card {
@@ -103,15 +109,10 @@
         color: #1a1a2e;
         margin: 0 0 0.75rem 0;
         line-height: 1.4;
-    }
-
-    .news-card-title a {
-        color: #1a1a2e;
-        text-decoration: none;
         transition: color 0.2s ease;
     }
 
-    .news-card-title a:hover {
+    .news-card-link:hover .news-card-title {
         color: #007bff;
     }
 

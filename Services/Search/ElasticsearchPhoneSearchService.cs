@@ -1,5 +1,6 @@
 using Elastic.Clients.Elasticsearch;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using TelefonOzellikleri.Configuration;
 using TelefonOzellikleri.Data;
 using TelefonOzellikleri.Models.Elasticsearch;
@@ -18,10 +19,11 @@ public class ElasticsearchPhoneSearchService : IPhoneSearchService
 
     public ElasticsearchPhoneSearchService(
         ElasticsearchClient client,
-        ElasticsearchSettings settings,
+        IOptions<ElasticsearchSettings> options,
         TelefonOzellikleriDbContext context,
         ILogger<ElasticsearchPhoneSearchService> logger)
     {
+        var settings = options.Value;
         _client = client;
         _indexName = settings.IndexName;
         _context = context;

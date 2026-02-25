@@ -101,6 +101,9 @@ public class SmartphoneJsonDto
 
         [JsonPropertyName("extraFeatures")]
         public List<string>? ScreenExtraFeatures { get; set; }
+
+        [JsonPropertyName("alwaysOnDisplay")]
+        public bool? AlwaysOnDisplay { get; set; }
     }
 
     public class DesignInfo

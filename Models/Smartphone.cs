@@ -64,6 +64,8 @@ public partial class Smartphone
 
     public string? ScreenAspectRatio { get; set; }
 
+    public bool? AlwaysOnDisplay { get; set; }
+
     public bool? Cam1Exists { get; set; }
 
     public string? Cam1Res { get; set; }

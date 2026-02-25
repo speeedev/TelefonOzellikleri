@@ -185,6 +185,7 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.ScreenBodyRatio = model.ScreenBodyRatio;
             phone.ScreenAspectRatio = model.ScreenAspectRatio;
             phone.ScreenBrightnessNits = model.ScreenBrightnessNits;
+            phone.AlwaysOnDisplay = model.AlwaysOnDisplay;
 
             phone.Cam1Exists = model.Cam1Exists;
             phone.Cam1Res = model.Cam1Res;
@@ -425,7 +426,8 @@ namespace TelefonOzellikleri.Controllers.Admin
                     ScreenBrightnessNits = phone.ScreenBrightnessNits,
                     ScreenAspectRatio = phone.ScreenAspectRatio,
                     ScreenProtection = phone.ScreenProtection,
-                    ScreenExtraFeatures = phone.ScreenExtraFeatures
+                    ScreenExtraFeatures = phone.ScreenExtraFeatures,
+                    AlwaysOnDisplay = phone.AlwaysOnDisplay
                 },
                 Design = new SmartphoneJsonDto.DesignInfo
                 {
@@ -581,6 +583,7 @@ namespace TelefonOzellikleri.Controllers.Admin
                 ScreenAspectRatio = dto.Display?.ScreenAspectRatio,
                 ScreenProtection = dto.Display?.ScreenProtection,
                 ScreenExtraFeatures = dto.Display?.ScreenExtraFeatures,
+                AlwaysOnDisplay = dto.Display?.AlwaysOnDisplay,
                 
                 Height = dto.Design?.Height,
                 Width = dto.Design?.Width,

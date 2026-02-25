@@ -195,6 +195,12 @@
                             <label asp-for="ScreenAspectRatio" class="form-label">Aspect Ratio</label>
                             <input asp-for="ScreenAspectRatio" class="form-control" placeholder="e.g. 19.5:9" />
                         </div>
+                        <div class="col-md-3">
+                            <div class="form-check mt-4">
+                                <input type="checkbox" id="AlwaysOnDisplay" name="AlwaysOnDisplay" class="form-check-input" value="true" @(Model.AlwaysOnDisplay == true ? "checked" : "") />
+                                <label for="AlwaysOnDisplay" class="form-check-label">Always-On Display (AOD)</label>
+                            </div>
+                        </div>
                         <div class="col-md-12">
                             <label class="form-label">Extra Features</label>
                             <input type="text" name="ScreenExtraFeaturesRaw" class="form-control"

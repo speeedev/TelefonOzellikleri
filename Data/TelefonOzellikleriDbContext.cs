@@ -156,6 +156,7 @@ public partial class TelefonOzellikleriDbContext : DbContext
             entity.Property(e => e.AiFeaturesList)
                 .HasColumnType("text")
                 .HasColumnName("ai_features_list");
+            entity.Property(e => e.AlwaysOnDisplay).HasColumnName("always_on_display");
             entity.Property(e => e.AntutuScore).HasColumnName("antutu_score");
             entity.Property(e => e.BackMaterial)
                 .HasMaxLength(100)

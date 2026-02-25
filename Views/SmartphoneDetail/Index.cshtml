@@ -1,5 +1,31 @@
 @model TelefonOzellikleri.Models.ViewModels.SmartphoneDetailViewModel
 @using TelefonOzellikleri.Helpers
+@using System.Net
+
+@functions {
+    IHtmlContent RenderAsList(string? value) {
+        if (string.IsNullOrWhiteSpace(value)) return Html.Raw("");
+        var parts = value.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length <= 1) return Html.Raw(WebUtility.HtmlEncode(value));
+        var sb = new System.Text.StringBuilder();
+        sb.Append("<ul class=\"list-unstyled mb-0\">");
+        foreach (var p in parts) {
+            sb.Append("<li>").Append(WebUtility.HtmlEncode(p)).Append("</li>");
+        }
+        sb.Append("</ul>");
+        return Html.Raw(sb.ToString());
+    }
+    IHtmlContent RenderListAsBullets(List<string>? items) {
+        if (items == null || items.Count == 0) return Html.Raw("");
+        var sb = new System.Text.StringBuilder();
+        sb.Append("<ul class=\"list-unstyled mb-0\">");
+        foreach (var item in items) {
+            sb.Append("<li>").Append(WebUtility.HtmlEncode(item)).Append("</li>");
+        }
+        sb.Append("</ul>");
+        return Html.Raw(sb.ToString());
+    }
+}
 
 @{
     var phone = Model.Phone;
@@ -224,6 +250,10 @@
                         {
                             <tr><th>Parlaklık</th><td>@phone.ScreenBrightnessNits nits</td></tr>
                         }
+                        @if (phone.AlwaysOnDisplay.HasValue)
+                        {
+                            <tr><th>AOD (Her Zaman Açık Ekran)</th><td>@(phone.AlwaysOnDisplay == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                        }
                         @if (!string.IsNullOrEmpty(phone.ScreenProtection))
                         {
                             <tr><th>Ekran Koruması</th><td>@phone.ScreenProtection</td></tr>
@@ -276,7 +306,7 @@
                             }
                             @if (!string.IsNullOrEmpty(phone.Cam1Features))
                             {
-                                <tr><th>Ana Kamera Özellikler</th><td>@phone.Cam1Features</td></tr>
+                                <tr><th>Ana Kamera Özellikler</th><td>@RenderAsList(phone.Cam1Features)</td></tr>
                             }
 
                             <!-- Kamera 2 -->
@@ -300,7 +330,7 @@
                                 }
                                 @if (!string.IsNullOrEmpty(phone.Cam2Features))
                                 {
-                                    <tr><th>2. Kamera Özellikler</th><td>@phone.Cam2Features</td></tr>
+                                    <tr><th>2. Kamera Özellikler</th><td>@RenderAsList(phone.Cam2Features)</td></tr>
                                 }
                             }
 
@@ -325,7 +355,7 @@
                                 }
                                 @if (!string.IsNullOrEmpty(phone.Cam3Features))
                                 {
-                                    <tr><th>3. Kamera Özellikler</th><td>@phone.Cam3Features</td></tr>
+                                    <tr><th>3. Kamera Özellikler</th><td>@RenderAsList(phone.Cam3Features)</td></tr>
                                 }
                             }
 
@@ -350,13 +380,13 @@
                                 }
                                 @if (!string.IsNullOrEmpty(phone.Cam4Features))
                                 {
-                                    <tr><th>4. Kamera Özellikler</th><td>@phone.Cam4Features</td></tr>
+                                    <tr><th>4. Kamera Özellikler</th><td>@RenderAsList(phone.Cam4Features)</td></tr>
                                 }
                             }
 
                             @if (!string.IsNullOrEmpty(phone.RearVideoRes))
                             {
-                                <tr><th>Video Kaydı</th><td>@phone.RearVideoRes</td></tr>
+                                <tr><th>Video Kaydı</th><td>@RenderAsList(phone.RearVideoRes)</td></tr>
                             }
                         </tbody>
                     </table>
@@ -392,11 +422,11 @@
                             }
                             @if (!string.IsNullOrEmpty(phone.FrontCamFeatures))
                             {
-                                <tr><th>Özellikler</th><td>@phone.FrontCamFeatures</td></tr>
+                                <tr><th>Özellikler</th><td>@RenderAsList(phone.FrontCamFeatures)</td></tr>
                             }
                             @if (!string.IsNullOrEmpty(phone.FrontVideoRes))
                             {
-                                <tr><th>Video Kaydı</th><td>@phone.FrontVideoRes</td></tr>
+                                <tr><th>Video Kaydı</th><td>@RenderAsList(phone.FrontVideoRes)</td></tr>
                             }
                             @if (phone.SecondFrontExists == true)
                             {
@@ -447,14 +477,14 @@
                         {
                             <tr>
                                 <th>RAM Seçenekleri</th>
-                                <td>@string.Join(", ", phone.RamOptions)</td>
+                                <td>@RenderListAsBullets(phone.RamOptions)</td>
                             </tr>
                         }
                         @if (phone.StorageOptions != null && phone.StorageOptions.Count > 0)
                         {
                             <tr>
                                 <th>Depolama Seçenekleri</th>
-                                <td>@string.Join(", ", phone.StorageOptions)</td>
+                                <td>@RenderListAsBullets(phone.StorageOptions)</td>
                             </tr>
                         }
                         @if (!string.IsNullOrEmpty(phone.StorageType))
@@ -511,7 +541,7 @@
                         <tbody>
                             @if (!string.IsNullOrEmpty(phone.AiFeaturesList))
                             {
-                                <tr><th>AI Özellikleri</th><td>@phone.AiFeaturesList</td></tr>
+                                <tr><th>AI Özellikleri</th><td>@RenderAsList(phone.AiFeaturesList)</td></tr>
                             }
                         </tbody>
                     </table>
@@ -607,7 +637,7 @@
                         }
                         @if (!string.IsNullOrEmpty(phone.SensorsList))
                         {
-                            <tr><th>Sensörler</th><td>@phone.SensorsList</td></tr>
+                            <tr><th>Sensörler</th><td>@RenderAsList(phone.SensorsList)</td></tr>
                         }
                     </tbody>
                 </table>
@@ -664,7 +694,7 @@
                     <h3 class="spec-section-title">Kutu İçeriği</h3>
                     <table class="table spec-table">
                         <tbody>
-                            <tr><th>Kutu İçeriği</th><td>@phone.BoxContents</td></tr>
+                            <tr><th>Kutu İçeriği</th><td>@RenderAsList(phone.BoxContents)</td></tr>
                         </tbody>
                     </table>
                 </div>

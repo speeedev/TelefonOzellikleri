@@ -140,28 +140,32 @@
                             <input asp-for="BackMaterial" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <label asp-for="ScreenProtection" class="form-label">Screen Protection</label>
+                            <label asp-for="ScreenProtection" class="form-label">Ekran Koruma</label>
                             <input asp-for="ScreenProtection" class="form-control" />
                         </div>
-                        <div class="col-md-2">
-                            <div class="form-check mt-4">
-                                <input type="checkbox" id="DustResistanceExists" name="DustResistanceExists" class="form-check-input" value="true" @(Model.DustResistanceExists == true ? "checked" : "") />
-                                <label for="DustResistanceExists" class="form-check-label">Toz Dayanıklılığı Var</label>
+                        <div class="col-12">
+                            <hr class="my-2" />
+                            <h6 class="fw-bold text-muted mb-2">Toz ve Su Dayanıklılığı</h6>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded p-3">
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" id="DustResistanceExists" name="DustResistanceExists" class="form-check-input" value="true" @(Model.DustResistanceExists == true ? "checked" : "") />
+                                    <label for="DustResistanceExists" class="form-check-label fw-medium">Toz Dayanıklılığı Var</label>
+                                </div>
+                                <label asp-for="DustResistance" class="form-label small">Toz Dayanıklılığı Değeri</label>
+                                <input asp-for="DustResistance" class="form-control" placeholder="örn. 6, IP6X" />
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <label asp-for="DustResistance" class="form-label">Dust Resistance</label>
-                            <input asp-for="DustResistance" class="form-control" placeholder="e.g. 6, IP6X" />
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-check mt-4">
-                                <input type="checkbox" id="WaterResistanceExists" name="WaterResistanceExists" class="form-check-input" value="true" @(Model.WaterResistanceExists == true ? "checked" : "") />
-                                <label for="WaterResistanceExists" class="form-check-label">Su Dayanıklılığı Var</label>
+                        <div class="col-md-6">
+                            <div class="border rounded p-3">
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" id="WaterResistanceExists" name="WaterResistanceExists" class="form-check-input" value="true" @(Model.WaterResistanceExists == true ? "checked" : "") />
+                                    <label for="WaterResistanceExists" class="form-check-label fw-medium">Su Dayanıklılığı Var</label>
+                                </div>
+                                <label asp-for="WaterResistance" class="form-label small">Su Dayanıklılığı Değeri</label>
+                                <input asp-for="WaterResistance" class="form-control" placeholder="örn. 8, IPX8" />
                             </div>
-                        </div>
-                        <div class="col-md-2">
-                            <label asp-for="WaterResistance" class="form-label">Water Resistance</label>
-                            <input asp-for="WaterResistance" class="form-control" placeholder="e.g. 8, IPX8" />
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Colors</label>
@@ -747,6 +751,7 @@
             const checkboxFields = [
                 'Cam1Exists', 'Cam2Exists', 'Cam3Exists', 'Cam4Exists',
                 'FrontExists', 'SecondFrontExists',
+                'DustResistanceExists', 'WaterResistanceExists',
                 'Support4g', 'Support5g', 'Support45g',
                 'Nfc', 'Gps', 'IrBlaster', 'HasUwb', 'HasSatelliteSos', 'EsimSupport',
                 'HeadphoneJack35mm',

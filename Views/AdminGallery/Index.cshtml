@@ -1,0 +1,225 @@
+@using TelefonOzellikleri.Controllers.Admin
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var selectedFolder = ViewData["SelectedFolder"] as string ?? "phones";
+    var folders = new[] { ("phones", "Phones"), ("brands", "Brands"), ("pages", "Pages"), ("misc", "Other") };
+    var files = ViewData["Files"] as List<GalleryFileInfo> ?? new List<GalleryFileInfo>();
+    var baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+}
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0">Upload Image</h5>
+            </div>
+            <div class="card-body">
+                <form id="galleryUploadForm">
+                    <div class="mb-3">
+                        <label for="uploadFolder" class="form-label">Destination</label>
+                        <select id="uploadFolder" name="folder" class="form-select" data-selected="@selectedFolder">
+                            <option value="phones">Phone</option>
+                            <option value="brands">Brand</option>
+                            <option value="pages">Page</option>
+                            <option value="misc">Other</option>
+                        </select>
+                        <small class="text-muted">Image will be saved to uploads/[folder]/</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="galleryFileInput" class="form-label">Image File</label>
+                        <input type="file" id="galleryFileInput" class="form-control" accept="image/*" />
+                        <small class="text-muted">JPG, PNG, WebP, GIF, SVG. Max 2 MB.</small>
+                    </div>
+                    <button type="button" id="uploadBtn" class="btn btn-primary" disabled>Upload</button>
+                </form>
+                <div id="uploadStatus" class="mt-2 small text-muted"></div>
+                <div id="uploadedUrlSection" class="mt-3 d-none">
+                    <label class="form-label">URL</label>
+                    <div class="input-group">
+                        <input type="text" id="uploadedUrl" class="form-control" readonly />
+                        <button type="button" class="btn btn-outline-secondary" id="copyUrlBtn" title="Copy URL">Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <h5 class="mb-0">Browse: <span id="galleryBrowseLabel">@(selectedFolder == "misc" ? "Other" : char.ToUpper(selectedFolder[0]) + selectedFolder[1..])</span></h5>
+                <div class="d-flex gap-1" id="galleryTabs">
+                    @foreach (var (folderId, folderLabel) in folders)
+                    {
+                        <button type="button" class="btn btn-sm gallery-tab @(string.Equals(folderId, selectedFolder, StringComparison.OrdinalIgnoreCase) ? "btn-primary" : "btn-outline-secondary")" data-folder="@folderId">@folderLabel</button>
+                    }
+                </div>
+            </div>
+            <div class="card-body" id="galleryFileGrid">
+                @if (files.Count == 0)
+                {
+                    <p class="text-muted mb-0">No images in this folder yet.</p>
+                }
+                else
+                {
+                    <div class="row g-3">
+                        @foreach (var file in files)
+                        {
+                            <div class="col-6 col-md-4 col-lg-3">
+                                <div class="border rounded p-2 h-100">
+                                    <a href="@file.Url" target="_blank" class="d-block text-center mb-2" style="height: 80px; overflow: hidden;">
+                                        <img src="@file.Url" alt="@file.FileName" class="img-fluid" style="max-height: 80px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                                        <span class="d-none small text-muted">@file.FileName</span>
+                                    </a>
+                                    <div class="small text-truncate" title="@file.Url">@file.FileName</div>
+                                    <div class="input-group input-group-sm mt-1">
+                                        <input type="text" class="form-control form-control-sm" value="@file.Url" readonly />
+                                        <button type="button" class="btn btn-outline-secondary btn-sm copy-url-btn" data-url="@file.Url" title="Copy URL">Copy</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    (function () {
+        var fileInput = document.getElementById('galleryFileInput');
+        var uploadBtn = document.getElementById('uploadBtn');
+        var uploadFolder = document.getElementById('uploadFolder');
+        var sel = uploadFolder.getAttribute('data-selected');
+        if (sel && ['phones','brands','pages','misc'].indexOf(sel) >= 0) uploadFolder.value = sel;
+        var uploadStatus = document.getElementById('uploadStatus');
+        var uploadedUrlSection = document.getElementById('uploadedUrlSection');
+        var uploadedUrl = document.getElementById('uploadedUrl');
+        var copyUrlBtn = document.getElementById('copyUrlBtn');
+        var galleryFileGrid = document.getElementById('galleryFileGrid');
+        var galleryBrowseLabel = document.getElementById('galleryBrowseLabel');
+        var folderLabels = { phones: 'Phones', brands: 'Brands', pages: 'Pages', misc: 'Other' };
+
+        function setStatus(msg, isError) {
+            uploadStatus.textContent = msg;
+            uploadStatus.className = 'mt-2 small ' + (isError ? 'text-danger' : 'text-muted');
+        }
+
+        function loadFolder(folderId, pushState) {
+            var tabs = document.querySelectorAll('.gallery-tab');
+            tabs.forEach(function (t) {
+                t.classList.remove('btn-primary');
+                t.classList.add('btn-outline-secondary');
+                if (t.getAttribute('data-folder') === folderId) {
+                    t.classList.remove('btn-outline-secondary');
+                    t.classList.add('btn-primary');
+                }
+            });
+            uploadFolder.value = folderId;
+            galleryBrowseLabel.textContent = folderLabels[folderId] || folderId;
+            if (pushState !== false) {
+                history.pushState({ folder: folderId }, '', '/derin/gallery?folder=' + encodeURIComponent(folderId));
+            }
+            fetch('/derin/api/gallery-files?folder=' + encodeURIComponent(folderId) + '&_=' + Date.now(), { cache: 'no-store' })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    var html;
+                    if (!data.files || data.files.length === 0) {
+                        html = '<p class="text-muted mb-0">No images in this folder yet.</p>';
+                    } else {
+                        html = '<div class="row g-3">';
+                        data.files.forEach(function (f) {
+                            html += '<div class="col-6 col-md-4 col-lg-3"><div class="border rounded p-2 h-100">';
+                            html += '<a href="' + f.url + '" target="_blank" class="d-block text-center mb-2" style="height: 80px; overflow: hidden;">';
+                            html += '<img src="' + f.url + '" alt="' + (f.fileName || '') + '" class="img-fluid" style="max-height: 80px; object-fit: contain;" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';" />';
+                            html += '<span class="d-none small text-muted">' + (f.fileName || '') + '</span></a>';
+                            html += '<div class="small text-truncate" title="' + f.url + '">' + (f.fileName || '') + '</div>';
+                            html += '<div class="input-group input-group-sm mt-1"><input type="text" class="form-control form-control-sm" value="' + f.url + '" readonly />';
+                            html += '<button type="button" class="btn btn-outline-secondary btn-sm copy-url-btn" data-url="' + f.url + '" title="Copy URL">Copy</button></div></div></div>';
+                        });
+                        html += '</div>';
+                    }
+                    galleryFileGrid.innerHTML = html;
+                })
+                .catch(function () {
+                    galleryFileGrid.innerHTML = '<p class="text-muted mb-0">Failed to load files.</p>';
+                });
+        }
+
+        document.getElementById('galleryTabs').addEventListener('click', function (e) {
+            var btn = e.target.closest('.gallery-tab');
+            if (btn) {
+                e.preventDefault();
+                loadFolder(btn.getAttribute('data-folder'));
+            }
+        });
+
+        window.addEventListener('popstate', function (e) {
+            var folder = (e.state && e.state.folder) || (new URLSearchParams(location.search).get('folder')) || 'phones';
+            loadFolder(folder, false);
+        });
+
+        fileInput.addEventListener('change', function () {
+            uploadBtn.disabled = !this.files || this.files.length === 0;
+        });
+
+        uploadBtn.addEventListener('click', function () {
+            var file = fileInput.files[0];
+            if (!file) return;
+            if (file.size > 2 * 1024 * 1024) {
+                setStatus('File size must be less than 2 MB.', true);
+                return;
+            }
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('folder', uploadFolder.value);
+            uploadBtn.disabled = true;
+            setStatus('Uploading...');
+            fetch('/derin/upload/image', { method: 'POST', body: formData })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (data.url) {
+                        uploadedUrl.value = data.url;
+                        uploadedUrlSection.classList.remove('d-none');
+                        setStatus('Upload successful. Copy the URL below.');
+                        loadFolder(uploadFolder.value, false);
+                    } else {
+                        setStatus(data.error || 'Upload failed.', true);
+                    }
+                })
+                .catch(function () {
+                    setStatus('Upload failed.', true);
+                })
+                .finally(function () {
+                    uploadBtn.disabled = false;
+                    fileInput.value = '';
+                });
+        });
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function () {
+                var orig = copyUrlBtn.textContent;
+                copyUrlBtn.textContent = 'Copied!';
+                setTimeout(function () { copyUrlBtn.textContent = orig; }, 1500);
+            });
+        }
+
+        copyUrlBtn.addEventListener('click', function () {
+            copyToClipboard(uploadedUrl.value);
+        });
+
+        galleryFileGrid.addEventListener('click', function (e) {
+            var btn = e.target.closest('.copy-url-btn');
+            if (btn) {
+                var url = btn.getAttribute('data-url');
+                navigator.clipboard.writeText(url).then(function () {
+                    var orig = btn.textContent;
+                    btn.textContent = 'OK';
+                    setTimeout(function () { btn.textContent = orig; }, 1000);
+                });
+            }
+        });
+    })();
+</script>
+}

@@ -172,6 +172,13 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.Width = model.Width;
             phone.Thickness = model.Thickness;
             phone.Weight = model.Weight;
+            phone.IsFoldable = model.IsFoldable;
+            phone.HeightFolded = model.HeightFolded;
+            phone.WidthFolded = model.WidthFolded;
+            phone.ThicknessFolded = model.ThicknessFolded;
+            phone.HeightUnfolded = model.HeightUnfolded;
+            phone.WidthUnfolded = model.WidthUnfolded;
+            phone.ThicknessUnfolded = model.ThicknessUnfolded;
             phone.FrameMaterial = model.FrameMaterial;
             phone.BackMaterial = model.BackMaterial;
             phone.ScreenProtection = model.ScreenProtection;
@@ -187,8 +194,20 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.PixelDensity = model.PixelDensity;
             phone.ScreenBodyRatio = model.ScreenBodyRatio;
             phone.ScreenAspectRatio = model.ScreenAspectRatio;
+            phone.ScreenTouchSamplingRate = model.ScreenTouchSamplingRate;
+            phone.ScreenOtherSpecs = model.ScreenOtherSpecs;
             phone.ScreenBrightnessNits = model.ScreenBrightnessNits;
             phone.AlwaysOnDisplay = model.AlwaysOnDisplay;
+            phone.Screen2Exists = model.Screen2Exists;
+            phone.Screen2Size = model.Screen2Size;
+            phone.Screen2Tech = model.Screen2Tech;
+            phone.Screen2Res = model.Screen2Res;
+            phone.Screen2RefreshRate = model.Screen2RefreshRate;
+            phone.Screen2PixelDensity = model.Screen2PixelDensity;
+            phone.Screen2AspectRatio = model.Screen2AspectRatio;
+            phone.Screen2Protection = model.Screen2Protection;
+            phone.Screen2OtherSpecs = model.Screen2OtherSpecs;
+            phone.Screen2TouchSamplingRate = model.Screen2TouchSamplingRate;
 
             phone.Cam1Exists = model.Cam1Exists;
             phone.Cam1Res = model.Cam1Res;
@@ -235,6 +254,14 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.SecondFrontRes = model.SecondFrontRes;
             phone.SecondFrontSensorSize = model.SecondFrontSensorSize;
             phone.SecondFrontPixelSize = model.SecondFrontPixelSize;
+            phone.FrontCoverExists = model.FrontCoverExists;
+            phone.FrontCoverRes = model.FrontCoverRes;
+            phone.FrontCoverAperture = model.FrontCoverAperture;
+            phone.FrontCoverFocal = model.FrontCoverFocal;
+            phone.FrontCoverSensorSize = model.FrontCoverSensorSize;
+            phone.FrontCoverPixelSize = model.FrontCoverPixelSize;
+            phone.FrontCoverFeatures = model.FrontCoverFeatures;
+            phone.FrontCoverVideoRes = model.FrontCoverVideoRes;
 
             phone.HasFaceRecognition = model.HasFaceRecognition;
             phone.HasFingerprint = model.HasFingerprint;
@@ -257,7 +284,9 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.WirelessCharging = model.WirelessCharging;
             phone.WirelessSpeed = model.WirelessSpeed;
             phone.ReverseWireless = model.ReverseWireless;
-            phone.ReverseSpeed = model.ReverseSpeed;
+            phone.ReverseWirelessSpeed = model.ReverseWirelessSpeed;
+            phone.ReverseWired = model.ReverseWired;
+            phone.ReverseWiredSpeed = model.ReverseWiredSpeed;
 
             phone.Support4g = model.Support4g;
             phone.Support45g = model.Support45g;
@@ -278,6 +307,7 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.SpeakerType = model.SpeakerType;
 
             phone.BoxContents = model.BoxContents;
+            phone.ImageGallery = model.ImageGallery;
             phone.SarHead = model.SarHead;
             phone.SarBody = model.SarBody;
             phone.UpdatedAt = DateTime.Now;
@@ -499,7 +529,18 @@ namespace TelefonOzellikleri.Controllers.Admin
                         FrontCamPixelSize = phone.FrontCamPixelSize,
                         FrontCamFeatures = phone.FrontCamFeatures,
                         FrontVideoRes = phone.FrontVideoRes,
-                        SecondFrontRes = phone.SecondFrontRes
+                        SecondFrontRes = phone.SecondFrontRes,
+                        FrontCover = phone.FrontCoverExists == true ? new SmartphoneJsonDto.FrontCoverCameraInfo
+                        {
+                            Exists = true,
+                            Res = phone.FrontCoverRes,
+                            Aperture = phone.FrontCoverAperture,
+                            Focal = phone.FrontCoverFocal,
+                            SensorSize = phone.FrontCoverSensorSize,
+                            PixelSize = phone.FrontCoverPixelSize,
+                            Features = phone.FrontCoverFeatures,
+                            VideoRes = phone.FrontCoverVideoRes
+                        } : null
                     }
                 },
                 Hardware = new SmartphoneJsonDto.HardwareInfo
@@ -522,7 +563,9 @@ namespace TelefonOzellikleri.Controllers.Admin
                     WirelessCharging = phone.WirelessCharging,
                     WirelessSpeed = phone.WirelessSpeed,
                     ReverseWireless = phone.ReverseWireless,
-                    ReverseSpeed = phone.ReverseSpeed
+                    ReverseWirelessSpeed = phone.ReverseWirelessSpeed,
+                    ReverseWired = phone.ReverseWired,
+                    ReverseWiredSpeed = phone.ReverseWiredSpeed
                 },
                 Software = new SmartphoneJsonDto.SoftwareInfo
                 {
@@ -597,9 +640,9 @@ namespace TelefonOzellikleri.Controllers.Admin
                 Weight = dto.Design?.Weight,
                 FrameMaterial = dto.Design?.FrameMaterial,
                 BackMaterial = dto.Design?.BackMaterial,
-                DustResistance = dto.Design?.DustResistance ?? TryParseDustFromLegacy(dto.Design?.DustWaterRes),
+                DustResistance = dto.Design?.DustResistance ?? dto.Design?.DustWaterRes,
                 DustResistanceExists = dto.Design?.DustResistanceExists,
-                WaterResistance = dto.Design?.WaterResistance ?? TryParseWaterFromLegacy(dto.Design?.DustWaterRes),
+                WaterResistance = dto.Design?.WaterResistance ?? dto.Design?.DustWaterRes,
                 WaterResistanceExists = dto.Design?.WaterResistanceExists,
                 
                 Cam1Exists = dto.Camera?.Rear?.Main != null,
@@ -648,6 +691,14 @@ namespace TelefonOzellikleri.Controllers.Admin
                 FrontCamFeatures = dto.Camera?.Front?.FrontCamFeatures,
                 FrontVideoRes = dto.Camera?.Front?.FrontVideoRes,
                 SecondFrontRes = dto.Camera?.Front?.SecondFrontRes,
+                FrontCoverExists = dto.Camera?.Front?.FrontCover?.Exists,
+                FrontCoverRes = dto.Camera?.Front?.FrontCover?.Res,
+                FrontCoverAperture = dto.Camera?.Front?.FrontCover?.Aperture,
+                FrontCoverFocal = dto.Camera?.Front?.FrontCover?.Focal,
+                FrontCoverSensorSize = dto.Camera?.Front?.FrontCover?.SensorSize,
+                FrontCoverPixelSize = dto.Camera?.Front?.FrontCover?.PixelSize,
+                FrontCoverFeatures = dto.Camera?.Front?.FrontCover?.Features,
+                FrontCoverVideoRes = dto.Camera?.Front?.FrontCover?.VideoRes,
                 
                 Chipset = dto.Hardware?.Chipset,
                 Cpu = dto.Hardware?.Cpu,
@@ -665,7 +716,9 @@ namespace TelefonOzellikleri.Controllers.Admin
                 WirelessCharging = dto.Battery?.WirelessCharging,
                 WirelessSpeed = dto.Battery?.WirelessSpeed,
                 ReverseWireless = dto.Battery?.ReverseWireless,
-                ReverseSpeed = dto.Battery?.ReverseSpeed,
+                ReverseWirelessSpeed = dto.Battery?.ReverseWirelessSpeed,
+                ReverseWired = dto.Battery?.ReverseWired,
+                ReverseWiredSpeed = dto.Battery?.ReverseWiredSpeed,
                 
                 OsType = !string.IsNullOrEmpty(dto.Software?.OsType) ? Enum.Parse<OsType>(dto.Software.OsType, ignoreCase: true) : null,
                 OsVersion = dto.Software?.OsVersion,
@@ -707,6 +760,7 @@ namespace TelefonOzellikleri.Controllers.Admin
             phone.ScreenExtraFeatures = ParseCommaSeparated(Request.Form["ScreenExtraFeaturesRaw"]);
             phone.RamOptions = ParseCommaSeparated(Request.Form["RamOptionsRaw"]);
             phone.StorageOptions = ParseCommaSeparated(Request.Form["StorageOptionsRaw"]);
+            phone.ImageGallery = ParseCommaSeparated(Request.Form["ImageGalleryRaw"]);
         }
 
         private static List<string>? ParseCommaSeparated(string? raw)

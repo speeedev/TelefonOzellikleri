@@ -103,10 +103,13 @@ app.MapRazorPages()
 
 app.Lifetime.ApplicationStarted.Register(() =>
 {
-    using var scope = app.Services.CreateScope();
-    var searchService = scope.ServiceProvider.GetService<IPhoneSearchService>();
-    if (searchService != null)
-        _ = Task.Run(() => searchService.IndexAllAsync());
+    _ = Task.Run(async () =>
+    {
+        using var scope = app.Services.CreateScope();
+        var searchService = scope.ServiceProvider.GetService<IPhoneSearchService>();
+        if (searchService != null)
+            await searchService.IndexAllAsync();
+    });
 });
 
 app.Run();

@@ -31,6 +31,8 @@ namespace TelefonOzellikleri.Controllers.Admin
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> UploadImage(IFormFile file, string? folder)
         {
+            ViewData["Title"] = "Gallery";
+
             if (file == null || file.Length == 0)
                 return BadRequest(new { error = "No file provided." });
 
@@ -45,7 +47,9 @@ namespace TelefonOzellikleri.Controllers.Admin
             {
                 "brands" => "brands",
                 "pages" => "pages",
-                _ => "phones"
+                "misc" => "misc",
+                "other" => "misc",
+                _ => "misc"
             };
 
             var uploadsPath = Path.Combine(_env.WebRootPath, "uploads", subfolder);

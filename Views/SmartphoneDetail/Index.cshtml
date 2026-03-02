@@ -84,6 +84,20 @@
                     <span class="text-muted">Görsel Yok</span>
                 </div>
             }
+            @if (phone.ImageGallery != null && phone.ImageGallery.Count > 0)
+            {
+                <div class="row g-2 mt-2">
+                    @foreach (var imgUrl in phone.ImageGallery)
+                    {
+                        @if (!string.IsNullOrEmpty(imgUrl))
+                        {
+                            <div class="col-6 col-md-4">
+                                <img src="@imgUrl" alt="@brand.Name @phone.ModelName" class="img-fluid rounded" style="max-height: 120px; object-fit: cover;" />
+                            </div>
+                        }
+                    }
+                </div>
+            }
         </div>
         <div class="col-md-8">
             <div class="phone-header-card">
@@ -102,9 +116,7 @@
                 }
                 @if (phone.ReleaseDate.HasValue)
                 {
-                    <p class="text-muted mt-1">
-                        Çıkış Tarihi: @phone.ReleaseDate.Value.ToString("MMMM yyyy")
-                    </p>
+                    <p class="text-muted mt-1">Çıkış: @phone.ReleaseDate.Value.ToString("MMMM yyyy")</p>
                 }
                 @if (phone.OsType.HasValue)
                 {
@@ -185,7 +197,32 @@
                 <h3 class="spec-section-title">Tasarım & Boyut</h3>
                 <table class="table spec-table">
                     <tbody>
-                        @if (phone.Height.HasValue || phone.Width.HasValue || phone.Thickness.HasValue)
+                        @if (phone.IsFoldable == true && (phone.HeightFolded.HasValue || phone.ThicknessFolded.HasValue || phone.HeightUnfolded.HasValue || phone.ThicknessUnfolded.HasValue))
+                        {
+                            @if (phone.HeightFolded.HasValue || phone.WidthFolded.HasValue || phone.ThicknessFolded.HasValue)
+                            {
+                                <tr>
+                                    <th>Boyutlar (Katlanmış)</th>
+                                    <td>
+                                        @if (phone.HeightFolded.HasValue) { <text>@phone.HeightFolded mm (Y)</text> }
+                                        @if (phone.WidthFolded.HasValue) { <text> x @phone.WidthFolded mm (G)</text> }
+                                        @if (phone.ThicknessFolded.HasValue) { <text> x @phone.ThicknessFolded mm (K)</text> }
+                                    </td>
+                                </tr>
+                            }
+                            @if (phone.HeightUnfolded.HasValue || phone.WidthUnfolded.HasValue || phone.ThicknessUnfolded.HasValue)
+                            {
+                                <tr>
+                                    <th>Boyutlar (Açık)</th>
+                                    <td>
+                                        @if (phone.HeightUnfolded.HasValue) { <text>@phone.HeightUnfolded mm (Y)</text> }
+                                        @if (phone.WidthUnfolded.HasValue) { <text> x @phone.WidthUnfolded mm (G)</text> }
+                                        @if (phone.ThicknessUnfolded.HasValue) { <text> x @phone.ThicknessUnfolded mm (K)</text> }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else if (phone.Height.HasValue || phone.Width.HasValue || phone.Thickness.HasValue)
                         {
                             <tr>
                                 <th>Boyutlar</th>
@@ -210,16 +247,13 @@
                         {
                             <tr><th>Arka Kapak Malzemesi</th><td>@phone.BackMaterial</td></tr>
                         }
-                        @if (phone.DustResistanceExists == true || phone.WaterResistanceExists == true || !string.IsNullOrEmpty(phone.DustResistance) || !string.IsNullOrEmpty(phone.WaterResistance))
+                        @if (phone.DustResistanceExists.HasValue)
                         {
-                            @if (phone.DustResistanceExists == true || !string.IsNullOrEmpty(phone.DustResistance))
-                            {
-                                <tr><th>Toz Dayanıklılığı</th><td>@(phone.DustResistance ?? "Var")</td></tr>
-                            }
-                            @if (phone.WaterResistanceExists == true || !string.IsNullOrEmpty(phone.WaterResistance))
-                            {
-                                <tr><th>Su Dayanıklılığı</th><td>@(phone.WaterResistance ?? "Var")</td></tr>
-                            }
+                            <tr><th>Toz Dayanıklılığı</th><td>@(phone.DustResistanceExists == true ? (phone.DustResistance ?? "Var") : "Yok")</td></tr>
+                        }
+                        @if (phone.WaterResistanceExists.HasValue)
+                        {
+                            <tr><th>Su Dayanıklılığı</th><td>@(phone.WaterResistanceExists == true ? (phone.WaterResistance ?? "Var") : "Yok")</td></tr>
                         }
                     </tbody>
                 </table>
@@ -258,26 +292,24 @@
                         {
                             <tr><th>Parlaklık</th><td>@phone.ScreenBrightnessNits nits</td></tr>
                         }
-                        <tr>
-                            <th>AOD (Her Zaman Açık Ekran)</th>
-                            <td>
-                                @if (phone.AlwaysOnDisplay == true)
-                                {
-                                    <text>✅ Var</text>
-                                }
-                                else if (phone.AlwaysOnDisplay == false)
-                                {
-                                    <text>❌ Yok</text>
-                                }
-                                else
-                                {
-                                    <span class="text-muted">—</span>
-                                }
-                            </td>
-                        </tr>
+                        @if (phone.AlwaysOnDisplay.HasValue)
+                        {
+                            <tr>
+                                <th>AOD (Her Zaman Açık Ekran)</th>
+                                <td>@(phone.AlwaysOnDisplay == true ? "✅ Var" : "❌ Yok")</td>
+                            </tr>
+                        }
                         @if (!string.IsNullOrEmpty(phone.ScreenProtection))
                         {
                             <tr><th>Ekran Koruması</th><td>@phone.ScreenProtection</td></tr>
+                        }
+                        @if (phone.ScreenTouchSamplingRate.HasValue)
+                        {
+                            <tr><th>Dokunma Örnekleme</th><td>@phone.ScreenTouchSamplingRate Hz</td></tr>
+                        }
+                        @if (!string.IsNullOrEmpty(phone.ScreenOtherSpecs))
+                        {
+                            <tr><th>Diğer Özellikler</th><td>@phone.ScreenOtherSpecs</td></tr>
                         }
                         @if (phone.ScreenExtraFeatures != null && phone.ScreenExtraFeatures.Count > 0)
                         {
@@ -292,6 +324,46 @@
                                     </ul>
                                 </td>
                             </tr>
+                        }
+                        @if (phone.IsFoldable == true && phone.Screen2Exists == true && (phone.Screen2Size.HasValue || !string.IsNullOrEmpty(phone.Screen2Tech) || !string.IsNullOrEmpty(phone.Screen2Res)))
+                        {
+                            <tr><th colspan="2" class="bg-light">Kapak Ekranı</th></tr>
+                            @if (phone.Screen2Size.HasValue)
+                            {
+                                <tr><th>Kapak Ekran Boyutu</th><td>@phone.Screen2Size inç</td></tr>
+                            }
+                            @if (!string.IsNullOrEmpty(phone.Screen2Tech))
+                            {
+                                <tr><th>Kapak Ekran Teknolojisi</th><td>@phone.Screen2Tech</td></tr>
+                            }
+                            @if (!string.IsNullOrEmpty(phone.Screen2Res))
+                            {
+                                <tr><th>Kapak Ekran Çözünürlük</th><td>@phone.Screen2Res</td></tr>
+                            }
+                            @if (phone.Screen2RefreshRate.HasValue)
+                            {
+                                <tr><th>Kapak Ekran Yenileme</th><td>@phone.Screen2RefreshRate Hz</td></tr>
+                            }
+                            @if (phone.Screen2PixelDensity.HasValue)
+                            {
+                                <tr><th>Kapak Ekran PPI</th><td>@phone.Screen2PixelDensity ppi</td></tr>
+                            }
+                            @if (!string.IsNullOrEmpty(phone.Screen2AspectRatio))
+                            {
+                                <tr><th>Kapak Ekran Oran</th><td>@phone.Screen2AspectRatio</td></tr>
+                            }
+                            @if (!string.IsNullOrEmpty(phone.Screen2Protection))
+                            {
+                                <tr><th>Kapak Ekran Koruma</th><td>@phone.Screen2Protection</td></tr>
+                            }
+                            @if (phone.Screen2TouchSamplingRate.HasValue)
+                            {
+                                <tr><th>Kapak Dokunma Örnekleme</th><td>@phone.Screen2TouchSamplingRate Hz</td></tr>
+                            }
+                            @if (!string.IsNullOrEmpty(phone.Screen2OtherSpecs))
+                            {
+                                <tr><th>Kapak Diğer Özellikler</th><td>@phone.Screen2OtherSpecs</td></tr>
+                            }
                         }
                     </tbody>
                 </table>
@@ -415,7 +487,7 @@
             }
 
             <!-- ÖN KAMERA -->
-            @if (phone.FrontExists == true)
+            @if (phone.FrontExists == true || phone.FrontCoverExists == true)
             {
                 <div class="spec-section">
                     <h3 class="spec-section-title">Ön Kamera</h3>
@@ -462,6 +534,38 @@
                                 @if (!string.IsNullOrEmpty(phone.SecondFrontPixelSize))
                                 {
                                     <tr><th>2. Ön Kamera Piksel Boyutu</th><td>@phone.SecondFrontPixelSize</td></tr>
+                                }
+                            }
+                            @if (phone.FrontCoverExists == true)
+                            {
+                                <tr><th colspan="2" class="bg-light">Kapak Ekranı Özçekim Kamerası</th></tr>
+                                @if (!string.IsNullOrEmpty(phone.FrontCoverRes))
+                                {
+                                    <tr><th>Çözünürlük</th><td>@phone.FrontCoverRes</td></tr>
+                                }
+                                @if (!string.IsNullOrEmpty(phone.FrontCoverAperture))
+                                {
+                                    <tr><th>Diyafram</th><td>@phone.FrontCoverAperture</td></tr>
+                                }
+                                @if (!string.IsNullOrEmpty(phone.FrontCoverFocal))
+                                {
+                                    <tr><th>Odak Uzaklığı</th><td>@phone.FrontCoverFocal</td></tr>
+                                }
+                                @if (!string.IsNullOrEmpty(phone.FrontCoverSensorSize))
+                                {
+                                    <tr><th>Sensör Boyutu</th><td>@phone.FrontCoverSensorSize</td></tr>
+                                }
+                                @if (!string.IsNullOrEmpty(phone.FrontCoverPixelSize))
+                                {
+                                    <tr><th>Piksel Boyutu</th><td>@phone.FrontCoverPixelSize</td></tr>
+                                }
+                                @if (!string.IsNullOrEmpty(phone.FrontCoverFeatures))
+                                {
+                                    <tr><th>Özellikler</th><td>@RenderAsList(phone.FrontCoverFeatures)</td></tr>
+                                }
+                                @if (!string.IsNullOrEmpty(phone.FrontCoverVideoRes))
+                                {
+                                    <tr><th>Video Kaydı</th><td>@RenderAsList(phone.FrontCoverVideoRes)</td></tr>
                                 }
                             }
                         </tbody>
@@ -535,26 +639,30 @@
                         }
                         @if (phone.WirelessCharging.HasValue)
                         {
-                            <tr><th>Kablosuz Şarj</th><td>@(phone.WirelessCharging == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                            <tr><th>Kablosuz Şarj</th><td>@(phone.WirelessCharging == true ? "✅ Var" : "❌ Yok")</td></tr>
                         }
                         @if (phone.WirelessCharging == true && phone.WirelessSpeed.HasValue)
                         {
                             <tr><th>Kablosuz Şarj Hızı</th><td>@phone.WirelessSpeed W</td></tr>
                         }
-                        @if (   phone.ReverseWireless.HasValue)
+                        @if (phone.ReverseWireless.HasValue)
                         {
-                            <tr><th>Ters Kablosuz Şarj</th><td>@(phone.ReverseWireless == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                            <tr><th>Ters Kablosuz Şarj</th><td>@(phone.ReverseWireless == true ? "✅ Var" : "❌ Yok")</td></tr>
                         }
-                        @if (phone.ReverseWireless == true && phone.ReverseSpeed.HasValue)
+                        @if (phone.ReverseWireless == true && phone.ReverseWirelessSpeed.HasValue)
                         {
-                            <tr><th>Ters Şarj Hızı</th><td>@phone.ReverseSpeed W</td></tr>
+                            <tr><th>Ters Kablosuz Şarj Hızı</th><td>@phone.ReverseWirelessSpeed W</td></tr>
+                        }
+                        @if (phone.ReverseWired.HasValue)
+                        {
+                            <tr><th>Ters Kablolu Şarj</th><td>@(phone.ReverseWired == true ? (phone.ReverseWiredSpeed.HasValue ? $"{phone.ReverseWiredSpeed} W" : "Var") : "Yok")</td></tr>
                         }
                     </tbody>
                 </table>
             </div>
 
             <!-- YAPAY ZEKA -->
-            @if (phone.HasAiFeatures == true)
+            @if (phone.HasAiFeatures.HasValue && phone.HasAiFeatures == true)
             {
                 <div class="spec-section">
                     <h3 class="spec-section-title">Yapay Zeka Özellikleri</h3>
@@ -580,7 +688,7 @@
                         }
                         @if (phone.HeadphoneJack35mm.HasValue)
                         {
-                            <tr><th>3.5mm Kulaklık Girişi</th><td>@(phone.HeadphoneJack35mm == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                            <tr><th>3.5mm Kulaklık Girişi</th><td>@(phone.HeadphoneJack35mm == true ? "✅ Var" : "❌ Yok")</td></tr>
                         }
                     </tbody>
                 </table>
@@ -593,19 +701,19 @@
                     <tbody>
                         @if (phone.Support5g.HasValue)
                         {
-                            <tr><th>5G Desteği</th><td>@(phone.Support5g == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                            <tr><th>5G Desteği</th><td>@(phone.Support5g == true ? "✅ Var" : "❌ Yok")</td></tr>
                         }
                         @if (phone.Support4g.HasValue)
                         {
-                            <tr><th>4G Desteği</th><td>@(phone.Support4g == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                            <tr><th>4G Desteği</th><td>@(phone.Support4g == true ? "✅ Var" : "❌ Yok")</td></tr>
                         }
                         @if (phone.Support45g.HasValue)
                         {
-                            <tr><th>4.5G Desteği</th><td>@(phone.Support45g == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                            <tr><th>4.5G Desteği</th><td>@(phone.Support45g == true ? "✅ Var" : "❌ Yok")</td></tr>
                         }
                         @if (phone.Nfc.HasValue)
                         {
-                            <tr><th>NFC</th><td>@(phone.Nfc == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                            <tr><th>NFC</th><td>@(phone.Nfc == true ? "✅ Var" : "❌ Yok")</td></tr>
                         }
                         @if (!string.IsNullOrEmpty(phone.BluetoothVer))
                         {
@@ -617,19 +725,19 @@
                         }
                         @if (phone.Gps.HasValue)
                         {
-                            <tr><th>GPS</th><td>@(phone.Gps == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                            <tr><th>GPS</th><td>@(phone.Gps == true ? "✅ Var" : "❌ Yok")</td></tr>
                         }
                         @if (phone.IrBlaster.HasValue)
                         {
-                            <tr><th>Kızılötesi (IR Blaster)</th><td>@(phone.IrBlaster == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                            <tr><th>Kızılötesi (IR Blaster)</th><td>@(phone.IrBlaster == true ? "✅ Var" : "❌ Yok")</td></tr>
                         }
                         @if (phone.HasUwb.HasValue)
                         {
-                            <tr><th>UWB (Ultra Wide Band)</th><td>@(phone.HasUwb == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                            <tr><th>UWB (Ultra Wide Band)</th><td>@(phone.HasUwb == true ? "✅ Var" : "❌ Yok")</td></tr>
                         }
                         @if (phone.HasSatelliteSos.HasValue)
                         {
-                            <tr><th>Uydu SOS</th><td>@(phone.HasSatelliteSos == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                            <tr><th>Uydu SOS</th><td>@(phone.HasSatelliteSos == true ? "✅ Var" : "❌ Yok")</td></tr>
                         }
                         @if (!string.IsNullOrEmpty(phone.UsbType))
                         {
@@ -654,7 +762,7 @@
                         }
                         @if (phone.EsimSupport.HasValue)
                         {
-                            <tr><th>eSIM Desteği</th><td>@(phone.EsimSupport == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                            <tr><th>eSIM Desteği</th><td>@(phone.EsimSupport == true ? "✅ Var" : "❌ Yok")</td></tr>
                         }
                         @if (!string.IsNullOrEmpty(phone.SensorsList))
                         {
@@ -673,11 +781,11 @@
                         <tbody>
                             @if (phone.HasFaceRecognition.HasValue)
                             {
-                                <tr><th>Yüz Tanıma</th><td>@(phone.HasFaceRecognition == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                                <tr><th>Yüz Tanıma</th><td>@(phone.HasFaceRecognition == true ? "✅ Var" : "❌ Yok")</td></tr>
                             }
                             @if (phone.HasFingerprint.HasValue)
                             {
-                                <tr><th>Parmak İzi</th><td>@(phone.HasFingerprint == true ? Html.Raw("✅ <span class=\"visually-hidden\">Var</span>") : Html.Raw("❌ <span class=\"visually-hidden\">Yok</span>"))</td></tr>
+                                <tr><th>Parmak İzi</th><td>@(phone.HasFingerprint == true ? "✅ Var" : "❌ Yok")</td></tr>
                             }
                             @if (phone.HasFingerprint == true && !string.IsNullOrEmpty(phone.FingerprintType))
                             {

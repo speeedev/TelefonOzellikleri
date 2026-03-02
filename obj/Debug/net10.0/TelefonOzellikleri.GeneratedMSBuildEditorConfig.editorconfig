@@ -38,6 +38,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW5EYXNoYm9hcmQvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/Views/AdminGallery/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW5HYWxsZXJ5L0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/Views/AdminPage/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW5QYWdlL0VkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

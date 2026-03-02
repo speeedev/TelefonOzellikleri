@@ -305,6 +305,28 @@ public partial class TelefonOzellikleriDbContext : DbContext
             entity.Property(e => e.FrontVideoRes)
                 .HasMaxLength(255)
                 .HasColumnName("front_video_res");
+            entity.Property(e => e.FrontCoverExists).HasColumnName("front_cover_exists");
+            entity.Property(e => e.FrontCoverRes)
+                .HasMaxLength(50)
+                .HasColumnName("front_cover_res");
+            entity.Property(e => e.FrontCoverAperture)
+                .HasMaxLength(20)
+                .HasColumnName("front_cover_aperture");
+            entity.Property(e => e.FrontCoverFocal)
+                .HasMaxLength(20)
+                .HasColumnName("front_cover_focal");
+            entity.Property(e => e.FrontCoverSensorSize)
+                .HasMaxLength(20)
+                .HasColumnName("front_cover_sensor_size");
+            entity.Property(e => e.FrontCoverPixelSize)
+                .HasMaxLength(20)
+                .HasColumnName("front_cover_pixel_size");
+            entity.Property(e => e.FrontCoverFeatures)
+                .HasColumnType("text")
+                .HasColumnName("front_cover_features");
+            entity.Property(e => e.FrontCoverVideoRes)
+                .HasMaxLength(255)
+                .HasColumnName("front_cover_video_res");
             entity.Property(e => e.GeekbenchScore)
                 .HasMaxLength(100)
                 .HasColumnName("geekbench_score");
@@ -326,6 +348,9 @@ public partial class TelefonOzellikleriDbContext : DbContext
             entity.Property(e => e.MainImageUrl)
                 .HasMaxLength(255)
                 .HasColumnName("main_image_url");
+            entity.Property(e => e.ImageGallery)
+                .HasColumnType("json")
+                .HasColumnName("image_gallery");
             entity.Property(e => e.ModelName)
                 .HasMaxLength(255)
                 .HasColumnName("model_name");
@@ -347,8 +372,10 @@ public partial class TelefonOzellikleriDbContext : DbContext
                 .HasColumnName("rear_video_res");
             entity.Property(e => e.RefreshRate).HasColumnName("refresh_rate");
             entity.Property(e => e.ReleaseDate).HasColumnName("release_date");
-            entity.Property(e => e.ReverseSpeed).HasColumnName("reverse_speed");
+            entity.Property(e => e.ReverseWired).HasColumnName("reverse_wired");
+            entity.Property(e => e.ReverseWiredSpeed).HasColumnName("reverse_wired_speed");
             entity.Property(e => e.ReverseWireless).HasColumnName("reverse_wireless");
+            entity.Property(e => e.ReverseWirelessSpeed).HasColumnName("reverse_wireless_speed");
             entity.Property(e => e.SarBody)
                 .HasPrecision(5, 3)
                 .HasColumnName("sar_body");
@@ -358,6 +385,32 @@ public partial class TelefonOzellikleriDbContext : DbContext
             entity.Property(e => e.ScreenAspectRatio)
                 .HasMaxLength(20)
                 .HasColumnName("screen_aspect_ratio");
+            entity.Property(e => e.ScreenTouchSamplingRate).HasColumnName("screen_touch_sampling_rate");
+            entity.Property(e => e.ScreenOtherSpecs)
+                .HasColumnType("text")
+                .HasColumnName("screen_other_specs");
+            entity.Property(e => e.Screen2Exists).HasColumnName("screen2_exists");
+            entity.Property(e => e.Screen2Size)
+                .HasPrecision(10, 2)
+                .HasColumnName("screen2_size");
+            entity.Property(e => e.Screen2Tech)
+                .HasMaxLength(100)
+                .HasColumnName("screen2_tech");
+            entity.Property(e => e.Screen2Res)
+                .HasMaxLength(100)
+                .HasColumnName("screen2_res");
+            entity.Property(e => e.Screen2RefreshRate).HasColumnName("screen2_refresh_rate");
+            entity.Property(e => e.Screen2PixelDensity).HasColumnName("screen2_pixel_density");
+            entity.Property(e => e.Screen2AspectRatio)
+                .HasMaxLength(20)
+                .HasColumnName("screen2_aspect_ratio");
+            entity.Property(e => e.Screen2Protection)
+                .HasMaxLength(100)
+                .HasColumnName("screen2_protection");
+            entity.Property(e => e.Screen2OtherSpecs)
+                .HasColumnType("text")
+                .HasColumnName("screen2_other_specs");
+            entity.Property(e => e.Screen2TouchSamplingRate).HasColumnName("screen2_touch_sampling_rate");
             entity.Property(e => e.ScreenBodyRatio)
                 .HasPrecision(5, 2)
                 .HasColumnName("screen_body_ratio");
@@ -429,6 +482,25 @@ public partial class TelefonOzellikleriDbContext : DbContext
             entity.Property(e => e.Weight)
                 .HasPrecision(10, 2)
                 .HasColumnName("weight");
+            entity.Property(e => e.IsFoldable).HasColumnName("is_foldable");
+            entity.Property(e => e.HeightFolded)
+                .HasPrecision(10, 2)
+                .HasColumnName("height_folded");
+            entity.Property(e => e.WidthFolded)
+                .HasPrecision(10, 2)
+                .HasColumnName("width_folded");
+            entity.Property(e => e.ThicknessFolded)
+                .HasPrecision(10, 2)
+                .HasColumnName("thickness_folded");
+            entity.Property(e => e.HeightUnfolded)
+                .HasPrecision(10, 2)
+                .HasColumnName("height_unfolded");
+            entity.Property(e => e.WidthUnfolded)
+                .HasPrecision(10, 2)
+                .HasColumnName("width_unfolded");
+            entity.Property(e => e.ThicknessUnfolded)
+                .HasPrecision(10, 2)
+                .HasColumnName("thickness_unfolded");
             entity.Property(e => e.Width)
                 .HasPrecision(10, 2)
                 .HasColumnName("width");

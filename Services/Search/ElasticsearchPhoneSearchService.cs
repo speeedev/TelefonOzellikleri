@@ -91,6 +91,7 @@ public class ElasticsearchPhoneSearchService : IPhoneSearchService
                     })
                 .ToListAsync(cancellationToken);
 
+            var indexedCount = 0;
             foreach (var doc in phones)
             {
                 var response = await _client.IndexAsync(doc, i => i
@@ -98,10 +99,24 @@ public class ElasticsearchPhoneSearchService : IPhoneSearchService
                     .Id(doc.Slug),
                     cancellationToken);
                 if (!response.IsValidResponse)
-                    _logger.LogWarning("Failed to index {Slug}: {Debug}", doc.Slug, response.DebugInformation);
+                {
+                    var debug = response.DebugInformation ?? "";
+                    if (debug.Contains("Connection refused", StringComparison.OrdinalIgnoreCase) ||
+                        debug.Contains("No connection could be made", StringComparison.OrdinalIgnoreCase))
+                    {
+                        _logger.LogWarning("Elasticsearch is not reachable (connection refused). Skipping index. Start Elasticsearch or disable it in configuration.");
+                        IsAvailable = false;
+                        return;
+                    }
+                    _logger.LogWarning("Failed to index {Slug}: {Debug}", doc.Slug, debug);
+                }
+                else
+                {
+                    indexedCount++;
+                }
             }
 
-            _logger.LogInformation("Indexed {Count} smartphones to Elasticsearch", phones.Count);
+            _logger.LogInformation("Indexed {Count} smartphones to Elasticsearch", indexedCount);
         }
         catch (Exception ex)
         {

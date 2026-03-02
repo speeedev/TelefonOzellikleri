@@ -40,6 +40,20 @@ public partial class Smartphone
 
     public decimal? Weight { get; set; }
 
+    public bool? IsFoldable { get; set; }
+
+    public decimal? HeightFolded { get; set; }
+
+    public decimal? WidthFolded { get; set; }
+
+    public decimal? ThicknessFolded { get; set; }
+
+    public decimal? HeightUnfolded { get; set; }
+
+    public decimal? WidthUnfolded { get; set; }
+
+    public decimal? ThicknessUnfolded { get; set; }
+
     public string? FrameMaterial { get; set; }
 
     public string? BackMaterial { get; set; }
@@ -70,7 +84,31 @@ public partial class Smartphone
 
     public string? ScreenAspectRatio { get; set; }
 
+    public int? ScreenTouchSamplingRate { get; set; }
+
+    public string? ScreenOtherSpecs { get; set; }
+
     public bool? AlwaysOnDisplay { get; set; }
+
+    public bool? Screen2Exists { get; set; }
+
+    public decimal? Screen2Size { get; set; }
+
+    public string? Screen2Tech { get; set; }
+
+    public string? Screen2Res { get; set; }
+
+    public int? Screen2RefreshRate { get; set; }
+
+    public int? Screen2PixelDensity { get; set; }
+
+    public string? Screen2AspectRatio { get; set; }
+
+    public string? Screen2Protection { get; set; }
+
+    public string? Screen2OtherSpecs { get; set; }
+
+    public int? Screen2TouchSamplingRate { get; set; }
 
     public bool? Cam1Exists { get; set; }
 
@@ -152,6 +190,22 @@ public partial class Smartphone
 
     public string? FrontVideoRes { get; set; }
 
+    public bool? FrontCoverExists { get; set; }
+
+    public string? FrontCoverRes { get; set; }
+
+    public string? FrontCoverAperture { get; set; }
+
+    public string? FrontCoverFocal { get; set; }
+
+    public string? FrontCoverSensorSize { get; set; }
+
+    public string? FrontCoverPixelSize { get; set; }
+
+    public string? FrontCoverFeatures { get; set; }
+
+    public string? FrontCoverVideoRes { get; set; }
+
     public bool? SecondFrontExists { get; set; }
 
     public string? SecondFrontRes { get; set; }
@@ -182,7 +236,11 @@ public partial class Smartphone
 
     public bool? ReverseWireless { get; set; }
 
-    public int? ReverseSpeed { get; set; }
+    public int? ReverseWirelessSpeed { get; set; }
+
+    public bool? ReverseWired { get; set; }
+
+    public int? ReverseWiredSpeed { get; set; }
 
     public bool? HasAiFeatures { get; set; }
 
@@ -233,6 +291,8 @@ public partial class Smartphone
     public decimal? SarBody { get; set; }
 
     public string? MainImageUrl { get; set; }
+
+    public List<string>? ImageGallery { get; set; }
 
     public List<string>? Colors { get; set; }
 

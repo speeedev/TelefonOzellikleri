@@ -194,6 +194,36 @@ public class SmartphoneJsonDto
 
         [JsonPropertyName("secondFrontResolution")]
         public string? SecondFrontRes { get; set; }
+
+        [JsonPropertyName("frontCover")]
+        public FrontCoverCameraInfo? FrontCover { get; set; }
+    }
+
+    public class FrontCoverCameraInfo
+    {
+        [JsonPropertyName("exists")]
+        public bool? Exists { get; set; }
+
+        [JsonPropertyName("resolution")]
+        public string? Res { get; set; }
+
+        [JsonPropertyName("aperture")]
+        public string? Aperture { get; set; }
+
+        [JsonPropertyName("focal")]
+        public string? Focal { get; set; }
+
+        [JsonPropertyName("sensorSize")]
+        public string? SensorSize { get; set; }
+
+        [JsonPropertyName("pixelSize")]
+        public string? PixelSize { get; set; }
+
+        [JsonPropertyName("features")]
+        public string? Features { get; set; }
+
+        [JsonPropertyName("videoResolution")]
+        public string? VideoRes { get; set; }
     }
 
     public class CameraSpec
@@ -270,8 +300,14 @@ public class SmartphoneJsonDto
         [JsonPropertyName("reverseWireless")]
         public bool? ReverseWireless { get; set; }
 
-        [JsonPropertyName("reverseSpeed")]
-        public int? ReverseSpeed { get; set; }
+        [JsonPropertyName("reverseWirelessSpeed")]
+        public int? ReverseWirelessSpeed { get; set; }
+
+        [JsonPropertyName("reverseWired")]
+        public bool? ReverseWired { get; set; }
+
+        [JsonPropertyName("reverseWiredSpeed")]
+        public int? ReverseWiredSpeed { get; set; }
     }
 
     public class SoftwareInfo

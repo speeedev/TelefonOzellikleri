@@ -53,7 +53,7 @@
                     @if (isNew)
                     {
                         <div class="alert alert-info mb-3">
-                            <strong>Tip:</strong> You can paste JSON data from an exported phone using the button below.
+                            <strong>Hint:</strong> You can paste JSON data from an exported phone using the button below.
                             <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#jsonPasteModal">📋 Paste JSON Data</button>
                         </div>
                     }
@@ -98,9 +98,16 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label asp-for="ReleaseDate" class="form-label">Release Date</label>
                             <input asp-for="ReleaseDate" type="date" class="form-control" />
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Image Gallery (URLs)</label>
+                            <input type="text" name="ImageGalleryRaw" class="form-control"
+                                placeholder="Comma separated image URLs"
+                                value="@(Model.ImageGallery != null ? string.Join(", ", Model.ImageGallery) : "")" />
+                            <small class="text-muted">Enter image URLs separated by commas</small>
                         </div>
                         <div class="col-md-12">
                             <label asp-for="BoxContents" class="form-label">Box Contents</label>
@@ -115,6 +122,46 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="IsFoldable" class="form-label fw-medium">Foldable Phone</label>
+                            <select asp-for="IsFoldable" id="IsFoldable" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Evet</option>
+                                <option value="false">Hayır</option>
+                            </select>
+                        </div>
+                        <div class="col-12 foldable-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <hr class="my-2" />
+                            <h6 class="fw-bold text-muted mb-2">Folded Dimensions</h6>
+                        </div>
+                        <div class="col-md-3 foldable-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="HeightFolded" class="form-label">Height Folded (mm)</label>
+                            <input asp-for="HeightFolded" type="number" step="0.1" class="form-control" />
+                        </div>
+                        <div class="col-md-3 foldable-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="WidthFolded" class="form-label">Width Folded (mm)</label>
+                            <input asp-for="WidthFolded" type="number" step="0.1" class="form-control" />
+                        </div>
+                        <div class="col-md-3 foldable-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="ThicknessFolded" class="form-label">Thickness Folded (mm)</label>
+                            <input asp-for="ThicknessFolded" type="number" step="0.1" class="form-control" />
+                        </div>
+                        <div class="col-12 foldable-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <h6 class="fw-bold text-muted mb-2 mt-2">Unfolded Dimensions</h6>
+                        </div>
+                        <div class="col-md-3 foldable-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="HeightUnfolded" class="form-label">Height Unfolded (mm)</label>
+                            <input asp-for="HeightUnfolded" type="number" step="0.1" class="form-control" />
+                        </div>
+                        <div class="col-md-3 foldable-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="WidthUnfolded" class="form-label">Width Unfolded (mm)</label>
+                            <input asp-for="WidthUnfolded" type="number" step="0.1" class="form-control" />
+                        </div>
+                        <div class="col-md-3 foldable-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="ThicknessUnfolded" class="form-label">Thickness Unfolded (mm)</label>
+                            <input asp-for="ThicknessUnfolded" type="number" step="0.1" class="form-control" />
+                        </div>
+                        <div class="col-12"><hr class="my-2" /><h6 class="fw-bold text-muted mb-2">Standard Dimensions (for flat phones)</h6></div>
                         <div class="col-md-3">
                             <label asp-for="Height" class="form-label">Height (mm)</label>
                             <input asp-for="Height" type="number" step="0.1" class="form-control" />
@@ -140,31 +187,35 @@
                             <input asp-for="BackMaterial" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <label asp-for="ScreenProtection" class="form-label">Ekran Koruma</label>
+                            <label asp-for="ScreenProtection" class="form-label">Screen Protection</label>
                             <input asp-for="ScreenProtection" class="form-control" />
                         </div>
                         <div class="col-12">
                             <hr class="my-2" />
-                            <h6 class="fw-bold text-muted mb-2">Toz ve Su Dayanıklılığı</h6>
+                            <h6 class="fw-bold text-muted mb-2">Dust and Water Resistance</h6>
                         </div>
                         <div class="col-md-6">
                             <div class="border rounded p-3">
-                                <div class="form-check mb-2">
-                                    <input type="checkbox" id="DustResistanceExists" name="DustResistanceExists" class="form-check-input" value="true" @(Model.DustResistanceExists == true ? "checked" : "") />
-                                    <label for="DustResistanceExists" class="form-check-label fw-medium">Toz Dayanıklılığı Var</label>
-                                </div>
-                                <label asp-for="DustResistance" class="form-label small">Toz Dayanıklılığı Değeri</label>
-                                <input asp-for="DustResistance" class="form-control" placeholder="örn. 6, IP6X" />
+                                <label for="DustResistanceExists" class="form-label fw-medium">Dust Resistance</label>
+                                <select asp-for="DustResistanceExists" id="DustResistanceExists" class="form-select mb-2">
+                                    <option value="">Seçilmedi</option>
+                                    <option value="true">Var</option>
+                                    <option value="false">Yok</option>
+                                </select>
+                                <label asp-for="DustResistance" class="form-label small">Dust Resistance Rating</label>
+                                <input asp-for="DustResistance" class="form-control" placeholder="e.g. 6, IP6X" />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="border rounded p-3">
-                                <div class="form-check mb-2">
-                                    <input type="checkbox" id="WaterResistanceExists" name="WaterResistanceExists" class="form-check-input" value="true" @(Model.WaterResistanceExists == true ? "checked" : "") />
-                                    <label for="WaterResistanceExists" class="form-check-label fw-medium">Su Dayanıklılığı Var</label>
-                                </div>
-                                <label asp-for="WaterResistance" class="form-label small">Su Dayanıklılığı Değeri</label>
-                                <input asp-for="WaterResistance" class="form-control" placeholder="örn. 8, IPX8" />
+                                <label for="WaterResistanceExists" class="form-label fw-medium">Water Resistance</label>
+                                <select asp-for="WaterResistanceExists" id="WaterResistanceExists" class="form-select mb-2">
+                                    <option value="">Seçilmedi</option>
+                                    <option value="true">Var</option>
+                                    <option value="false">Yok</option>
+                                </select>
+                                <label asp-for="WaterResistance" class="form-label small">Water Resistance Rating</label>
+                                <input asp-for="WaterResistance" class="form-control" placeholder="e.g. 8, IPX8" />
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -216,17 +267,74 @@
                             <input asp-for="ScreenAspectRatio" class="form-control" placeholder="e.g. 19.5:9" />
                         </div>
                         <div class="col-md-3">
-                            <div class="form-check mt-4">
-                                <input type="checkbox" id="AlwaysOnDisplay" name="AlwaysOnDisplay" class="form-check-input" value="true" @(Model.AlwaysOnDisplay == true ? "checked" : "") />
-                                <label for="AlwaysOnDisplay" class="form-check-label">Always-On Display (AOD)</label>
-                            </div>
+                            <label asp-for="ScreenTouchSamplingRate" class="form-label">Touch Sampling (Hz)</label>
+                            <input asp-for="ScreenTouchSamplingRate" type="number" class="form-control" />
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label for="AlwaysOnDisplay" class="form-label">Always-On Display (AOD)</label>
+                            <select asp-for="AlwaysOnDisplay" id="AlwaysOnDisplay" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label">Extra Features</label>
                             <input type="text" name="ScreenExtraFeaturesRaw" class="form-control"
-                                placeholder="Comma separated (e.g. HDR10+, Dolby Vision, Always-On)"
+                                placeholder="Comma separated (e.g. HDR10+, Dolby Vision)"
                                 value="@(Model.ScreenExtraFeatures != null ? string.Join(", ", Model.ScreenExtraFeatures) : "")" />
-                            <small class="text-muted">Enter features separated by commas</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ScreenOtherSpecs" class="form-label">Other Specs</label>
+                            <input asp-for="ScreenOtherSpecs" class="form-control" placeholder="Extra screen specs" />
+                        </div>
+                        <div class="col-12 screen2-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <hr class="my-3" />
+                            <h6 class="fw-bold mb-3">Cover Screen (Screen 2)</h6>
+                        </div>
+                        <div class="col-md-2 screen2-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label for="Screen2Exists" class="form-label">Cover Screen</label>
+                            <select asp-for="Screen2Exists" id="Screen2Exists" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 screen2-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="Screen2Size" class="form-label">Size (inch)</label>
+                            <input asp-for="Screen2Size" type="number" step="0.01" class="form-control" />
+                        </div>
+                        <div class="col-md-3 screen2-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="Screen2Tech" class="form-label">Technology</label>
+                            <input asp-for="Screen2Tech" class="form-control" />
+                        </div>
+                        <div class="col-md-3 screen2-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="Screen2Res" class="form-label">Resolution</label>
+                            <input asp-for="Screen2Res" class="form-control" />
+                        </div>
+                        <div class="col-md-3 screen2-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="Screen2RefreshRate" class="form-label">Refresh Rate (Hz)</label>
+                            <input asp-for="Screen2RefreshRate" type="number" class="form-control" />
+                        </div>
+                        <div class="col-md-3 screen2-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="Screen2PixelDensity" class="form-label">PPI</label>
+                            <input asp-for="Screen2PixelDensity" type="number" class="form-control" />
+                        </div>
+                        <div class="col-md-3 screen2-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="Screen2AspectRatio" class="form-label">Aspect Ratio</label>
+                            <input asp-for="Screen2AspectRatio" class="form-control" />
+                        </div>
+                        <div class="col-md-3 screen2-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="Screen2Protection" class="form-label">Protection</label>
+                            <input asp-for="Screen2Protection" class="form-control" />
+                        </div>
+                        <div class="col-md-3 screen2-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="Screen2TouchSamplingRate" class="form-label">Touch Sampling (Hz)</label>
+                            <input asp-for="Screen2TouchSamplingRate" type="number" class="form-control" />
+                        </div>
+                        <div class="col-md-12 screen2-section" style="@(Model.IsFoldable == true ? "" : "display:none;")">
+                            <label asp-for="Screen2OtherSpecs" class="form-label">Other Specs</label>
+                            <input asp-for="Screen2OtherSpecs" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -239,10 +347,12 @@
                     <h6 class="fw-bold mb-3">Main Camera</h6>
                     <div class="row g-3 mb-4">
                         <div class="col-md-2">
-                            <div class="form-check mt-4">
-                                <input type="checkbox" id="Cam1Exists" name="Cam1Exists" class="form-check-input" value="true" @(Model.Cam1Exists == true ? "checked" : "") />
-                                <label for="Cam1Exists" class="form-check-label">Exists</label>
-                            </div>
+                            <label for="Cam1Exists" class="form-label">Exists</label>
+                            <select asp-for="Cam1Exists" id="Cam1Exists" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-2"><label asp-for="Cam1Res" class="form-label">Resolution</label><input
                                 asp-for="Cam1Res" class="form-control" /></div>
@@ -263,10 +373,12 @@
                     <h6 class="fw-bold mb-3">2nd Camera</h6>
                     <div class="row g-3 mb-4">
                         <div class="col-md-2">
-                            <div class="form-check mt-4">
-                                <input type="checkbox" id="Cam2Exists" name="Cam2Exists" class="form-check-input" value="true" @(Model.Cam2Exists == true ? "checked" : "") />
-                                <label for="Cam2Exists" class="form-check-label">Exists</label>
-                            </div>
+                            <label for="Cam2Exists" class="form-label">Exists</label>
+                            <select asp-for="Cam2Exists" id="Cam2Exists" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-2"><label asp-for="Cam2Type" class="form-label">Type</label><input
                                 asp-for="Cam2Type" class="form-control" /></div>
@@ -288,10 +400,12 @@
                     <h6 class="fw-bold mb-3">3rd Camera</h6>
                     <div class="row g-3 mb-4">
                         <div class="col-md-2">
-                            <div class="form-check mt-4">
-                                <input type="checkbox" id="Cam3Exists" name="Cam3Exists" class="form-check-input" value="true" @(Model.Cam3Exists == true ? "checked" : "") />
-                                <label for="Cam3Exists" class="form-check-label">Exists</label>
-                            </div>
+                            <label for="Cam3Exists" class="form-label">Exists</label>
+                            <select asp-for="Cam3Exists" id="Cam3Exists" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-2"><label asp-for="Cam3Type" class="form-label">Type</label><input
                                 asp-for="Cam3Type" class="form-control" /></div>
@@ -313,10 +427,12 @@
                     <h6 class="fw-bold mb-3">4th Camera</h6>
                     <div class="row g-3 mb-4">
                         <div class="col-md-2">
-                            <div class="form-check mt-4">
-                                <input type="checkbox" id="Cam4Exists" name="Cam4Exists" class="form-check-input" value="true" @(Model.Cam4Exists == true ? "checked" : "") />
-                                <label for="Cam4Exists" class="form-check-label">Exists</label>
-                            </div>
+                            <label for="Cam4Exists" class="form-label">Exists</label>
+                            <select asp-for="Cam4Exists" id="Cam4Exists" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-2"><label asp-for="Cam4Type" class="form-label">Type</label><input
                                 asp-for="Cam4Type" class="form-control" /></div>
@@ -346,10 +462,12 @@
                     <h6 class="fw-bold mb-3">Front Camera</h6>
                     <div class="row g-3 mb-4">
                         <div class="col-md-2">
-                            <div class="form-check mt-4">
-                                <input type="checkbox" id="FrontExists" name="FrontExists" class="form-check-input" value="true" @(Model.FrontExists == true ? "checked" : "") />
-                                <label for="FrontExists" class="form-check-label">Exists</label>
-                            </div>
+                            <label for="FrontExists" class="form-label">Exists</label>
+                            <select asp-for="FrontExists" id="FrontExists" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-2"><label asp-for="FrontCamRes" class="form-label">Resolution</label><input
                                 asp-for="FrontCamRes" class="form-control" /></div>
@@ -372,11 +490,13 @@
                             <label asp-for="FrontVideoRes" class="form-label">Front Video Resolution</label>
                             <input asp-for="FrontVideoRes" class="form-control" />
                         </div>
-                        <div class="col-md-1">
-                            <div class="form-check mt-4">
-                                <input type="checkbox" id="SecondFrontExists" name="SecondFrontExists" class="form-check-input" value="true" @(Model.SecondFrontExists == true ? "checked" : "") />
-                                <label for="SecondFrontExists" class="form-check-label">2nd</label>
-                            </div>
+                        <div class="col-md-2">
+                            <label for="SecondFrontExists" class="form-label">2nd Front</label>
+                            <select asp-for="SecondFrontExists" id="SecondFrontExists" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-2">
                             <label asp-for="SecondFrontRes" class="form-label">2nd Front Res</label>
@@ -387,6 +507,27 @@
                         <div class="col-md-2"><label asp-for="SecondFrontPixelSize" class="form-label">Pixel
                                 Size</label><input asp-for="SecondFrontPixelSize" class="form-control" /></div>
                     </div>
+
+                    <hr class="my-4" />
+                    <h6 class="fw-bold mb-3">Cover Screen Selfie Camera</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-2">
+                            <label for="FrontCoverExists" class="form-label">Exists</label>
+                            <select asp-for="FrontCoverExists" id="FrontCoverExists" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2"><label asp-for="FrontCoverRes" class="form-label">Resolution</label><input asp-for="FrontCoverRes" class="form-control" placeholder="e.g. 10 MP" /></div>
+                        <div class="col-md-2"><label asp-for="FrontCoverAperture" class="form-label">Aperture</label><input asp-for="FrontCoverAperture" class="form-control" placeholder="e.g. f/2.2" /></div>
+                        <div class="col-md-2"><label asp-for="FrontCoverFocal" class="form-label">Focal</label><input asp-for="FrontCoverFocal" class="form-control" placeholder="e.g. 26mm" /></div>
+                        <div class="col-md-4"><label asp-for="FrontCoverFeatures" class="form-label">Features</label><input asp-for="FrontCoverFeatures" class="form-control" placeholder="PDAF, HDR etc." /></div>
+                        <div class="col-md-2 offset-md-2"></div>
+                        <div class="col-md-2"><label asp-for="FrontCoverSensorSize" class="form-label">Sensor Size</label><input asp-for="FrontCoverSensorSize" class="form-control" /></div>
+                        <div class="col-md-2"><label asp-for="FrontCoverPixelSize" class="form-label">Pixel Size</label><input asp-for="FrontCoverPixelSize" class="form-control" /></div>
+                        <div class="col-md-4"><label asp-for="FrontCoverVideoRes" class="form-label">Video Resolution</label><input asp-for="FrontCoverVideoRes" class="form-control" /></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -396,16 +537,20 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <div class="form-check mt-2">
-                                <input type="checkbox" id="HasFaceRecognition" name="HasFaceRecognition" class="form-check-input" value="true" @(Model.HasFaceRecognition == true ? "checked" : "") />
-                                <label for="HasFaceRecognition" class="form-check-label">Face Recognition</label>
-                            </div>
+                            <label for="HasFaceRecognition" class="form-label">Face Recognition</label>
+                            <select asp-for="HasFaceRecognition" id="HasFaceRecognition" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-3">
-                            <div class="form-check mt-2">
-                                <input type="checkbox" id="HasFingerprint" name="HasFingerprint" class="form-check-input" value="true" @(Model.HasFingerprint == true ? "checked" : "") />
-                                <label for="HasFingerprint" class="form-check-label">Fingerprint Reader</label>
-                            </div>
+                            <label for="HasFingerprint" class="form-label">Fingerprint Reader</label>
+                            <select asp-for="HasFingerprint" id="HasFingerprint" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label asp-for="FingerprintType" class="form-label">Fingerprint Type</label>
@@ -488,17 +633,19 @@
                         </div>
                         <div class="col-md-4">
                             <label asp-for="UpdateGuaranteeYears" class="form-label">Update Guarantee (Years)</label>
-                            <input asp-for="UpdateGuaranteeYears" class="form-control" placeholder="e.g. 5 yıl" />
+                            <input asp-for="UpdateGuaranteeYears" class="form-control" placeholder="e.g. 5 years" />
                         </div>
                         <div class="col-md-4">
                             <label asp-for="UpdateGuaranteeVersion" class="form-label">Update Until Version</label>
                             <input asp-for="UpdateGuaranteeVersion" class="form-control" placeholder="e.g. iOS 30" />
                         </div>
                         <div class="col-md-3">
-                            <div class="form-check mt-2">
-                                <input type="checkbox" id="HasAiFeatures" name="HasAiFeatures" class="form-check-input" value="true" @(Model.HasAiFeatures == true ? "checked" : "") />
-                                <label for="HasAiFeatures" class="form-check-label">AI Features</label>
-                            </div>
+                            <label for="HasAiFeatures" class="form-label">AI Features</label>
+                            <select asp-for="HasAiFeatures" id="HasAiFeatures" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-9">
                             <label asp-for="AiFeaturesList" class="form-label">AI Features List</label>
@@ -538,24 +685,40 @@
                             <input asp-for="ChargingSpeed" type="number" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <div class="form-check mt-4">
-                                <input type="checkbox" id="WirelessCharging" name="WirelessCharging" class="form-check-input" value="true" @(Model.WirelessCharging == true ? "checked" : "") />
-                                <label for="WirelessCharging" class="form-check-label">Wireless Charging</label>
-                            </div>
+                            <label for="WirelessCharging" class="form-label">Wireless Charging</label>
+                            <select asp-for="WirelessCharging" id="WirelessCharging" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-4">
                             <label asp-for="WirelessSpeed" class="form-label">Wireless Charging (W)</label>
                             <input asp-for="WirelessSpeed" type="number" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <div class="form-check mt-4">
-                                <input type="checkbox" id="ReverseWireless" name="ReverseWireless" class="form-check-input" value="true" @(Model.ReverseWireless == true ? "checked" : "") />
-                                <label for="ReverseWireless" class="form-check-label">Reverse Wireless</label>
-                            </div>
+                            <label for="ReverseWireless" class="form-label">Reverse Wireless</label>
+                            <select asp-for="ReverseWireless" id="ReverseWireless" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-4">
-                            <label asp-for="ReverseSpeed" class="form-label">Reverse Speed (W)</label>
-                            <input asp-for="ReverseSpeed" type="number" class="form-control" />
+                            <label for="ReverseWirelessSpeed" class="form-label">Reverse Wireless (W)</label>
+                            <input name="ReverseWirelessSpeed" id="ReverseWirelessSpeed" type="number" class="form-control" value="@Model.ReverseWirelessSpeed" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="ReverseWired" class="form-label">Reverse Wired</label>
+                            <select asp-for="ReverseWired" id="ReverseWired" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="ReverseWiredSpeed" class="form-label">Reverse Wired (W)</label>
+                            <input asp-for="ReverseWiredSpeed" type="number" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -567,28 +730,36 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-2">
-                            <div class="form-check">
-                                <input type="checkbox" id="Support4g" name="Support4g" class="form-check-input" value="true" @(Model.Support4g == true ? "checked" : "") />
-                                <label for="Support4g" class="form-check-label">4G</label>
-                            </div>
+                            <label for="Support4g" class="form-label">4G</label>
+                            <select asp-for="Support4g" id="Support4g" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-2">
-                            <div class="form-check">
-                                <input type="checkbox" id="Support45g" name="Support45g" class="form-check-input" value="true" @(Model.Support45g == true ? "checked" : "") />
-                                <label for="Support45g" class="form-check-label">4.5G</label>
-                            </div>
+                            <label for="Support45g" class="form-label">4.5G</label>
+                            <select asp-for="Support45g" id="Support45g" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-2">
-                            <div class="form-check">
-                                <input type="checkbox" id="Support5g" name="Support5g" class="form-check-input" value="true" @(Model.Support5g == true ? "checked" : "") />
-                                <label for="Support5g" class="form-check-label">5G</label>
-                            </div>
+                            <label for="Support5g" class="form-label">5G</label>
+                            <select asp-for="Support5g" id="Support5g" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-3">
-                            <div class="form-check">
-                                <input type="checkbox" id="EsimSupport" name="EsimSupport" class="form-check-input" value="true" @(Model.EsimSupport == true ? "checked" : "") />
-                                <label for="EsimSupport" class="form-check-label">eSIM Support</label>
-                            </div>
+                            <label for="EsimSupport" class="form-label">eSIM Support</label>
+                            <select asp-for="EsimSupport" id="EsimSupport" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-3">
                             <label asp-for="PhysicalSimCount" class="form-label">Physical SIM Count</label>
@@ -627,10 +798,12 @@
                             <input asp-for="BluetoothVer" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <div class="form-check mt-4">
-                                <input type="checkbox" id="Nfc" name="Nfc" class="form-check-input" value="true" @(Model.Nfc == true ? "checked" : "") />
-                                <label for="Nfc" class="form-check-label">NFC</label>
-                            </div>
+                            <label for="Nfc" class="form-label">NFC</label>
+                            <select asp-for="Nfc" id="Nfc" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-4">
                             <label asp-for="UsbType" class="form-label">USB Type</label>
@@ -641,34 +814,44 @@
                             <input asp-for="UsbVersion" class="form-control" />
                         </div>
                         <div class="col-md-4">
-                            <div class="form-check mt-4">
-                                <input type="checkbox" id="IrBlaster" name="IrBlaster" class="form-check-input" value="true" @(Model.IrBlaster == true ? "checked" : "") />
-                                <label for="IrBlaster" class="form-check-label">IR Blaster</label>
-                            </div>
+                            <label for="IrBlaster" class="form-label">IR Blaster</label>
+                            <select asp-for="IrBlaster" id="IrBlaster" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-2">
-                            <div class="form-check">
-                                <input type="checkbox" id="Gps" name="Gps" class="form-check-input" value="true" @(Model.Gps == true ? "checked" : "") />
-                                <label for="Gps" class="form-check-label">GPS</label>
-                            </div>
+                            <label for="Gps" class="form-label">GPS</label>
+                            <select asp-for="Gps" id="Gps" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-2">
-                            <div class="form-check">
-                                <input type="checkbox" id="HasUwb" name="HasUwb" class="form-check-input" value="true" @(Model.HasUwb == true ? "checked" : "") />
-                                <label for="HasUwb" class="form-check-label">UWB</label>
-                            </div>
+                            <label for="HasUwb" class="form-label">UWB</label>
+                            <select asp-for="HasUwb" id="HasUwb" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-2">
-                            <div class="form-check">
-                                <input type="checkbox" id="HasSatelliteSos" name="HasSatelliteSos" class="form-check-input" value="true" @(Model.HasSatelliteSos == true ? "checked" : "") />
-                                <label for="HasSatelliteSos" class="form-check-label">Satellite SOS</label>
-                            </div>
+                            <label for="HasSatelliteSos" class="form-label">Satellite SOS</label>
+                            <select asp-for="HasSatelliteSos" id="HasSatelliteSos" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-2">
-                            <div class="form-check">
-                                <input type="checkbox" id="HeadphoneJack35mm" name="HeadphoneJack35mm" class="form-check-input" value="true" @(Model.HeadphoneJack35mm == true ? "checked" : "") />
-                                <label for="HeadphoneJack35mm" class="form-check-label">3.5mm Jack</label>
-                            </div>
+                            <label for="HeadphoneJack35mm" class="form-label">3.5mm Jack</label>
+                            <select asp-for="HeadphoneJack35mm" id="HeadphoneJack35mm" class="form-select">
+                                <option value="">Seçilmedi</option>
+                                <option value="true">Var</option>
+                                <option value="false">Yok</option>
+                            </select>
                         </div>
                         <div class="col-md-4">
                             <label asp-for="SpeakerType" class="form-label">Speaker Type</label>
@@ -741,36 +924,17 @@
     <script>
         function setFieldValue(elementId, value) {
             var element = document.getElementById(elementId);
-            if (element && value) {
+            if (element && value !== undefined && value !== null && value !== '') {
                 element.value = value;
             }
         }
 
-        // Handle form submission - ensure unchecked checkboxes are sent as false
-        document.getElementById('phoneForm').addEventListener('submit', function(e) {
-            const checkboxFields = [
-                'Cam1Exists', 'Cam2Exists', 'Cam3Exists', 'Cam4Exists',
-                'FrontExists', 'SecondFrontExists',
-                'DustResistanceExists', 'WaterResistanceExists',
-                'Support4g', 'Support5g', 'Support45g',
-                'Nfc', 'Gps', 'IrBlaster', 'HasUwb', 'HasSatelliteSos', 'EsimSupport',
-                'HeadphoneJack35mm',
-                'WirelessCharging', 'ReverseWireless',
-                'HasAiFeatures', 'HasFaceRecognition', 'HasFingerprint'
-            ];
-            
-            checkboxFields.forEach(function(fieldName) {
-                const checkbox = document.getElementById(fieldName);
-                if (checkbox && !checkbox.checked) {
-                    // Create a hidden input for unchecked checkboxes
-                    const hidden = document.createElement('input');
-                    hidden.type = 'hidden';
-                    hidden.name = fieldName;
-                    hidden.value = 'false';
-                    checkbox.parentNode.appendChild(hidden);
-                }
-            });
-        });
+        function setBoolSelectValue(elementId, value) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                element.value = value === true ? 'true' : (value === false ? 'false' : '');
+            }
+        }
 
         function parseAndFillJson() {
             try {
@@ -829,13 +993,13 @@
                     setFieldValue('BackMaterial', data.design.backMaterial);
                     setFieldValue('DustResistance', data.design.dustResistance ?? (data.design.dustWaterResistance && data.design.dustWaterResistance.match(/^IP(\d)/) ? data.design.dustWaterResistance[2] : null));
                     setFieldValue('WaterResistance', data.design.waterResistance ?? (data.design.dustWaterResistance && data.design.dustWaterResistance.match(/^IP.(\d)/) ? data.design.dustWaterResistance[3] : null));
+                    setBoolSelectValue('DustResistanceExists', data.design.dustResistanceExists);
+                    setBoolSelectValue('WaterResistanceExists', data.design.waterResistanceExists);
                 }
 
                 // Camera
                 if (data.camera && data.camera.rear && data.camera.rear.main) {
-                    var mainCheckbox = document.getElementById('Cam1Exists');
-                    if (mainCheckbox) mainCheckbox.checked = true;
-                    
+                    setBoolSelectValue('Cam1Exists', true);
                     var main = data.camera.rear.main;
                     setFieldValue('Cam1Res', main.resolution);
                     setFieldValue('Cam1Aperture', main.aperture);
@@ -846,9 +1010,7 @@
                 }
 
                 if (data.camera && data.camera.rear && data.camera.rear.secondary) {
-                    var cam2Checkbox = document.getElementById('Cam2Exists');
-                    if (cam2Checkbox) cam2Checkbox.checked = true;
-                    
+                    setBoolSelectValue('Cam2Exists', true);
                     var secondary = data.camera.rear.secondary;
                     setFieldValue('Cam2Type', secondary.type);
                     setFieldValue('Cam2Res', secondary.resolution);
@@ -860,9 +1022,7 @@
                 }
 
                 if (data.camera && data.camera.rear && data.camera.rear.tertiary) {
-                    var cam3Checkbox = document.getElementById('Cam3Exists');
-                    if (cam3Checkbox) cam3Checkbox.checked = true;
-                    
+                    setBoolSelectValue('Cam3Exists', true);
                     var tertiary = data.camera.rear.tertiary;
                     setFieldValue('Cam3Type', tertiary.type);
                     setFieldValue('Cam3Res', tertiary.resolution);
@@ -874,9 +1034,7 @@
                 }
 
                 if (data.camera && data.camera.rear && data.camera.rear.quaternary) {
-                    var cam4Checkbox = document.getElementById('Cam4Exists');
-                    if (cam4Checkbox) cam4Checkbox.checked = true;
-                    
+                    setBoolSelectValue('Cam4Exists', true);
                     var quaternary = data.camera.rear.quaternary;
                     setFieldValue('Cam4Type', quaternary.type);
                     setFieldValue('Cam4Res', quaternary.resolution);
@@ -892,10 +1050,8 @@
                 }
 
                 if (data.camera && data.camera.front) {
-                    var frontCheckbox = document.getElementById('FrontExists');
-                    if (frontCheckbox) frontCheckbox.checked = true;
-                    
                     var front = data.camera.front;
+                    if (front.resolution) setBoolSelectValue('FrontExists', true);
                     setFieldValue('FrontCamRes', front.resolution);
                     setFieldValue('FrontCamAperture', front.aperture);
                     setFieldValue('FrontCamFocal', front.focal);
@@ -904,9 +1060,18 @@
                     setFieldValue('FrontCamFeatures', front.features);
                     setFieldValue('FrontVideoRes', front.videoResolution);
                     if (front.secondFrontResolution) {
-                        var secondFrontCheckbox = document.getElementById('SecondFrontExists');
-                        if (secondFrontCheckbox) secondFrontCheckbox.checked = true;
+                        setBoolSelectValue('SecondFrontExists', true);
                         setFieldValue('SecondFrontRes', front.secondFrontResolution);
+                    }
+                    if (front.frontCover && front.frontCover.exists) {
+                        setBoolSelectValue('FrontCoverExists', true);
+                        setFieldValue('FrontCoverRes', front.frontCover.resolution);
+                        setFieldValue('FrontCoverAperture', front.frontCover.aperture);
+                        setFieldValue('FrontCoverFocal', front.frontCover.focal);
+                        setFieldValue('FrontCoverSensorSize', front.frontCover.sensorSize);
+                        setFieldValue('FrontCoverPixelSize', front.frontCover.pixelSize);
+                        setFieldValue('FrontCoverFeatures', front.frontCover.features);
+                        setFieldValue('FrontCoverVideoRes', front.frontCover.videoResolution);
                     }
                 }
 
@@ -915,16 +1080,11 @@
                     setFieldValue('BatteryType', data.battery.type);
                     setFieldValue('BatteryCapacity', data.battery.capacity);
                     setFieldValue('ChargingSpeed', data.battery.chargingSpeed);
-                    if (data.battery.wirelessCharging) {
-                        var wirelessCheckbox = document.getElementById('WirelessCharging');
-                        if (wirelessCheckbox) wirelessCheckbox.checked = true;
-                    }
+                    setBoolSelectValue('WirelessCharging', data.battery.wirelessCharging);
                     setFieldValue('WirelessSpeed', data.battery.wirelessSpeed);
-                    if (data.battery.reverseWireless) {
-                        var reverseCheckbox = document.getElementById('ReverseWireless');
-                        if (reverseCheckbox) reverseCheckbox.checked = true;
-                    }
-                    setFieldValue('ReverseSpeed', data.battery.reverseSpeed);
+                    setBoolSelectValue('ReverseWireless', data.battery.reverseWireless);
+                    setFieldValue('ReverseWirelessSpeed', data.battery.reverseWirelessSpeed);
+                    setBoolSelectValue('ReverseWired', data.battery.reverseWired);
                 }
 
                 // Hardware
@@ -956,10 +1116,7 @@
                     setFieldValue('OsVersion', data.software.osVersion);
                     setFieldValue('UpdateGuaranteeYears', data.software.updateGuaranteeYears);
                     setFieldValue('UpdateGuaranteeVersion', data.software.updateGuaranteeVersion);
-                    if (data.software.hasAiFeatures) {
-                        var aiCheckbox = document.getElementById('HasAiFeatures');
-                        if (aiCheckbox) aiCheckbox.checked = true;
-                    }
+                    setBoolSelectValue('HasAiFeatures', data.software.hasAiFeatures);
                     setFieldValue('AiFeaturesList', data.software.aiFeaturesList);
                 }
 
@@ -972,55 +1129,21 @@
                     setFieldValue('PhysicalSimCount', data.connectivity.physicalSimCount);
                     setFieldValue('SpeakerType', data.connectivity.speakerType);
                     
-                    // Connectivity checkboxes
-                    if (data.connectivity.nfc) {
-                        var nfcCheckbox = document.getElementById('Nfc');
-                        if (nfcCheckbox) nfcCheckbox.checked = true;
-                    }
-                    if (data.connectivity['5g']) {
-                        var support5gCheckbox = document.getElementById('Support5g');
-                        if (support5gCheckbox) support5gCheckbox.checked = true;
-                    }
-                    if (data.connectivity['4g']) {
-                        var support4gCheckbox = document.getElementById('Support4g');
-                        if (support4gCheckbox) support4gCheckbox.checked = true;
-                    }
-                    if (data.connectivity['4_5g']) {
-                        var support45gCheckbox = document.getElementById('Support45g');
-                        if (support45gCheckbox) support45gCheckbox.checked = true;
-                    }
-                    if (data.connectivity.gps) {
-                        var gpsCheckbox = document.getElementById('Gps');
-                        if (gpsCheckbox) gpsCheckbox.checked = true;
-                    }
-                    if (data.connectivity.irBlaster) {
-                        var irBlasterCheckbox = document.getElementById('IrBlaster');
-                        if (irBlasterCheckbox) irBlasterCheckbox.checked = true;
-                    }
-                    if (data.connectivity.uwb) {
-                        var uwbCheckbox = document.getElementById('HasUwb');
-                        if (uwbCheckbox) uwbCheckbox.checked = true;
-                    }
-                    if (data.connectivity.satelliteSos) {
-                        var satSosCheckbox = document.getElementById('HasSatelliteSos');
-                        if (satSosCheckbox) satSosCheckbox.checked = true;
-                    }
-                    if (data.connectivity.esim) {
-                        var esimCheckbox = document.getElementById('EsimSupport');
-                        if (esimCheckbox) esimCheckbox.checked = true;
-                    }
+                    setBoolSelectValue('Nfc', data.connectivity.nfc);
+                    setBoolSelectValue('Support5g', data.connectivity['5g']);
+                    setBoolSelectValue('Support4g', data.connectivity['4g']);
+                    setBoolSelectValue('Support45g', data.connectivity['4_5g']);
+                    setBoolSelectValue('Gps', data.connectivity.gps);
+                    setBoolSelectValue('IrBlaster', data.connectivity.irBlaster);
+                    setBoolSelectValue('HasUwb', data.connectivity.uwb);
+                    setBoolSelectValue('HasSatelliteSos', data.connectivity.satelliteSos);
+                    setBoolSelectValue('EsimSupport', data.connectivity.esim);
                 }
 
                 // Security
                 if (data.security) {
-                    if (data.security.faceRecognition) {
-                        var faceCheckbox = document.getElementById('HasFaceRecognition');
-                        if (faceCheckbox) faceCheckbox.checked = true;
-                    }
-                    if (data.security.fingerprint) {
-                        var fingerprintCheckbox = document.getElementById('HasFingerprint');
-                        if (fingerprintCheckbox) fingerprintCheckbox.checked = true;
-                    }
+                    setBoolSelectValue('HasFaceRecognition', data.security.faceRecognition);
+                    setBoolSelectValue('HasFingerprint', data.security.fingerprint);
                     setFieldValue('FingerprintType', data.security.fingerprintType);
                 }
 
@@ -1039,91 +1162,26 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            // Auto-check camera "Exists" checkboxes when any related field has value
+            // Auto-set camera "Exists" dropdowns when any related field has value
             function setupCameraAutoCheck() {
-                // Main Camera (Cam1)
-                const cam1Fields = ['Cam1Res', 'Cam1Aperture', 'Cam1Focal', 'Cam1SensorSize', 'Cam1PixelSize', 'Cam1Features'];
-                cam1Fields.forEach(function(fieldId) {
-                    const field = document.getElementById(fieldId);
-                    if (field) {
-                        field.addEventListener('input', function() {
-                            const cam1Checkbox = document.getElementById('Cam1Exists');
-                            if (cam1Checkbox && this.value.trim()) {
-                                cam1Checkbox.checked = true;
-                            }
-                        });
-                    }
-                });
-
-                // 2nd Camera (Cam2)
-                const cam2Fields = ['Cam2Type', 'Cam2Res', 'Cam2Aperture', 'Cam2Focal', 'Cam2SensorSize', 'Cam2PixelSize', 'Cam2Features'];
-                cam2Fields.forEach(function(fieldId) {
-                    const field = document.getElementById(fieldId);
-                    if (field) {
-                        field.addEventListener('input', function() {
-                            const cam2Checkbox = document.getElementById('Cam2Exists');
-                            if (cam2Checkbox && this.value.trim()) {
-                                cam2Checkbox.checked = true;
-                            }
-                        });
-                    }
-                });
-
-                // 3rd Camera (Cam3)
-                const cam3Fields = ['Cam3Type', 'Cam3Res', 'Cam3Aperture', 'Cam3Focal', 'Cam3SensorSize', 'Cam3PixelSize', 'Cam3Features'];
-                cam3Fields.forEach(function(fieldId) {
-                    const field = document.getElementById(fieldId);
-                    if (field) {
-                        field.addEventListener('input', function() {
-                            const cam3Checkbox = document.getElementById('Cam3Exists');
-                            if (cam3Checkbox && this.value.trim()) {
-                                cam3Checkbox.checked = true;
-                            }
-                        });
-                    }
-                });
-
-                // 4th Camera (Cam4)
-                const cam4Fields = ['Cam4Type', 'Cam4Res', 'Cam4Aperture', 'Cam4Focal', 'Cam4SensorSize', 'Cam4PixelSize', 'Cam4Features'];
-                cam4Fields.forEach(function(fieldId) {
-                    const field = document.getElementById(fieldId);
-                    if (field) {
-                        field.addEventListener('input', function() {
-                            const cam4Checkbox = document.getElementById('Cam4Exists');
-                            if (cam4Checkbox && this.value.trim()) {
-                                cam4Checkbox.checked = true;
-                            }
-                        });
-                    }
-                });
-
-                // Front Camera
-                const frontFields = ['FrontCamRes', 'FrontCamAperture', 'FrontCamFocal', 'FrontCamSensorSize', 'FrontCamPixelSize', 'FrontCamFeatures', 'FrontVideoRes'];
-                frontFields.forEach(function(fieldId) {
-                    const field = document.getElementById(fieldId);
-                    if (field) {
-                        field.addEventListener('input', function() {
-                            const frontCheckbox = document.getElementById('FrontExists');
-                            if (frontCheckbox && this.value.trim()) {
-                                frontCheckbox.checked = true;
-                            }
-                        });
-                    }
-                });
-
-                // Second Front Camera
-                const secondFrontFields = ['SecondFrontRes', 'SecondFrontSensorSize', 'SecondFrontPixelSize'];
-                secondFrontFields.forEach(function(fieldId) {
-                    const field = document.getElementById(fieldId);
-                    if (field) {
-                        field.addEventListener('input', function() {
-                            const secondFrontCheckbox = document.getElementById('SecondFrontExists');
-                            if (secondFrontCheckbox && this.value.trim()) {
-                                secondFrontCheckbox.checked = true;
-                            }
-                        });
-                    }
-                });
+                function setSelectIfHasValue(selectId, fieldIds) {
+                    fieldIds.forEach(function(fieldId) {
+                        const field = document.getElementById(fieldId);
+                        if (field) {
+                            field.addEventListener('input', function() {
+                                const select = document.getElementById(selectId);
+                                if (select && this.value.trim()) select.value = 'true';
+                            });
+                        }
+                    });
+                }
+                setSelectIfHasValue('Cam1Exists', ['Cam1Res', 'Cam1Aperture', 'Cam1Focal', 'Cam1SensorSize', 'Cam1PixelSize', 'Cam1Features']);
+                setSelectIfHasValue('Cam2Exists', ['Cam2Type', 'Cam2Res', 'Cam2Aperture', 'Cam2Focal', 'Cam2SensorSize', 'Cam2PixelSize', 'Cam2Features']);
+                setSelectIfHasValue('Cam3Exists', ['Cam3Type', 'Cam3Res', 'Cam3Aperture', 'Cam3Focal', 'Cam3SensorSize', 'Cam3PixelSize', 'Cam3Features']);
+                setSelectIfHasValue('Cam4Exists', ['Cam4Type', 'Cam4Res', 'Cam4Aperture', 'Cam4Focal', 'Cam4SensorSize', 'Cam4PixelSize', 'Cam4Features']);
+                setSelectIfHasValue('FrontExists', ['FrontCamRes', 'FrontCamAperture', 'FrontCamFocal', 'FrontCamSensorSize', 'FrontCamPixelSize', 'FrontCamFeatures', 'FrontVideoRes']);
+                setSelectIfHasValue('SecondFrontExists', ['SecondFrontRes', 'SecondFrontSensorSize', 'SecondFrontPixelSize']);
+                setSelectIfHasValue('FrontCoverExists', ['FrontCoverRes', 'FrontCoverAperture', 'FrontCoverFocal', 'FrontCoverSensorSize', 'FrontCoverPixelSize', 'FrontCoverFeatures', 'FrontCoverVideoRes']);
             }
 
             // Initialize camera auto-check
@@ -1139,6 +1197,15 @@
                 width: '100%',
                 allowClear: true
             });
+
+            // IsFoldable toggle - show foldable/screen2 sections ONLY when Var (true)
+            function toggleFoldableSections() {
+                var val = $('#IsFoldable').val();
+                var isVar = val === 'true';
+                $('.foldable-section, .screen2-section').css('display', isVar ? '' : 'none');
+            }
+            $('#IsFoldable').on('change select2:select select2:clear', toggleFoldableSections);
+            toggleFoldableSections(); // Initial state
         });
     </script>
 }

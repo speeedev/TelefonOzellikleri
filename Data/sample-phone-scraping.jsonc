@@ -1,0 +1,163 @@
+{
+  "general": {
+    "brandId": 1,              // Veritabanındaki marka ID (Brands tablosu)
+    "brand": "Apple",          // Marka adı (brandId yoksa isimle eşleme için)
+    "seriesId": 1,             // Veritabanındaki seri ID (Series tablosu)
+    "series": "iPhone",        // Seri adı (örn: iPhone, Galaxy S)
+    "name": "iPhone 15 Pro Max", // Model adı
+    "slug": "iphone-15-pro-max", // URL'de kullanılan benzersiz tanımlayıcı (küçük harf, tire)
+    "releaseDate": "2023-09-22", // Çıkış tarihi (YYYY-MM-DD)
+    "status": "Released",      // Durum: Released, Unannounced, Rumored
+    "mainImageUrl": "https://example.com/images/iphone-15-pro-max.jpg", // Ana ürün görseli URL
+    "colors": ["Natural Titanium", "Blue Titanium", "White Titanium", "Black Titanium"], // Mevcut renkler listesi
+    "boxContents": "iPhone, USB-C to USB-C Cable, Documentation", // Kutuda çıkan aksesuarlar
+    "imageGallery": [          // Galeri resim URL'leri (DTO'da eklenmeli)
+      "https://example.com/images/iphone-15-pro-max-1.jpg",
+      "https://example.com/images/iphone-15-pro-max-2.jpg",
+      "https://example.com/images/iphone-15-pro-max-3.jpg"
+    ]
+  },
+  "display": {
+    "size": 6.7,              // Ekran boyutu (inç)
+    "technology": "LTPO Super Retina XDR OLED", // Ekran teknolojisi (OLED, AMOLED, IPS LCD vb.)
+    "resolution": "2796x1290", // Çözünürlük (genişlik x yükseklik)
+    "refreshRate": 120,       // Yenileme hızı (Hz)
+    "pixelDensity": 460,      // Piksel yoğunluğu (ppi)
+    "bodyRatio": 88.3,        // Ekran-gövde oranı (%)
+    "brightness": 2000,       // Parlaklık (nits)
+    "aspectRatio": "19.5:9",  // En-boy oranı
+    "protection": "Ceramic Shield", // Ekran koruması (Gorilla Glass, Ceramic Shield vb.)
+    "extraFeatures": ["ProMotion", "Always-On", "HDR10", "Dolby Vision"], // Ek özellikler listesi
+    "alwaysOnDisplay": true   // Her zaman açık ekran var mı
+  },
+  "design": {
+    "height": 159.9,          // Yükseklik (mm)
+    "width": 76.7,            // Genişlik (mm)
+    "thickness": 8.25,        // Kalınlık (mm)
+    "weight": 221.0,          // Ağırlık (gram)
+    "frameMaterial": "Titanium", // Çerçeve malzemesi
+    "backMaterial": "Titanium",  // Arka kapak malzemesi
+    "dustResistance": "IP6X", // Toz dayanımı (IP sınıfı)
+    "dustResistanceExists": true, // Toz dayanımı bilgisi mevcut mu
+    "waterResistance": "IP68", // Su dayanımı (IP sınıfı)
+    "waterResistanceExists": true, // Su dayanımı bilgisi mevcut mu
+    "dustWaterResistance": "IP68" // Birleşik toz/su dayanımı (IP68 vb.)
+  },
+  "camera": {
+    "rear": {
+      "main": {               // Ana (birincil) arka kamera
+        "resolution": "48 MP", // Çözünürlük (MP)
+        "type": "Wide",       // Kamera tipi: Wide, Ultra Wide, Telephoto, Macro vb.
+        "aperture": "f/1.78", // Diyafram açıklığı
+        "focal": "24mm",     // Odak uzaklığı (eşdeğer 35mm)
+        "sensorSize": "1/1.28\"", // Sensör boyutu
+        "pixelSize": "1.22µm", // Piksel boyutu
+        "features": "Sensor-shift OIS, PDAF" // Özellikler (OIS, PDAF, laser AF vb.)
+      },
+      "secondary": {          // İkinci arka kamera
+        "resolution": "12 MP",
+        "type": "Ultra Wide",
+        "aperture": "f/2.2",
+        "focal": "13mm",
+        "sensorSize": "1/2.55\"",
+        "pixelSize": "1.4µm",
+        "features": "120° FOV"
+      },
+      "tertiary": {           // Üçüncü arka kamera
+        "resolution": "12 MP",
+        "type": "Telephoto",
+        "aperture": "f/2.8",
+        "focal": "77mm",
+        "sensorSize": "1/3.5\"",
+        "pixelSize": "1.0µm",
+        "features": "5x optical zoom, OIS"
+      },
+      "quaternary": {         // Dördüncü arka kamera
+        "resolution": "12 MP",
+        "type": "Telephoto",
+        "aperture": "f/2.2",
+        "focal": "120mm",
+        "sensorSize": "1/3.5\"",
+        "pixelSize": "1.0µm",
+        "features": "5x optical zoom"
+      },
+      "videoResolution": "4K@60fps, ProRes, Cinematic" // Arka kamera video çözünürlüğü
+    },
+    "front": {
+      "resolution": "12 MP",  // Ön kamera çözünürlüğü
+      "aperture": "f/1.9",
+      "focal": "23mm",
+      "sensorSize": "1/3.6\"",
+      "pixelSize": "1.0µm",
+      "features": "Face ID, SL 3D", // Özellikler (Face ID, otofokus vb.)
+      "videoResolution": "4K@60fps", // Ön kamera video
+      "secondFrontResolution": null, // İkinci ön kamera (çift ön kamera modelleri)
+      "frontCover": {         // Katlanabilir modellerde kapak ekranı kamerası
+        "exists": false,
+        "resolution": null,
+        "aperture": null,
+        "focal": null,
+        "sensorSize": null,
+        "pixelSize": null,
+        "features": null,
+        "videoResolution": null
+      }
+    }
+  },
+  "hardware": {
+    "chipset": "Apple A17 Pro", // İşlemci / çipset adı
+    "cpu": "Hexa-core (2x3.78 GHz + 4x2.11 GHz)", // CPU detayı
+    "gpu": "Apple GPU (6-core)", // GPU adı
+    "antutuScore": 2100000,   // AnTuTu benchmark puanı
+    "geekbenchScore": "Single 2950, Multi 7200", // Geekbench puanları
+    "ramOptions": ["8 GB"],   // RAM seçenekleri listesi
+    "storageOptions": ["256 GB", "512 GB", "1 TB"], // Depolama seçenekleri
+    "storageType": "NVMe",    // Depolama tipi (UFS 4.0, NVMe vb.)
+    "sensors": "Face ID, accelerometer, gyro, proximity, compass, barometer" // Sensörler listesi
+  },
+  "battery": {
+    "type": "LiIon",          // Pil tipi: LiIon, LiPo
+    "capacity": 4422,         // Pil kapasitesi (mAh)
+    "chargingSpeed": 27,      // Kablolu şarj hızı (W)
+    "wirelessCharging": true, // Kablosuz şarj var mı
+    "wirelessSpeed": 15,      // Kablosuz şarj hızı (W)
+    "reverseWireless": true,  // Ters kablosuz şarj (başka cihaz şarj etme)
+    "reverseWirelessSpeed": 7, // Ters kablosuz şarj hızı (W)
+    "reverseWired": true,     // Ters kablolu şarj (power bank gibi)
+    "reverseWiredSpeed": 4    // Ters kablolu şarj hızı (W)
+  },
+  "software": {
+    "osType": "iOS",          // İşletim sistemi: Android, iOS, HarmonyOS
+    "osVersion": "iOS 17",    // İşletim sistemi sürümü
+    "updateGuaranteeYears": "7", // Güncelleme garantisi (yıl)
+    "updateGuaranteeVersion": "iOS 24", // Garanti edilen son sürüm
+    "hasAiFeatures": true,    // AI özellikleri var mı
+    "aiFeaturesList": "Siri, Live Voicemail, Visual Look Up" // AI özellikleri listesi
+  },
+  "connectivity": {
+    "wifiVersion": "WiFi6E",  // WiFi sürümü: WiFi4, WiFi5, WiFi6, WiFi6E, WiFi7
+    "bluetoothVersion": "5.3", // Bluetooth sürümü
+    "nfc": true,              // NFC var mı
+    "usbType": "USB Type-C 3.2", // USB tipi
+    "usbVersion": "3.2",      // USB sürümü
+    "5g": true,               // 5G desteği
+    "4g": true,               // 4G desteği
+    "4_5g": true,             // 4.5G (LTE-A) desteği
+    "gps": true,              // GPS var mı
+    "irBlaster": false,       // Kızılötesi (IR) verici var mı
+    "uwb": true,              // Ultra Wideband (UWB) var mı
+    "satelliteSos": true,     // Uydu SOS özelliği var mı
+    "esim": true,             // eSIM desteği
+    "physicalSimCount": 1,    // Fiziksel SIM kart sayısı
+    "speakerType": "Stereo"   // Hoparlör tipi: Mono, Stereo, Surround
+  },
+  "security": {
+    "faceRecognition": true,  // Yüz tanıma var mı
+    "fingerprint": false,     // Parmak izi okuyucu var mı
+    "fingerprintType": null   // Parmak izi tipi: Under Display, Side Mounted vb.
+  },
+  "other": {
+    "sarHead": 0.98,          // SAR değeri - baş (W/kg)
+    "sarBody": 0.98           // SAR değeri - vücut (W/kg)
+  }
+}

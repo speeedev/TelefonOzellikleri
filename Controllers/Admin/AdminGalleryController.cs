@@ -20,9 +20,11 @@ public class AdminGalleryController : Controller
 
     [Route("derin/gallery")]
     [HttpGet]
-    [ResponseCache(NoStore = true, Duration = 0)]
+    [ResponseCache(NoStore = true, Duration = 0)] 
     public IActionResult Index([FromQuery(Name = "folder")] string? folder = "phones")
     {
+        ViewData["Title"] = "Gallery";
+
         var folderLower = (folder ?? "").ToLowerInvariant();
         var selectedFolder = GalleryFolders.Contains(folderLower) ? folderLower : "phones";
         var uploadsPath = Path.Combine(_env.WebRootPath, "uploads", selectedFolder);

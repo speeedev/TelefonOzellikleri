@@ -71,9 +71,10 @@
                                         <span class="d-none small text-muted">@file.FileName</span>
                                     </a>
                                     <div class="small text-truncate" title="@file.Url">@file.FileName</div>
-                                    <div class="input-group input-group-sm mt-1">
-                                        <input type="text" class="form-control form-control-sm" value="@file.Url" readonly />
+                                    <input type="text" class="form-control form-control-sm mt-1" value="@file.Url" readonly />
+                                    <div class="d-flex gap-1 mt-1">
                                         <button type="button" class="btn btn-outline-secondary btn-sm copy-url-btn" data-url="@file.Url" title="Copy URL">Copy</button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm delete-file-btn" data-folder="@selectedFolder" data-filename="@file.FileName" title="Delete">Sil</button>
                                     </div>
                                 </div>
                             </div>
@@ -135,8 +136,9 @@
                             html += '<img src="' + f.url + '" alt="' + (f.fileName || '') + '" class="img-fluid" style="max-height: 80px; object-fit: contain;" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';" />';
                             html += '<span class="d-none small text-muted">' + (f.fileName || '') + '</span></a>';
                             html += '<div class="small text-truncate" title="' + f.url + '">' + (f.fileName || '') + '</div>';
-                            html += '<div class="input-group input-group-sm mt-1"><input type="text" class="form-control form-control-sm" value="' + f.url + '" readonly />';
-                            html += '<button type="button" class="btn btn-outline-secondary btn-sm copy-url-btn" data-url="' + f.url + '" title="Copy URL">Copy</button></div></div></div>';
+                            html += '<input type="text" class="form-control form-control-sm mt-1" value="' + f.url + '" readonly />';
+                            html += '<div class="d-flex gap-1 mt-1"><button type="button" class="btn btn-outline-secondary btn-sm copy-url-btn" data-url="' + f.url + '" title="Copy URL">Copy</button>';
+                            html += '<button type="button" class="btn btn-outline-danger btn-sm delete-file-btn" data-folder="' + folderId + '" data-filename="' + (f.fileName || '') + '" title="Delete">Delete</button></div></div></div>';
                         });
                         html += '</div>';
                     }
@@ -211,14 +213,41 @@
         });
 
         galleryFileGrid.addEventListener('click', function (e) {
-            var btn = e.target.closest('.copy-url-btn');
-            if (btn) {
-                var url = btn.getAttribute('data-url');
+            var copyBtn = e.target.closest('.copy-url-btn');
+            if (copyBtn) {
+                var url = copyBtn.getAttribute('data-url');
                 navigator.clipboard.writeText(url).then(function () {
-                    var orig = btn.textContent;
-                    btn.textContent = 'OK';
-                    setTimeout(function () { btn.textContent = orig; }, 1000);
+                    var orig = copyBtn.textContent;
+                    copyBtn.textContent = 'OK';
+                    setTimeout(function () { copyBtn.textContent = orig; }, 1000);
                 });
+                return;
+            }
+            var delBtn = e.target.closest('.delete-file-btn');
+            if (delBtn) {
+                var folder = delBtn.getAttribute('data-folder');
+                var fileName = delBtn.getAttribute('data-filename');
+                if (!folder || !fileName) return;
+                if (!confirm('Bu resmi silmek istedi\u011finize emin misiniz?')) return;
+                delBtn.disabled = true;
+                var formData = new FormData();
+                formData.append('folder', folder);
+                formData.append('fileName', fileName);
+                fetch('/derin/api/gallery-delete', { method: 'POST', body: formData })
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
+                        if (data.success) {
+                            loadFolder(folder, false);
+                        } else {
+                            setStatus(data.error || 'Silme ba\u015far\u0131s\u0131z.', true);
+                        }
+                    })
+                    .catch(function () {
+                        setStatus('Silme ba\u015far\u0131s\u0131z.', true);
+                    })
+                    .finally(function () {
+                        delBtn.disabled = false;
+                    });
             }
         });
     })();

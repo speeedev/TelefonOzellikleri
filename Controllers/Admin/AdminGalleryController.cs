@@ -85,6 +85,42 @@ public class AdminGalleryController : Controller
         }
         return Json(new { folder = selectedFolder, files });
     }
+
+    [Route("derin/api/gallery-delete")]
+    [HttpPost]
+    [ResponseCache(NoStore = true, Duration = 0)]
+    public IActionResult DeleteFile([FromForm(Name = "folder")] string? folder, [FromForm(Name = "fileName")] string? fileName)
+    {
+        var folderLower = (folder ?? "").ToLowerInvariant();
+        var selectedFolder = GalleryFolders.Contains(folderLower) ? folderLower : null;
+        if (selectedFolder == null || string.IsNullOrWhiteSpace(fileName))
+            return BadRequest(new { error = "Invalid folder or file name." });
+
+        if (fileName.Contains("..", StringComparison.Ordinal) || Path.GetFileName(fileName) != fileName)
+            return BadRequest(new { error = "Invalid file name." });
+
+        var ext = Path.GetExtension(fileName);
+        if (!AllowedExtensions.Contains(ext, StringComparer.OrdinalIgnoreCase))
+            return BadRequest(new { error = "Invalid file type." });
+
+        var uploadsPath = Path.Combine(_env.WebRootPath, "uploads", selectedFolder);
+        var filePath = Path.Combine(uploadsPath, Path.GetFileName(fileName));
+
+        if (!System.IO.File.Exists(filePath))
+            return NotFound(new { error = "File not found." });
+
+        try
+        {
+            System.IO.File.Delete(filePath);
+            _logger.LogInformation("Gallery file deleted: {Folder}/{FileName}", selectedFolder, fileName);
+            return Ok(new { success = true });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to delete gallery file: {Path}", filePath);
+            return StatusCode(500, new { error = "Failed to delete file." });
+        }
+    }
 }
 
 public record GalleryFileInfo(string FileName, string Url, long SizeBytes, DateTime LastModified);

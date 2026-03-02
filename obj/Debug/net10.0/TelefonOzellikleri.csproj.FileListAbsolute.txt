@@ -171,3 +171,4 @@
 /Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/obj/Debug/net10.0/TelefonOzellikleri.pdb
 /Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/obj/Debug/net10.0/TelefonOzellikleri.genruntimeconfig.cache
 /Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/obj/Debug/net10.0/ref/TelefonOzellikleri.dll
+/Users/emir.bolat/Documents/software/DotNet/TelefonOzellikleri/obj/Debug/net10.0/compressed/kje8ekonrl-{0}-s24s5xfdts-s24s5xfdts.gz

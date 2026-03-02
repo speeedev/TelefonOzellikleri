@@ -29,7 +29,7 @@ namespace TelefonOzellikleri.Controllers.Admin
         [Route("derin/upload/image")]
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> UploadImage(IFormFile file, string? folder)
+        public async Task<IActionResult> UploadImage(IFormFile file, [FromForm(Name = "folder")] string? folder)
         {
             ViewData["Title"] = "Gallery";
 
@@ -43,8 +43,12 @@ namespace TelefonOzellikleri.Controllers.Admin
             if (!AllowedExtensions.Contains(ext))
                 return BadRequest(new { error = "Invalid file type. Allowed: jpg, png, webp, gif, svg." });
 
-            var subfolder = folder switch
+            var folderLower = (folder ?? "").ToLowerInvariant();
+            _logger.LogDebug("UploadImage: folder={Folder}, folderLower={FolderLower}", folder, folderLower);
+
+            var subfolder = folderLower switch
             {
+                "phones" => "phones",
                 "brands" => "brands",
                 "pages" => "pages",
                 "misc" => "misc",

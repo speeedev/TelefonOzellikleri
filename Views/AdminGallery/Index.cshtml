@@ -171,9 +171,10 @@
                 setStatus('File size must be less than 2 MB.', true);
                 return;
             }
-            var formData = new FormData();
-            formData.append('file', file);
-            formData.append('folder', uploadFolder.value);
+            var folder = uploadFolder.value;
+            var formData = new FormData(document.getElementById('galleryUploadForm'));
+            formData.set('file', file);
+            formData.set('folder', folder);
             uploadBtn.disabled = true;
             setStatus('Uploading...');
             fetch('/derin/upload/image', { method: 'POST', body: formData })
@@ -183,7 +184,7 @@
                         uploadedUrl.value = data.url;
                         uploadedUrlSection.classList.remove('d-none');
                         setStatus('Upload successful. Copy the URL below.');
-                        loadFolder(uploadFolder.value, false);
+                        loadFolder(folder, false);
                     } else {
                         setStatus(data.error || 'Upload failed.', true);
                     }

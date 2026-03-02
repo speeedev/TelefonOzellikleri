@@ -25,6 +25,7 @@ namespace TelefonOzellikleri.Controllers
         }
 
         [Route("{slug:smartphoneSlug}")]
+        [ResponseCache(NoStore = true, Duration = 0)]
         public async Task<IActionResult> Index(string slug)
         {
             if (string.IsNullOrWhiteSpace(slug))
@@ -33,6 +34,7 @@ namespace TelefonOzellikleri.Controllers
             var viewModel = await _cache.GetOrCreateAsync(CacheKeys.PhoneDetail(slug), async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(PhoneCacheMinutes);
+                entry.Size = 1;
 
                 var phone = await _context.Smartphones
                     .AsNoTracking()
@@ -63,41 +65,41 @@ namespace TelefonOzellikleri.Controllers
                         .FirstOrDefaultAsync(s => s.Id == phone.SeriesId.Value);
                 }
 
+                var sameBrandPhones = await _context.Smartphones
+                    .AsNoTracking()
+                    .Where(s => s.BrandId == phone.BrandId && s.Id != phone.Id)
+                    .OrderByDescending(s => s.ReleaseDate ?? DateOnly.MinValue)
+                    .ThenByDescending(s => s.Id)
+                    .Take(6)
+                    .Join(_context.Brands,
+                        p => p.BrandId,
+                        b => b.Id,
+                        (p, b) => new LatestPhoneItem
+                        {
+                            Slug = p.Slug,
+                            ModelName = p.ModelName,
+                            BrandName = b.Name,
+                            BrandLogoUrl = b.LogoUrl,
+                            MainImageUrl = p.MainImageUrl,
+                            Chipset = p.Chipset,
+                            BatteryCapacity = p.BatteryCapacity,
+                            Cam1Res = p.Cam1Res,
+                            ScreenSize = p.ScreenSize,
+                            ReleaseDate = p.ReleaseDate
+                        })
+                    .ToListAsync();
+
                 return new SmartphoneDetailViewModel
                 {
                     Phone = phone,
                     Brand = brand,
-                    Series = series
+                    Series = series,
+                    SameBrandPhones = sameBrandPhones
                 };
             });
 
             if (viewModel == null)
                 return NotFound();
-
-            var sameBrandPhones = await _context.Smartphones
-                .AsNoTracking()
-                .Where(s => s.BrandId == viewModel.Phone.BrandId && s.Id != viewModel.Phone.Id)
-                .OrderByDescending(s => s.ReleaseDate ?? DateOnly.MinValue)
-                .ThenByDescending(s => s.Id)
-                .Take(6)
-                .Join(_context.Brands,
-                    phone => phone.BrandId,
-                    brand => brand.Id,
-                    (phone, brand) => new LatestPhoneItem
-                    {
-                        Slug = phone.Slug,
-                        ModelName = phone.ModelName,
-                        BrandName = brand.Name,
-                        BrandLogoUrl = brand.LogoUrl,
-                        MainImageUrl = phone.MainImageUrl,
-                        Chipset = phone.Chipset,
-                        BatteryCapacity = phone.BatteryCapacity,
-                        Cam1Res = phone.Cam1Res,
-                        ScreenSize = phone.ScreenSize,
-                        ReleaseDate = phone.ReleaseDate
-                    })
-                .ToListAsync();
-            viewModel.SameBrandPhones = sameBrandPhones;
 
             ViewData["Title"] = SeoHelper.TruncateTitle($"{viewModel.Brand.Name} {viewModel.Phone.ModelName} Özellikleri");
             ViewData["Description"] = SeoHelper.TruncateDescription(

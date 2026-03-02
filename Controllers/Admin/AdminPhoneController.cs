@@ -156,6 +156,7 @@ namespace TelefonOzellikleri.Controllers.Admin
                 return View("Edit", model);
             }
 
+            var oldSlug = phone.Slug;
             phone.BrandId = model.BrandId;
             phone.SeriesId = model.SeriesId;
             phone.ModelName = model.ModelName;
@@ -319,6 +320,8 @@ namespace TelefonOzellikleri.Controllers.Admin
             _cache.Remove(CacheKeys.HomePage);
             if (!string.IsNullOrWhiteSpace(phone.Slug))
                 _cache.Remove(CacheKeys.PhoneDetail(phone.Slug));
+            if (!string.IsNullOrWhiteSpace(oldSlug) && !string.Equals(oldSlug, phone.Slug, StringComparison.OrdinalIgnoreCase))
+                _cache.Remove(CacheKeys.PhoneDetail(oldSlug));
             await _searchService.IndexAsync(phone.Id);
 
             TempData["Success"] = $"{phone.ModelName} updated successfully.";

@@ -86,13 +86,13 @@
             }
             @if (phone.ImageGallery != null && phone.ImageGallery.Count > 0)
             {
-                <div class="row g-2 mt-2">
+                <div class="row g-2 mt-2" id="phoneImageGallery">
                     @foreach (var imgUrl in phone.ImageGallery)
                     {
                         @if (!string.IsNullOrEmpty(imgUrl))
                         {
-                            <div class="col-6 col-md-4">
-                                <img src="@imgUrl" alt="@brand.Name @phone.ModelName" class="img-fluid rounded" style="max-height: 120px; object-fit: cover;" />
+                            <div class="col-6 col-md-4 gallery-img-wrap">
+                                <img src="@imgUrl" alt="@brand.Name @phone.ModelName" class="img-fluid rounded" style="max-height: 120px; object-fit: cover;" onerror="this.closest('.gallery-img-wrap').style.display='none'" />
                             </div>
                         }
                     }
@@ -1085,3 +1085,27 @@
         }
     }
 </style>
+
+@section Scripts {
+<script>
+(function() {
+    var gallery = document.getElementById('phoneImageGallery');
+    if (!gallery) return;
+    var imgs = gallery.querySelectorAll('.gallery-img-wrap img');
+    var pending = imgs.length;
+    function checkEmpty() {
+        pending--;
+        if (pending > 0) return;
+        var anyVisible = false;
+        gallery.querySelectorAll('.gallery-img-wrap').forEach(function(w) {
+            if (w.style.display !== 'none') anyVisible = true;
+        });
+        if (!anyVisible) gallery.style.display = 'none';
+    }
+    imgs.forEach(function(img) {
+        if (img.complete) checkEmpty();
+        else { img.addEventListener('load', checkEmpty); img.addEventListener('error', checkEmpty); }
+    });
+})();
+</script>
+}

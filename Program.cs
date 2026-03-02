@@ -19,7 +19,11 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<FeedService>();
 builder.Services.AddScoped<FeedService>();
 builder.Services.AddResponseCaching();
-builder.Services.AddMemoryCache();
+builder.Services.AddMemoryCache(options =>
+{
+    options.SizeLimit = 5000;
+    options.CompactionPercentage = 0.25;
+});
 
 builder.Services.Configure<ElasticsearchSettings>(builder.Configuration.GetSection(ElasticsearchSettings.SectionName));
 builder.Services.AddSingleton<ElasticsearchClient>(sp =>
